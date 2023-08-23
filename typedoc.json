@@ -1,0 +1,16 @@
+{
+  "$schema": "https://typedoc.org/schema.json",
+  "cleanOutputDir": false,
+  "entryPoints": [
+    "src/index.ts"
+  ],
+  "githubPages": false,
+  "htmlLang": "en",
+  "name": "TypeScript PostMessage handler",
+  "out": "docs",
+  "plugin": [
+    "@mxssfd/typedoc-theme",
+    "typedoc-plugin-mdn-links"
+  ],
+  "theme": "my-theme"
+}
