@@ -9,11 +9,10 @@ import { transformAsynchronous, transformSynchronous } from './transform.js'
 /**
  * Tries to parse the given input (passed by `from`) into one or multiple sections.
  *
- * @param fieldNames - Field names to use while parsing. These will only be used if `parser` is not present.
- * @param from - The source from which the parser should read.
- * @param parser - A parser instance, which should be used instead of creating a new one.
+ * @param options - Parse options must include the `from` field.
  */
-export default function lcovParser({ fieldNames, from, parser }: Options): Promise<SectionSummary[]> {
+export function lcovParser(options: Options): Promise<SectionSummary[]> {
+    const { fieldNames, from, parser } = options
     const parserInstance = parser ?? new LcovParser(fieldNames ?? defaultFieldNames)
 
     if (from instanceof Readable) {
@@ -38,3 +37,5 @@ export default function lcovParser({ fieldNames, from, parser }: Options): Promi
 
     return Promise.reject(new Error("given `from` type isn't supported."))
 }
+
+export default lcovParser

@@ -5,10 +5,27 @@ import { List } from './lib/list.js'
 import { generateFieldLookup } from './lib/lookup.js'
 import { FieldNames } from './typings/options.js'
 
+/**
+ * A parsed LCOV field entry. It may be incomplete, check the `done` and `incomplete` fields.
+ */
 export interface ParseResult<V extends Variant = Variant> {
+    /**
+     * Signals that this was the last entry.
+     */
     done: boolean
+    /**
+     * Signals that there wasn't enough data to successfully parse the current buffer
+     * and more data is necessary to parse it successfully.
+     */
     incomplete: boolean
+    /**
+     * A list of string values which were present after the `:` (colon) separator, or `null`
+     * if the current variant shouldn't have values.
+     */
     value: string[] | null
+    /**
+     * Variant fo the current field entry. See `Variant` for more information.
+     */
     variant: V
 }
 
@@ -17,6 +34,11 @@ interface ParseValueResult {
     value: string[]
 }
 
+/**
+ * Parses the given chunks based on the provided `fieldNames`.
+ * Please note that a `write` call doesn't imply any parsing,
+ * call the `read` or `flush` functions to parse the given chunks.
+ */
 export class LcovParser {
     private _buffer: Buffer | null = null
     private _offset: number = 0
@@ -31,10 +53,18 @@ export class LcovParser {
         this._fieldNames = names
     }
 
+    /**
+     * Add the `chunk` to the list of chunks that should be parsed.
+     * @param chunk - A `Buffer` with UTF-8 encoding
+     */
     public write(chunk: Buffer): void {
         this._chunks.insert(chunk)
     }
 
+    /**
+     * Try to parse a result, this may fail if there's no or insufficient data.
+     * Check the `done` and `incomplete` fields for `false` values.
+     */
     public read(): ParseResult {
         if (this._buffer === null) {
             if (this._chunks.size() === 0) {
@@ -61,6 +91,9 @@ export class LcovParser {
         return result
     }
 
+    /**
+     * Try to parse as many results as possible with the currently available chunks.
+     */
     public flush(): ParseResult[] {
         let result = this.read()
         const parseResults: ParseResult[] = [result]
@@ -73,6 +106,9 @@ export class LcovParser {
         return parseResults
     }
 
+    /**
+     * @returns Buffer - If there's a buffer available returns the remaining slice of it, otherwise returns `null`.
+     */
     public getCurrentBuffer(): Buffer | null {
         if (this._buffer) {
             return this._buffer.subarray(this._offset)

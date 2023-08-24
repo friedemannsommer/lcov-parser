@@ -7,3 +7,5 @@ import lcovParser from './promise/index.js'
  * If you want to use a stream instead, consider importing "<package>/stream".
  */
 export default lcovParser
+
+export { lcovParser }
