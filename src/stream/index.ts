@@ -9,7 +9,7 @@ import { StreamOptions } from '../typings/options.js'
 /**
  * A `Transform` stream which accepts `Buffer` chunks as input and outputs `SectionSummary` objects.
  */
-export default class StreamParser extends Transform {
+export class LcovStreamParser extends Transform {
     private readonly _functionMap = new Map<string, number>()
     private _current = createSection()
     private _parser: LcovParser
@@ -35,7 +35,7 @@ export default class StreamParser extends Transform {
             return
         }
 
-        if (!StreamParser.supportedEncoding(encoding)) {
+        if (!LcovStreamParser.supportedEncoding(encoding)) {
             callback(new Error(`received chunk with unsupported encoding (${encoding}).`))
             return
         }
@@ -106,3 +106,5 @@ export default class StreamParser extends Transform {
         return false
     }
 }
+
+export default LcovStreamParser
