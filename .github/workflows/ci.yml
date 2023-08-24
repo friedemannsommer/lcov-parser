@@ -19,7 +19,7 @@ jobs:
       - uses: actions/setup-node@v3
         with:
           cache: 'npm'
-          node-version: 16
+          node-version: 18
       - run: npm ci --no-fund --no-audit
       - name: formatting
         run: npm run fmt
@@ -27,6 +27,12 @@ jobs:
         run: npm run lint
       - name: typescript check
         run: npm run check
+      - name: collect coverage
+        run: npm run coverage
+      - name: upload coverage reports to Codecov
+        uses: codecov/codecov-action@v3
+        env:
+          CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
 
   publish:
     needs:
@@ -38,7 +44,7 @@ jobs:
       - uses: actions/setup-node@v3
         with:
           cache: 'npm'
-          node-version: 16
+          node-version: 18
           registry-url: 'https://registry.npmjs.org'
       - run: npm ci --no-fund --no-audit
       - run: npm run build:dist

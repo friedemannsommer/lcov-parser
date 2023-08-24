@@ -1,0 +1,15 @@
+{
+  "all": true,
+  "clean": true,
+  "exclude": [
+    "src/tests/**/*.ts",
+    "src/**/*.d.ts"
+  ],
+  "include": [
+    "src/**/*.ts"
+  ],
+  "reporter": [
+    "lcovonly",
+    "text"
+  ]
+}
