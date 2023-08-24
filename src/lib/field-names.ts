@@ -1,9 +1,8 @@
 import { FieldNames } from '../typings/options.js'
 
-const defaultFieldNames = fieldNames()
-
-export default defaultFieldNames
-
+/**
+ * @returns FieldNames - an object which contains the default field names
+ */
 export function fieldNames(): FieldNames {
     return {
         branchHit: 'BRH',
@@ -16,8 +15,9 @@ export function fieldNames(): FieldNames {
         functionInstrumented: 'FNF',
         functionLocation: 'FN',
         lineHit: 'LH',
-        lineInstrumented: 'LH',
+        lineInstrumented: 'LF',
         lineLocation: 'DA',
-        testName: 'TN'
+        testName: 'TN',
+        version: 'VER'
     }
 }

@@ -1,29 +1,33 @@
-import { Lcov } from '../typings/file.js'
+import { Readable } from 'node:stream'
+
+import { defaultFieldNames } from '../constants.js'
 import { LcovParser } from '../parser.js'
-import defaultFieldNames from '../lib/field-names.js'
+import { SectionSummary } from '../typings/file.js'
+import { Options } from '../typings/options.js'
+import { transformAsynchronous, transformSynchronous } from './transform.js'
 
-export default function lcovParser(): Promise<Lcov> {
-    const parser = new LcovParser(defaultFieldNames)
+export default function lcovParser({ fieldNames, from, parser }: Options): Promise<SectionSummary[]> {
+    const parserInstance = parser ?? new LcovParser(fieldNames ?? defaultFieldNames)
 
-    parser.write(
-        Buffer.from(`TN:awesome name
-SF:path/to/file.ts
-FN:1,fnName
-FNF:1
-FNH:1
-FNDA:3,fnName
-DA:1,1
-DA:2,3
-DA:3,3
-LF:3 # for some (currently) unknown reason this will be "skipped"
-LH:3
-BRDA:1,0,0,3
-BRF:1
-BRH:1
-end_of_record`)
-    )
+    if (from instanceof Readable) {
+        return transformAsynchronous(parserInstance, from)
+    }
 
-    console.log(parser.flush())
+    if (typeof from === 'string' || from instanceof ArrayBuffer) {
+        parserInstance.write(Buffer.from(from as ArrayBuffer))
 
-    return Promise.reject()
+        return new Promise((res): void => {
+            res(transformSynchronous(parserInstance.flush()))
+        })
+    }
+
+    if (Buffer.isBuffer(from)) {
+        parserInstance.write(from)
+
+        return new Promise((res): void => {
+            res(transformSynchronous(parserInstance.flush()))
+        })
+    }
+
+    return Promise.reject(new Error("given `from` type isn't supported."))
 }

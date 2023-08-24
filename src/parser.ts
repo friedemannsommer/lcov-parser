@@ -1,18 +1,19 @@
-import { List } from './lib/list.js'
-import { FieldNames } from './typings/options.js'
-import { generateFieldLookup } from './lib/lookup.js'
-import ByteMatch from './lib/byte-match.js'
 import { Variant } from './constants.js'
+import ByteMatch from './lib/byte-match.js'
+import { isNonEmptyField } from './lib/field-variant.js'
+import { List } from './lib/list.js'
+import { generateFieldLookup } from './lib/lookup.js'
+import { FieldNames } from './typings/options.js'
 
-export interface ParseResult {
+export interface ParseResult<V extends Variant = Variant> {
     done: boolean
     incomplete: boolean
     value: string[] | null
-    variant: Variant
+    variant: V
 }
 
 interface ParseValueResult {
-    index: number
+    lastIndex: number
     value: string[]
 }
 
@@ -37,22 +38,17 @@ export class LcovParser {
     public read(): ParseResult {
         if (this._buffer === null) {
             if (this._chunks.size() === 0) {
-                return {
-                    done: true,
-                    incomplete: false,
-                    value: null,
-                    variant: Variant.None
-                }
+                return LcovParser._defaultResult(true, false)
             }
 
             this._buffer = this._chunks.remove()
         } else if (this._offset >= this._buffer.byteLength) {
-            return {
-                done: true,
-                incomplete: false,
-                value: null,
-                variant: Variant.None
+            if (this._chunks.size() === 0) {
+                return LcovParser._defaultResult(true, false)
             }
+
+            this._buffer = this._chunks.remove()
+            this._offset = 0
         }
 
         let result = this._parseResult(this._buffer!)
@@ -69,7 +65,7 @@ export class LcovParser {
         let result = this.read()
         const parseResults: ParseResult[] = [result]
 
-        while (!result.done) {
+        while (!result.done && !result.incomplete) {
             result = this.read()
             parseResults.push(result)
         }
@@ -77,51 +73,64 @@ export class LcovParser {
         return parseResults
     }
 
+    public getCurrentBuffer(): Buffer | null {
+        if (this._buffer) {
+            return this._buffer.subarray(this._offset)
+        }
+
+        return null
+    }
+
     private _parseResult(buf: Buffer): ParseResult {
         const length = buf.byteLength
 
         for (let byteIndex = this._offset; byteIndex < length; byteIndex++) {
-            const byte = buf[byteIndex]
+            const field = this._matchFields(buf, byteIndex, length)
 
-            for (let nameIndex = 0; nameIndex < this._fieldNames.length; nameIndex++) {
-                const matcher = this._fieldNames[nameIndex]
+            if (field !== null) {
+                return field
+            }
+        }
 
-                if (matcher.compare(byte) && matcher.matched()) {
-                    const variant = this._variants[nameIndex]
-                    const nonEmptyField = variant !== Variant.EndOfRecord
+        return LcovParser._defaultResult(false, true)
+    }
 
-                    if (nonEmptyField && byteIndex + 1 < length && buf[byteIndex + 1] !== 58 /* ':' (colon) */) {
-                        continue
-                    }
+    private _matchFields(buf: Buffer, byteIndex: number, length: number): ParseResult | null {
+        const byte = buf[byteIndex]
 
-                    const result = nonEmptyField ? LcovParser._parseValue(buf, byteIndex + 1) : null
-                    let value = null
+        for (let nameIndex = 0; nameIndex < this._fieldNames.length; nameIndex++) {
+            const matcher = this._fieldNames[nameIndex]
 
-                    if (result !== null) {
-                        this._offset = result.index + 1
-                        value = result.value
-                    } else if (!nonEmptyField) {
-                        this._offset += matcher.size
-                    }
+            if (matcher.compare(byte) && matcher.matched()) {
+                const variant = this._variants[nameIndex]
+                const nonEmptyField = isNonEmptyField(variant)
 
-                    this._resetMatcher()
+                if (nonEmptyField && byteIndex + 1 < length && buf[byteIndex + 1] !== 58 /* ':' (colon) */) {
+                    continue
+                }
 
-                    return {
-                        done: false,
-                        value,
-                        variant,
-                        incomplete: nonEmptyField && result === null
-                    }
+                const result = nonEmptyField ? this._parseValue(buf, byteIndex + 1) : null
+                let value = null
+
+                if (result !== null) {
+                    this._offset = result.lastIndex + 1
+                    value = result.value
+                } else if (!nonEmptyField) {
+                    this._offset += matcher.size
+                }
+
+                this._resetMatcher()
+
+                return {
+                    done: false,
+                    incomplete: nonEmptyField && result === null,
+                    value,
+                    variant
                 }
             }
         }
 
-        return {
-            done: false,
-            incomplete: true,
-            value: null,
-            variant: Variant.None
-        }
+        return null
     }
 
     private _resetMatcher(): void {
@@ -130,10 +139,11 @@ export class LcovParser {
         }
     }
 
-    private static _parseValue(buf: Buffer, offset: number): ParseValueResult | null {
+    private _parseValue(buf: Buffer, offset: number): ParseValueResult | null {
+        const length = buf.byteLength
         let start = -1
 
-        for (let index = offset; index < buf.byteLength; index++) {
+        for (let index = offset; index < length; index++) {
             switch (buf[index]) {
                 case 58 /* ':' (colon) */:
                     start = index + 1
@@ -144,7 +154,7 @@ export class LcovParser {
                     }
 
                     return {
-                        index,
+                        lastIndex: index,
                         value: LcovParser._parseSlice(buf, start, index)
                     }
             }
@@ -167,5 +177,14 @@ export class LcovParser {
         values.push(buf.subarray(offset, end).toString())
 
         return values
+    }
+
+    private static _defaultResult(done: boolean, incomplete: boolean): ParseResult {
+        return {
+            done,
+            incomplete,
+            value: null,
+            variant: Variant.None
+        }
     }
 }

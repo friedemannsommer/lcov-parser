@@ -1,14 +1,10 @@
-export interface Lcov {
-    branches: BranchEntry[]
-    functions: FunctionEntry[]
-    lines: LineEntry[]
-    summaries: SectionSummary[]
-}
-
 export interface SectionSummary {
-    branch: Summary
-    function: Summary
-    line: Summary
+    branchSummary: Summary
+    branches: BranchEntry[]
+    functionSummary: Summary
+    functions: FunctionEntry[]
+    lineSummary: Summary
+    lines: LineEntry[]
     name: string
     path: string
 }
@@ -29,5 +25,6 @@ export interface FunctionEntry extends LineEntry {
 
 export interface BranchEntry extends LineEntry {
     blockNumber: number
-    branch: number
+    expression: string
+    isException: boolean
 }

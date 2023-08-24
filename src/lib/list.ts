@@ -5,33 +5,50 @@ export interface ListNode<T> {
 
 export class List<T> {
     private _tail: ListNode<T> | null = null
+    private _head: ListNode<T> | null = null
     private _size: number = 0
 
     public insert(value: T): void {
+        const lastNode = this._tail
+        const firstNode = this._head
         const node: ListNode<T> = {
             next: null,
             value
         }
 
-        this._tail = this._tail ? (this._tail.next = node) : node
+        if (lastNode !== null) {
+            lastNode.next = node
+        }
+
+        if (firstNode === null) {
+            this._head = node
+        } else if (firstNode.next === null) {
+            firstNode.next = node
+        }
+
+        this._tail = node
         this._size++
     }
 
     public remove(): T | null {
-        const node = this._tail
+        const firstNode = this._head
 
-        if (node) {
-            this._tail = node.next
+        if (firstNode !== null) {
+            this._head = firstNode.next
             this._size--
 
-            return node.value
+            if (this._tail === firstNode) {
+                this._tail = null
+            }
+
+            return firstNode.value
         }
 
         return null
     }
 
     public peek(): T | null {
-        return this._tail ? this._tail.value : null
+        return this._head !== null ? this._head.value : null
     }
 
     public size(): number {

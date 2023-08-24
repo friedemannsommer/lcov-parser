@@ -1,6 +1,7 @@
 /**
  * source: https://stackoverflow.com/a/18729931
  * @param val - string to be encoded into bytes
+ * @returns Array<number> - UTF-8 bytes
  */
 export function encode(val: string): number[] {
     const bytes = []

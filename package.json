@@ -3,18 +3,35 @@
   "bugs": {
     "url": "https://github.com/friedemannsommer/lcov-parser/issues"
   },
+  "dependencies": {
+    "tslib": "2.6.2"
+  },
   "description": "A LCOV file parser.",
   "devDependencies": {
     "@mxssfd/typedoc-theme": "1.1.2",
+    "@trivago/prettier-plugin-sort-imports": "4.2.0",
+    "@types/chai": "4.3.5",
+    "@types/mocha": "10.0.1",
     "@types/node": "18.17.8",
     "@typescript-eslint/eslint-plugin": "6.4.1",
     "@typescript-eslint/parser": "6.4.1",
+    "chai": "4.3.7",
     "eslint": "8.47.0",
     "eslint-plugin-tsdoc": "0.2.17",
+    "mocha": "10.2.0",
     "prettier": "3.0.2",
+    "ts-node": "10.9.1",
     "typedoc": "0.24.8",
     "typedoc-plugin-mdn-links": "3.0.3",
     "typescript": "5.1.6"
+  },
+  "exports": {
+    ".": "./dist/index.js",
+    "./constants": "./dist/constants.js",
+    "./lib/field-variant": "./dist/lib/field-variant.js",
+    "./parser": "./dist/parser.js",
+    "./promise": "./dist/promise/index.js",
+    "./stream": "./dist/stream/index.js"
   },
   "files": [
     "dist/*"
@@ -26,7 +43,7 @@
     "parser"
   ],
   "license": "MIT",
-  "main": "dist/index.js",
+  "main": "./dist/index.js",
   "name": "@friedemannsommer/lcov-parser",
   "repository": {
     "type": "git",

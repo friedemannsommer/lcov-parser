@@ -1,3 +1,5 @@
+import { fieldNames } from './lib/field-names.js'
+
 export const enum Variant {
     None,
     BranchHit,
@@ -12,5 +14,8 @@ export const enum Variant {
     LineHit,
     LineInstrumented,
     LineLocation,
-    TestName
+    TestName,
+    Version
 }
+
+export const defaultFieldNames = Object.freeze(fieldNames())

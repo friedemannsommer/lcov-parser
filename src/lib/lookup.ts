@@ -1,7 +1,7 @@
-import { FieldNames } from '../typings/options.js'
-import { encode } from './utf-8.js'
-import ByteMatch from './byte-match.js'
 import { Variant } from '../constants.js'
+import { FieldNames } from '../typings/options.js'
+import ByteMatch from './byte-match.js'
+import { encode } from './utf-8.js'
 
 export type LookupResult = [Variant[], ByteMatch[]]
 
@@ -9,13 +9,12 @@ export function generateFieldLookup(fieldNameMap: FieldNames): LookupResult {
     const fieldNames = Object.keys(fieldNameMap) as Array<keyof FieldNames>
     const names = mapFieldNames(fieldNames)
     const values = Array<ByteMatch>(names.length)
-    const lookup: LookupResult = [names, values]
 
     for (let index = 0; index < names.length; index++) {
         values[index] = new ByteMatch(encode(fieldNameMap[fieldNames[index]]))
     }
 
-    return lookup
+    return sortFieldNames(names, values)
 }
 
 export function mapFieldNames(fieldNames: Array<keyof FieldNames>): Variant[] {
@@ -28,7 +27,23 @@ export function mapFieldNames(fieldNames: Array<keyof FieldNames>): Variant[] {
     return variants
 }
 
-function mapFieldName(fieldName: keyof FieldNames): Variant {
+export function sortFieldNames(names: Variant[], values: ByteMatch[]): LookupResult {
+    const indexMap = new Map<ByteMatch, number>()
+    const sortedValues = values.slice().sort((a: ByteMatch, b: ByteMatch): number => (a.size > b.size ? -1 : 1))
+    const sortedNames = Array<Variant>(names.length)
+
+    for (let index = 0; index < sortedValues.length; index++) {
+        indexMap.set(sortedValues[index], index)
+    }
+
+    for (let index = 0; index < names.length; index++) {
+        sortedNames[indexMap.get(values[index])!] = names[index]
+    }
+
+    return [sortedNames, sortedValues]
+}
+
+export function mapFieldName(fieldName: keyof FieldNames): Variant {
     switch (fieldName) {
         case 'branchHit':
             return Variant.BranchHit
@@ -56,5 +71,7 @@ function mapFieldName(fieldName: keyof FieldNames): Variant {
             return Variant.LineLocation
         case 'testName':
             return Variant.TestName
+        case 'version':
+            return Variant.Version
     }
 }

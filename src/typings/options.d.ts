@@ -1,7 +1,11 @@
-import type { Duplex, Readable, Stream, Writable } from 'node:stream'
+import type { Readable } from 'node:stream'
+
+import { LcovParser } from '../parser.js'
 
 export interface Options {
-    from?: string | Stream | Readable | Writable | Duplex | Buffer | ArrayBuffer
+    fieldNames?: FieldNames
+    from: string | Readable | Buffer | ArrayBuffer
+    parser?: LcovParser
 }
 
 export interface FieldNames {
@@ -18,4 +22,5 @@ export interface FieldNames {
     lineInstrumented: string
     lineLocation: string
     testName: string
+    version: string
 }
