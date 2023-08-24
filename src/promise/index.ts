@@ -6,6 +6,13 @@ import { SectionSummary } from '../typings/file.js'
 import { Options } from '../typings/options.js'
 import { transformAsynchronous, transformSynchronous } from './transform.js'
 
+/**
+ * Tries to parse the given input (passed by `from`) into one or multiple sections.
+ *
+ * @param fieldNames - Field names to use while parsing. These will only be used if `parser` is not present.
+ * @param from - The source from which the parser should read.
+ * @param parser - A parser instance, which should be used instead of creating a new one.
+ */
 export default function lcovParser({ fieldNames, from, parser }: Options): Promise<SectionSummary[]> {
     const parserInstance = parser ?? new LcovParser(fieldNames ?? defaultFieldNames)
 

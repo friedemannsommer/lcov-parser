@@ -1,6 +1,9 @@
 import { fieldNames } from './lib/field-names.js'
 
-export const enum Variant {
+/**
+ * Field entry variants
+ */
+export enum Variant {
     None,
     BranchHit,
     BranchInstrumented,
@@ -18,4 +21,7 @@ export const enum Variant {
     Version
 }
 
+/**
+ * The default names as specified in the "linux-test-project/lcov/geninfo" description
+ */
 export const defaultFieldNames = Object.freeze(fieldNames())

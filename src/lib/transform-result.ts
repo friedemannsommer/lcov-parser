@@ -100,12 +100,14 @@ export function transformBranchLocation(result: ParseResult<Variant.BranchLocati
     let taken = 0
 
     if (result.value !== null && result.value.length >= 4) {
+        const branchTaken = result.value[result.value.length - 1]
+
         lineNumber = parseInteger(result.value[0])
         isException = result.value[1].startsWith('e')
         block = parseInteger(isException ? result.value[1].slice(1) : result.value[1])
         // if the expression contained "," (semicolon) add them back by joining the possibly related values
         expression = result.value.slice(2, -1).join(',')
-        taken = parseInteger(result.value[result.value.length - 1])
+        taken = branchTaken === '-' ? 0 : parseInteger(branchTaken)
     }
 
     return {
