@@ -24,7 +24,7 @@ const variants: Variant[] = [
 describe('field variant - isEmptyField', (): void => {
     for (const variant of variants) {
         it(`should correctly identify variant "${Variant[variant]}"`, (): void => {
-            expect(isEmptyField(variant)).to.eq(variant === Variant.EndOfRecord)
+            expect(isEmptyField(variant)).to.eq(variant === Variant.EndOfRecord || variant === Variant.None)
         })
     }
 })
@@ -32,7 +32,7 @@ describe('field variant - isEmptyField', (): void => {
 describe('field variant - isNonEmptyField', (): void => {
     for (const variant of variants) {
         it(`should correctly identify variant "${Variant[variant]}"`, (): void => {
-            expect(isNonEmptyField(variant)).to.eq(variant !== Variant.EndOfRecord)
+            expect(isNonEmptyField(variant)).to.eq(variant !== Variant.EndOfRecord && variant !== Variant.None)
         })
     }
 })

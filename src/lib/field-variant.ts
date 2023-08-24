@@ -5,7 +5,7 @@ import { Variant } from '../constants.js'
  * @param variant - Field entry variant
  */
 export function isEmptyField(variant: Variant): variant is Variant.EndOfRecord {
-    return variant === Variant.EndOfRecord
+    return variant === Variant.EndOfRecord || variant === Variant.None
 }
 
 /**
