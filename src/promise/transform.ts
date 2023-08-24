@@ -1,7 +1,7 @@
 import { Readable } from 'node:stream'
 
-import transformResult from '../lib/transform-result.js'
 import { updateResult } from '../lib/handle-result.js'
+import transformResult from '../lib/transform-result.js'
 import { LcovParser, ParseResult } from '../parser.js'
 import { SectionSummary } from '../typings/file.js'
 

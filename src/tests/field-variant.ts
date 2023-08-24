@@ -1,7 +1,7 @@
 import { expect } from 'chai'
 
 import { Variant } from '../constants.js'
-import {isEmptyField, isNonEmptyField} from '../lib/field-variant.js'
+import { isEmptyField, isNonEmptyField } from '../lib/field-variant.js'
 
 const variants: Variant[] = [
     Variant.None,
