@@ -318,7 +318,7 @@ describe('transformBranchLocation', (): void => {
                 block: 2,
                 done: false,
                 expression: 'expr,with,comma',
-                isException: true,
+                isException: false,
                 lineNumber: 1,
                 taken: 3,
                 variant: Variant.BranchLocation
