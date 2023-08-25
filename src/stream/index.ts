@@ -1,7 +1,7 @@
 import { Transform, TransformCallback } from 'node:stream'
 
 import { defaultFieldNames } from '../constants.js'
-import { createSection, handleResult } from '../lib/handle-result.js'
+import { createSection, FunctionMap, handleResult } from '../lib/handle-result.js'
 import transformResult from '../lib/transform-result.js'
 import { LcovParser } from '../parser.js'
 import { StreamOptions } from '../typings/options.js'
@@ -11,7 +11,7 @@ import { StreamOptions } from '../typings/options.js'
  * stream which accepts `Buffer` chunks as input and outputs {@link SectionSummary} objects.
  */
 export class LcovStreamParser extends Transform {
-    private readonly _functionMap = new Map<string, number>()
+    private readonly _functionMap: FunctionMap = new Map()
     private _current = createSection()
     private _parser: LcovParser
 

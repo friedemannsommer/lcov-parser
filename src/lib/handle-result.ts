@@ -11,7 +11,7 @@ import {
 } from '../typings/entry.js'
 import { BranchEntry, FunctionEntry, LineEntry, SectionSummary, Summary } from '../typings/file.js'
 
-type FunctionMap = Map<string, number>
+export type FunctionMap = Map<string, FunctionEntry>
 
 export function handleResult(entry: EntryVariants, functionMap: FunctionMap, section: SectionSummary): boolean {
     switch (entry.variant) {
@@ -103,15 +103,17 @@ function createUpdateFunctionSummary(
     functions: FunctionEntry[],
     entry: FunctionLocationEntry | FunctionExecutionEntry
 ): void {
-    const index = functionMap.get(entry.name)
+    const functionSummary = functionMap.get(entry.name)
 
-    if (index === undefined) {
-        functionMap.set(entry.name, functions.length)
-        functions.push(createFunctionSummary(entry))
+    if (functionSummary === undefined) {
+        const summary = createFunctionSummary(entry)
+
+        functionMap.set(entry.name, summary)
+        functions.push(summary)
     } else if (entry.variant === Variant.FunctionExecution) {
-        functions[index].hitCount = entry.called
+        functionSummary.hitCount = entry.called
     } else {
-        functions[index].lineNumber = entry.lineNumberStart
+        functionSummary.lineNumber = entry.lineNumberStart
     }
 }
 
