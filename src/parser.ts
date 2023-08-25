@@ -10,7 +10,7 @@ import { FieldNames } from './typings/options.js'
  */
 export interface ParseResult<V extends Variant = Variant> {
     /**
-     * Signals that this was the last entry.
+     * Signals that this is the last entry.
      */
     done: boolean
     /**

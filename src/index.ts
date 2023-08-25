@@ -1,5 +1,7 @@
 import lcovParser from './promise/index.js'
 
+export { BranchEntry, LineEntry, SectionSummary, Summary, FunctionEntry } from './typings/file.js'
+
 /**
  * An asynchronous LCOV parser, which will return a `Promise` with the parsed sections.
  * This is simply an alias for "<package>/promise".
