@@ -3,7 +3,7 @@
   "clean": true,
   "exclude": [
     "src/tests/**/*.ts",
-    "src/typings/**/*.d.ts"
+    "src/typings/**/*.ts"
   ],
   "include": [
     "src/**/*.ts"
