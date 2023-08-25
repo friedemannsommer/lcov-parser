@@ -35,4 +35,8 @@ describe('UTF-8 encode', (): void => {
             46
         ])
     })
+
+    it('should correctly encode "🏳️‍🌈"', (): void => {
+        expect(encode('🏳️‍🌈')).to.eql([240, 159, 143, 179, 239, 184, 143, 226, 128, 141, 240, 159, 140, 136])
+    })
 })
