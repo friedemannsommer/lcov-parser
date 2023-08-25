@@ -1,9 +1,8 @@
 import { FieldNames } from '../typings/options.js'
 
 /**
- * @returns FieldNames - an object which contains the default field names that are specified in [linux-test-project/lcov/geninfo][1]
- *
- * [1]: https://github.com/linux-test-project/lcov/blob/3decc12ab1e7b34d2860393e2f40f0e1057d5c16/man/geninfo.1#L989-L1171
+ * @returns - An object which contains the default field names
+ * that are specified in [linux-test-project/lcov/geninfo](https://github.com/linux-test-project/lcov/blob/3decc12ab1e7b34d2860393e2f40f0e1057d5c16/man/geninfo.1#L989-L1171).
  */
 export function fieldNames(): FieldNames {
     return {

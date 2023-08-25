@@ -7,9 +7,9 @@ import { Options } from '../typings/options.js'
 import { transformAsynchronous, transformSynchronous } from './transform.js'
 
 /**
- * Tries to parse the given input (passed by `from`) into one or multiple sections.
+ * Tries to parse the given input (passed by {@link Options#from}) into one or multiple sections.
  *
- * @param options - Parse options must include the `from` field.
+ * @param options - The parse options must include the {@link Options#from} field.
  */
 export function lcovParser(options: Options): Promise<SectionSummary[]> {
     const { fieldNames, from, parser } = options

@@ -5,7 +5,7 @@ import { fieldNames } from './lib/field-names.js'
  */
 export enum Variant {
     /**
-     * Used for {@link parser.ParseResult | incomplete} and {@link parser.ParseResult | done} results.
+     * Used for {@link ParseResult#incomplete} and {@link ParseResult#done} results.
      */
     None,
     /**
@@ -67,8 +67,7 @@ export enum Variant {
 }
 
 /**
- * The default names as specified in the [linux-test-project/lcov/geninfo][1] description.
- *
- * [1]: https://github.com/linux-test-project/lcov/blob/3decc12ab1e7b34d2860393e2f40f0e1057d5c16/man/geninfo.1#L989-L1171
+ * The default names as specified in the [linux-test-project/lcov/geninfo](https://github.com/linux-test-project/lcov/blob/3decc12ab1e7b34d2860393e2f40f0e1057d5c16/man/geninfo.1#L989-L1171)
+ * description.
  */
 export const defaultFieldNames = Object.freeze(fieldNames())
