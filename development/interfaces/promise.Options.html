@@ -34,7 +34,7 @@
 <ul class="tsd-hierarchy">
 <li><span class="target">Options</span></li></ul></section><aside class="tsd-sources">
 <ul>
-<li>Defined in <a href="https://github.com/friedemannsommer/lcov-parser/blob/00fba0e/src/typings/options.ts#L5">src/typings/options.ts:5</a></li></ul></aside>
+<li>Defined in <a href="https://github.com/friedemannsommer/lcov-parser/blob/1b4e3d6/src/typings/options.ts#L5">src/typings/options.ts:5</a></li></ul></aside>
 <section class="tsd-panel-group tsd-index-group">
 <section class="tsd-panel tsd-index-panel">
 <details class="tsd-index-content tsd-index-accordion" open><summary class="tsd-accordion-summary tsd-index-summary">
@@ -50,19 +50,29 @@
 <h2>Properties</h2>
 <section class="tsd-panel tsd-member"><a id="fieldNames" class="tsd-anchor"></a>
 <h3 class="tsd-anchor-link"><code class="tsd-tag ts-flagOptional">Optional</code> <span>field<wbr/>Names</span><a href="#fieldNames" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24"><g stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round" id="icon-anchor"><path stroke="none" d="M0 0h24v24H0z" fill="none"></path><path d="M10 14a3.5 3.5 0 0 0 5 0l4 -4a3.5 3.5 0 0 0 -5 -5l-.5 .5"></path><path d="M14 10a3.5 3.5 0 0 0 -5 0l-4 4a3.5 3.5 0 0 0 5 5l.5 -.5"></path></g></svg></a></h3>
-<div class="tsd-signature"><span class="tsd-kind-property">field<wbr/>Names</span><span class="tsd-signature-symbol">?:</span> <a href="index.FieldNames.html" class="tsd-signature-type tsd-kind-interface">FieldNames</a></div><aside class="tsd-sources">
+<div class="tsd-signature"><span class="tsd-kind-property">field<wbr/>Names</span><span class="tsd-signature-symbol">?:</span> <a href="index.FieldNames.html" class="tsd-signature-type tsd-kind-interface">FieldNames</a></div>
+<div class="tsd-comment tsd-typography"><p>The field names to use for parsing. These will only be used if <a href="promise.Options.html#parser" class="tsd-kind-property">parser</a> is not present.</p>
+</div>
+<div class="tsd-comment tsd-typography"></div><aside class="tsd-sources">
 <ul>
-<li>Defined in <a href="https://github.com/friedemannsommer/lcov-parser/blob/00fba0e/src/typings/options.ts#L6">src/typings/options.ts:6</a></li></ul></aside></section>
+<li>Defined in <a href="https://github.com/friedemannsommer/lcov-parser/blob/1b4e3d6/src/typings/options.ts#L9">src/typings/options.ts:9</a></li></ul></aside></section>
 <section class="tsd-panel tsd-member"><a id="from" class="tsd-anchor"></a>
 <h3 class="tsd-anchor-link"><span>from</span><a href="#from" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24"><use href="#icon-anchor"></use></svg></a></h3>
-<div class="tsd-signature"><span class="tsd-kind-property">from</span><span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">string</span><span class="tsd-signature-symbol"> | </span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/ArrayBuffer" class="tsd-signature-type external" target="_blank">ArrayBuffer</a><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type ">Buffer</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type ">Readable</span></div><aside class="tsd-sources">
+<div class="tsd-signature"><span class="tsd-kind-property">from</span><span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">string</span><span class="tsd-signature-symbol"> | </span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/ArrayBuffer" class="tsd-signature-type external" target="_blank">ArrayBuffer</a><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type ">Buffer</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type ">Readable</span></div>
+<div class="tsd-comment tsd-typography"><p>Input source to read from.
+This can be a <code>string</code>, <a href="https://nodejs.org/api/stream.html#readable-streams">Readable</a>, <code>Buffer</code>, or <code>ArrayBuffer</code>.</p>
+</div>
+<div class="tsd-comment tsd-typography"></div><aside class="tsd-sources">
 <ul>
-<li>Defined in <a href="https://github.com/friedemannsommer/lcov-parser/blob/00fba0e/src/typings/options.ts#L7">src/typings/options.ts:7</a></li></ul></aside></section>
+<li>Defined in <a href="https://github.com/friedemannsommer/lcov-parser/blob/1b4e3d6/src/typings/options.ts#L14">src/typings/options.ts:14</a></li></ul></aside></section>
 <section class="tsd-panel tsd-member"><a id="parser" class="tsd-anchor"></a>
 <h3 class="tsd-anchor-link"><code class="tsd-tag ts-flagOptional">Optional</code> <span>parser</span><a href="#parser" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24"><use href="#icon-anchor"></use></svg></a></h3>
-<div class="tsd-signature"><span class="tsd-kind-property">parser</span><span class="tsd-signature-symbol">?:</span> <a href="../classes/parser.LcovParser.html" class="tsd-signature-type tsd-kind-class">LcovParser</a></div><aside class="tsd-sources">
+<div class="tsd-signature"><span class="tsd-kind-property">parser</span><span class="tsd-signature-symbol">?:</span> <a href="../classes/parser.LcovParser.html" class="tsd-signature-type tsd-kind-class">LcovParser</a></div>
+<div class="tsd-comment tsd-typography"><p>A parser instance that should be used for parsing, instead of creating a new one internally.</p>
+</div>
+<div class="tsd-comment tsd-typography"></div><aside class="tsd-sources">
 <ul>
-<li>Defined in <a href="https://github.com/friedemannsommer/lcov-parser/blob/00fba0e/src/typings/options.ts#L8">src/typings/options.ts:8</a></li></ul></aside></section></section></div>
+<li>Defined in <a href="https://github.com/friedemannsommer/lcov-parser/blob/1b4e3d6/src/typings/options.ts#L18">src/typings/options.ts:18</a></li></ul></aside></section></section></div>
 <div class="col-sidebar">
 <div class="page-menu">
 <details open class="tsd-index-accordion tsd-page-navigation"><summary class="tsd-accordion-summary">
