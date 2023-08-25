@@ -7,7 +7,8 @@ import { LcovParser } from '../parser.js'
 import { StreamOptions } from '../typings/options.js'
 
 /**
- * A `Transform` stream which accepts `Buffer` chunks as input and outputs `SectionSummary` objects.
+ * A [Transform](https://nodejs.org/api/stream.html#class-streamtransform)
+ * stream which accepts `Buffer` chunks as input and outputs {@link SectionSummary} objects.
  */
 export class LcovStreamParser extends Transform {
     private readonly _functionMap = new Map<string, number>()
