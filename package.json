@@ -26,6 +26,9 @@
     "typedoc-plugin-mdn-links": "3.0.3",
     "typescript": "5.1.6"
   },
+  "engines": {
+    "node": ">=16"
+  },
   "exports": {
     ".": "./dist/index.js",
     "./constants": "./dist/constants.js",
