@@ -27,7 +27,7 @@ npm i -DE @friedemannsommer/lcov-parser
 
 ## Basic usage
 
-`string` data
+[`string`][string-glossary] data
 
 ```typescript
 import lcovParser from "@friedemannsommer/lcov-parser"
@@ -35,7 +35,7 @@ import lcovParser from "@friedemannsommer/lcov-parser"
 const sections = await lcovParser({from: "<LCOV data>"})
 ```
 
-`Buffer` / `ArrayBuffer`
+[`Buffer`][buffer-docs] / [`ArrayBuffer`][array-buffer-docs]
 
 ```typescript
 import lcovParser from "@friedemannsommer/lcov-parser"
@@ -43,7 +43,7 @@ import lcovParser from "@friedemannsommer/lcov-parser"
 const sections = await lcovParser({from: Buffer.from("<LCOV data>")})
 ```
 
-[`Readable`][readable] streams
+[`Readable`][readable-docs] streams
 
 ```typescript
 import lcovParser from "@friedemannsommer/lcov-parser"
@@ -56,10 +56,16 @@ const sections = await lcovParser({from: lcovFile})
 For more details, take a look at the documentation,
 which can be found here: [friedemannsommer.github.io/lcov-parser][package-docs].
 
+[array-buffer-docs]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/ArrayBuffer
+
+[buffer-docs]: https://nodejs.org/api/buffer.html#class-buffer
+
 [lcov-format]: https://github.com/linux-test-project/lcov/blob/3decc12ab1e7b34d2860393e2f40f0e1057d5c16/man/geninfo.1#L989-L1171
 
 [npm]: https://www.npmjs.com/package/@friedemannsommer/lcov-parser
 
-[readable]: https://nodejs.org/api/stream.html#readable-streams
-
 [package-docs]: https://friedemannsommer.github.io/lcov-parser/
+
+[readable-docs]: https://nodejs.org/api/stream.html#readable-streams
+
+[string-glossary]: https://developer.mozilla.org/en-US/docs/Glossary/String
