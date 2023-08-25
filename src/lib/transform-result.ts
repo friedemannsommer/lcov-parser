@@ -16,8 +16,8 @@ import {
 } from '../typings/entry.js'
 import { parseInteger } from './parse.js'
 
-type ParseResultHit = ParseResult<Variant.BranchHit | Variant.FunctionHit | Variant.LineHit>
-type ParseResultInstrumented = ParseResult<
+export type ParseResultHit = ParseResult<Variant.BranchHit | Variant.FunctionHit | Variant.LineHit>
+export type ParseResultInstrumented = ParseResult<
     Variant.BranchInstrumented | Variant.FunctionInstrumented | Variant.LineInstrumented
 >
 
