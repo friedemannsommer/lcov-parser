@@ -110,7 +110,7 @@ export class LcovParser {
      * @returns Buffer - If there's a buffer available returns the remaining slice of it, otherwise returns `null`.
      */
     public getCurrentBuffer(): Buffer | null {
-        if (this._buffer) {
+        if (this._buffer && this._offset < this._buffer.byteLength) {
             return this._buffer.subarray(this._offset)
         }
 
@@ -204,7 +204,7 @@ export class LcovParser {
         let offset = start
 
         for (let index = start; index < end; index++) {
-            if (buf[index] === 44) {
+            if (buf[index] === 44 /* ',' (comma) */) {
                 values.push(buf.subarray(offset, index).toString())
                 offset = index + 1
             }
