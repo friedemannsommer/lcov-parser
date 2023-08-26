@@ -10,7 +10,6 @@ export class List<T> {
 
     public insert(value: T): void {
         const lastNode = this._tail
-        const firstNode = this._head
         const node: ListNode<T> = {
             next: null,
             value
@@ -20,10 +19,8 @@ export class List<T> {
             lastNode.next = node
         }
 
-        if (firstNode === null) {
+        if (this._head === null) {
             this._head = node
-        } else if (firstNode.next === null) {
-            firstNode.next = node
         }
 
         this._tail = node
