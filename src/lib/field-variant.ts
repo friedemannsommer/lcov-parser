@@ -1,7 +1,7 @@
 import { Variant } from '../constants.js'
 
 /**
- * Checks if the given {@link Variant} doesn't have value.
+ * Checks if the given {@link Variant} doesn't have a value.
  *
  * @param variant - The field entry variant to check.
  */
