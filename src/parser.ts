@@ -25,7 +25,7 @@ export interface ParseResult<V extends Variant = Variant> {
      */
     value: string[] | null
     /**
-     * Variant fo the current field entry. See `Variant` for more information.
+     * Variant fo the current field entry. See {@link Variant} for more information.
      */
     variant: V
 }
