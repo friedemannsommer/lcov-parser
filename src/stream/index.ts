@@ -11,8 +11,17 @@ import { StreamOptions } from '../typings/options.js'
  * stream which accepts `Buffer` chunks as input and outputs {@link SectionSummary} objects.
  */
 export class LcovStreamParser extends Transform {
+    /**
+     * @internal
+     */
     private readonly _functionMap: FunctionMap = new Map()
+    /**
+     * @internal
+     */
     private _current = createSection()
+    /**
+     * @internal
+     */
     private _parser: LcovParser
 
     public constructor(options?: StreamOptions) {
@@ -91,6 +100,9 @@ export class LcovStreamParser extends Transform {
         )
     }
 
+    /**
+     * @internal
+     */
     private _processResults(results = this._parser.flush()): boolean {
         for (const result of results) {
             if (result.incomplete) {

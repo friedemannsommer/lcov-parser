@@ -6,7 +6,8 @@ import { generateFieldLookup } from './lib/lookup.js'
 import { FieldNames } from './typings/options.js'
 
 /**
- * A parsed LCOV field entry. It may be incomplete, check the `done` and `incomplete` fields.
+ * A parsed LCOV field entry.
+ * It may be incomplete, check the {@link ParseResult#done} and {@link ParseResult#incomplete} fields.
  */
 export interface ParseResult<V extends Variant = Variant> {
     /**
@@ -35,15 +36,30 @@ interface ParseValueResult {
 }
 
 /**
- * Parses the given chunks based on the provided `fieldNames`.
- * Please note that a `write` call doesn't imply any parsing,
- * call the `read` or `flush` functions to parse the given chunks.
+ * Parses the given chunks based on the provided {@link FieldNames}.
+ * Please note that a {@link LcovParser#write} call doesn't imply any parsing,
+ * call the {@link LcovParser#read} or {@link LcovParser#flush} functions to parse the given chunks.
  */
 export class LcovParser {
+    /**
+     * @internal
+     */
     private _buffer: Buffer | null = null
+    /**
+     * @internal
+     */
     private _offset: number = 0
+    /**
+     * @internal
+     */
     private readonly _chunks = new List<Buffer>()
+    /**
+     * @internal
+     */
     private readonly _variants: Variant[]
+    /**
+     * @internal
+     */
     private readonly _fieldNames: ByteMatch[]
 
     public constructor(fieldNames: FieldNames) {
@@ -117,6 +133,9 @@ export class LcovParser {
         return null
     }
 
+    /**
+     * @internal
+     */
     private _parseResult(buf: Buffer): ParseResult {
         const length = buf.byteLength
 
@@ -131,6 +150,9 @@ export class LcovParser {
         return LcovParser._defaultResult(false, true)
     }
 
+    /**
+     * @internal
+     */
     private _matchFields(buf: Buffer, byteIndex: number, length: number): ParseResult | null {
         const byte = buf[byteIndex]
 
@@ -169,12 +191,18 @@ export class LcovParser {
         return null
     }
 
+    /**
+     * @internal
+     */
     private _resetMatcher(): void {
         for (const matcher of this._fieldNames) {
             matcher.reset()
         }
     }
 
+    /**
+     * @internal
+     */
     private _parseValue(buf: Buffer, offset: number): ParseValueResult | null {
         const length = buf.byteLength
         let start = -1
@@ -199,6 +227,9 @@ export class LcovParser {
         return null
     }
 
+    /**
+     * @internal
+     */
     private static _parseSlice(buf: Buffer, start: number, end: number): string[] {
         const values: string[] = []
         let offset = start
@@ -215,6 +246,9 @@ export class LcovParser {
         return values
     }
 
+    /**
+     * @internal
+     */
     private static _defaultResult(done: boolean, incomplete: boolean): ParseResult {
         return {
             done,
