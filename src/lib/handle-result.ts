@@ -111,9 +111,9 @@ function createUpdateFunctionSummary(
         functionMap.set(entry.name, summary)
         functions.push(summary)
     } else if (entry.variant === Variant.FunctionExecution) {
-        functionSummary.hit = entry.called
+        functionSummary.hit = entry.hit
     } else {
-        functionSummary.line = entry.lineNumberStart
+        functionSummary.line = entry.lineStart
     }
 }
 
@@ -133,17 +133,17 @@ function updateSectionSummary<Detail extends LineEntry>(
 function createBranchSummary(entry: BranchLocationEntry): BranchEntry {
     return {
         block: entry.block,
-        expression: entry.expression,
+        branch: entry.branch,
         hit: entry.taken,
         isException: entry.isException,
-        line: entry.lineNumber
+        line: entry.line
     }
 }
 
 function createFunctionSummary(entry: FunctionLocationEntry | FunctionExecutionEntry): FunctionEntry {
     return {
-        hit: entry.variant === Variant.FunctionExecution ? entry.called : 0,
-        line: entry.variant === Variant.FunctionLocation ? entry.lineNumberStart : 0,
+        hit: entry.variant === Variant.FunctionExecution ? entry.hit : 0,
+        line: entry.variant === Variant.FunctionLocation ? entry.lineStart : 0,
         name: entry.name
     }
 }
@@ -151,6 +151,6 @@ function createFunctionSummary(entry: FunctionLocationEntry | FunctionExecutionE
 function createLineSummary(entry: LineLocationEntry): LineEntry {
     return {
         hit: entry.hit,
-        line: entry.lineNumber
+        line: entry.line
     }
 }

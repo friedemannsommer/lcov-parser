@@ -94,28 +94,28 @@ export function transformInstrumented(result: ParseResultInstrumented): Instrume
 
 export function transformBranchLocation(result: ParseResult<Variant.BranchLocation>): BranchLocationEntry {
     let block = 0
-    let expression = ''
+    let branch = ''
     let isException = false
-    let lineNumber = 0
+    let line = 0
     let taken = 0
 
     if (result.value !== null && result.value.length >= 4) {
         const branchTaken = result.value[result.value.length - 1]
 
-        lineNumber = parseInteger(result.value[0])
+        line = parseInteger(result.value[0])
         isException = result.value[1].startsWith('e')
         block = parseInteger(isException ? result.value[1].slice(1) : result.value[1])
-        // if the expression contained "," (semicolon) add them back by joining the possibly related values
-        expression = result.value.slice(2, -1).join(',')
+        // if the branch contained "," (semicolon) add them back by joining the possibly related values
+        branch = result.value.slice(2, -1).join(',')
         taken = branchTaken === '-' ? 0 : parseInteger(branchTaken)
     }
 
     return {
         block,
         done: result.done,
-        expression,
+        branch,
         isException,
-        lineNumber,
+        line,
         taken,
         variant: result.variant
     }
@@ -144,16 +144,16 @@ export function transformFilePath(result: ParseResult<Variant.FilePath>): FilePa
 }
 
 export function transformFunctionExecution(result: ParseResult<Variant.FunctionExecution>): FunctionExecutionEntry {
-    let called = 0
+    let hit = 0
     let name = ''
 
     if (result.value !== null && result.value.length >= 2) {
-        called = parseInteger(result.value[0])
+        hit = parseInteger(result.value[0])
         name = result.value[1]
     }
 
     return {
-        called,
+        hit,
         done: result.done,
         name,
         variant: result.variant
@@ -161,15 +161,15 @@ export function transformFunctionExecution(result: ParseResult<Variant.FunctionE
 }
 
 export function transformFunctionLocation(result: ParseResult<Variant.FunctionLocation>): FunctionLocationEntry {
-    let lineNumberEnd = 0
-    let lineNumberStart = 0
+    let lineEnd = 0
+    let lineStart = 0
     let name = ''
 
     if (result.value !== null && result.value.length >= 2) {
-        lineNumberStart = parseInteger(result.value[0])
-        lineNumberEnd = parseInteger(result.value[1])
+        lineStart = parseInteger(result.value[0])
+        lineEnd = parseInteger(result.value[1])
         name =
-            lineNumberEnd < lineNumberStart || result.value.length === 2
+            lineEnd < lineStart || result.value.length === 2
                 ? result.value[1]
                 : result.value.length >= 3
                 ? result.value[2]
@@ -178,8 +178,8 @@ export function transformFunctionLocation(result: ParseResult<Variant.FunctionLo
 
     return {
         done: result.done,
-        lineNumberEnd,
-        lineNumberStart,
+        lineEnd,
+        lineStart,
         name,
         variant: result.variant
     }
@@ -188,10 +188,10 @@ export function transformFunctionLocation(result: ParseResult<Variant.FunctionLo
 export function transformLineLocation(result: ParseResult<Variant.LineLocation>): LineLocationEntry {
     let checksum = ''
     let hit = 0
-    let lineNumber = 0
+    let line = 0
 
     if (result.value !== null && result.value.length >= 2) {
-        lineNumber = parseInteger(result.value[0])
+        line = parseInteger(result.value[0])
         hit = parseInteger(result.value[1])
 
         if (result.value.length >= 3) {
@@ -203,7 +203,7 @@ export function transformLineLocation(result: ParseResult<Variant.LineLocation>)
         checksum,
         done: result.done,
         hit,
-        lineNumber,
+        line,
         variant: result.variant
     }
 }

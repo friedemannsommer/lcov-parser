@@ -60,9 +60,9 @@ export interface BranchEntry extends LineEntry {
      */
     block: number
     /**
-     * The expression of the branch.
+     * A human-readable string, which should uniquely identify a given branch.
      */
-    expression: string
+    branch: string
     /**
      * Possibly a `catch` or otherwise exception related branch.
      */

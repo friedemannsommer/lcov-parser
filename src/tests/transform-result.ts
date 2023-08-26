@@ -215,9 +215,9 @@ describe('transformBranchLocation', (): void => {
             {
                 block: 0,
                 done: false,
-                expression: '',
+                branch: '',
                 isException: false,
-                lineNumber: 0,
+                line: 0,
                 taken: 0,
                 variant: Variant.BranchLocation
             }
@@ -232,9 +232,9 @@ describe('transformBranchLocation', (): void => {
             {
                 block: 0,
                 done: true,
-                expression: '',
+                branch: '',
                 isException: false,
-                lineNumber: 0,
+                line: 0,
                 taken: 0,
                 variant: Variant.BranchLocation
             }
@@ -249,9 +249,9 @@ describe('transformBranchLocation', (): void => {
             {
                 block: 0,
                 done: false,
-                expression: '',
+                branch: '',
                 isException: false,
-                lineNumber: 0,
+                line: 0,
                 taken: 0,
                 variant: Variant.BranchLocation
             }
@@ -266,9 +266,9 @@ describe('transformBranchLocation', (): void => {
             {
                 block: 0,
                 done: false,
-                expression: '',
+                branch: '',
                 isException: false,
-                lineNumber: 0,
+                line: 0,
                 taken: 0,
                 variant: Variant.BranchLocation
             }
@@ -283,9 +283,9 @@ describe('transformBranchLocation', (): void => {
             {
                 block: 2,
                 done: false,
-                expression: 'expr',
+                branch: 'expr',
                 isException: false,
-                lineNumber: 1,
+                line: 1,
                 taken: 3,
                 variant: Variant.BranchLocation
             }
@@ -300,9 +300,9 @@ describe('transformBranchLocation', (): void => {
             {
                 block: 2,
                 done: false,
-                expression: 'expr',
+                branch: 'expr',
                 isException: true,
-                lineNumber: 1,
+                line: 1,
                 taken: 3,
                 variant: Variant.BranchLocation
             }
@@ -317,9 +317,9 @@ describe('transformBranchLocation', (): void => {
             {
                 block: 2,
                 done: false,
-                expression: 'expr,with,comma',
+                branch: 'expr,with,comma',
                 isException: false,
-                lineNumber: 1,
+                line: 1,
                 taken: 3,
                 variant: Variant.BranchLocation
             }
@@ -334,9 +334,9 @@ describe('transformBranchLocation', (): void => {
             {
                 block: 2,
                 done: false,
-                expression: 'expr,with,comma',
+                branch: 'expr,with,comma',
                 isException: true,
-                lineNumber: 1,
+                line: 1,
                 taken: 3,
                 variant: Variant.BranchLocation
             }
@@ -458,7 +458,7 @@ describe('transformFunctionExecution', (): void => {
                 variant: Variant.FunctionExecution
             },
             {
-                called: 0,
+                hit: 0,
                 done: false,
                 name: '',
                 variant: Variant.FunctionExecution
@@ -472,7 +472,7 @@ describe('transformFunctionExecution', (): void => {
                 variant: Variant.FunctionExecution
             },
             {
-                called: 0,
+                hit: 0,
                 done: false,
                 name: '',
                 variant: Variant.FunctionExecution
@@ -486,7 +486,7 @@ describe('transformFunctionExecution', (): void => {
                 variant: Variant.FunctionExecution
             },
             {
-                called: 0,
+                hit: 0,
                 done: true,
                 name: '',
                 variant: Variant.FunctionExecution
@@ -500,7 +500,7 @@ describe('transformFunctionExecution', (): void => {
                 variant: Variant.FunctionExecution
             },
             {
-                called: 1,
+                hit: 1,
                 done: true,
                 name: 'test',
                 variant: Variant.FunctionExecution
@@ -514,7 +514,7 @@ describe('transformFunctionExecution', (): void => {
                 variant: Variant.FunctionExecution
             },
             {
-                called: 0,
+                hit: 0,
                 done: false,
                 name: 'n',
                 variant: Variant.FunctionExecution
@@ -528,7 +528,7 @@ describe('transformFunctionExecution', (): void => {
                 variant: Variant.FunctionExecution
             },
             {
-                called: 11,
+                hit: 11,
                 done: true,
                 name: 'shouldBeFine',
                 variant: Variant.FunctionExecution
@@ -550,8 +550,8 @@ describe('transformFunctionLocation', (): void => {
             },
             {
                 done: false,
-                lineNumberEnd: 0,
-                lineNumberStart: 0,
+                lineEnd: 0,
+                lineStart: 0,
                 name: '',
                 variant: Variant.FunctionLocation
             }
@@ -565,8 +565,8 @@ describe('transformFunctionLocation', (): void => {
             },
             {
                 done: true,
-                lineNumberEnd: 0,
-                lineNumberStart: 0,
+                lineEnd: 0,
+                lineStart: 0,
                 name: '',
                 variant: Variant.FunctionLocation
             }
@@ -580,8 +580,8 @@ describe('transformFunctionLocation', (): void => {
             },
             {
                 done: false,
-                lineNumberEnd: 0,
-                lineNumberStart: 0,
+                lineEnd: 0,
+                lineStart: 0,
                 name: '',
                 variant: Variant.FunctionLocation
             }
@@ -595,8 +595,8 @@ describe('transformFunctionLocation', (): void => {
             },
             {
                 done: true,
-                lineNumberEnd: 0,
-                lineNumberStart: 1,
+                lineEnd: 0,
+                lineStart: 1,
                 name: 'name',
                 variant: Variant.FunctionLocation
             }
@@ -610,8 +610,8 @@ describe('transformFunctionLocation', (): void => {
             },
             {
                 done: false,
-                lineNumberEnd: 2,
-                lineNumberStart: 1,
+                lineEnd: 2,
+                lineStart: 1,
                 name: 'name',
                 variant: Variant.FunctionLocation
             }
@@ -634,7 +634,7 @@ describe('transformLineLocation', (): void => {
                 checksum: '',
                 done: false,
                 hit: 0,
-                lineNumber: 0,
+                line: 0,
                 variant: Variant.LineLocation
             }
         ],
@@ -649,7 +649,7 @@ describe('transformLineLocation', (): void => {
                 checksum: '',
                 done: true,
                 hit: 0,
-                lineNumber: 0,
+                line: 0,
                 variant: Variant.LineLocation
             }
         ],
@@ -664,7 +664,7 @@ describe('transformLineLocation', (): void => {
                 checksum: '',
                 done: false,
                 hit: 0,
-                lineNumber: 0,
+                line: 0,
                 variant: Variant.LineLocation
             }
         ],
@@ -679,7 +679,7 @@ describe('transformLineLocation', (): void => {
                 checksum: '',
                 done: true,
                 hit: 2,
-                lineNumber: 1,
+                line: 1,
                 variant: Variant.LineLocation
             }
         ],
@@ -694,7 +694,7 @@ describe('transformLineLocation', (): void => {
                 checksum: 'md5',
                 done: false,
                 hit: 2,
-                lineNumber: 1,
+                line: 1,
                 variant: Variant.LineLocation
             }
         ]
@@ -937,9 +937,9 @@ describe('transformResult', (): void => {
             {
                 block: 2,
                 done: false,
-                expression: 'separated,expr',
+                branch: 'separated,expr',
                 isException: true,
-                lineNumber: 1,
+                line: 1,
                 taken: 3,
                 variant: Variant.BranchLocation
             }
@@ -977,7 +977,7 @@ describe('transformResult', (): void => {
                 variant: Variant.FunctionExecution
             },
             {
-                called: 1,
+                hit: 1,
                 done: false,
                 name: 'fnName',
                 variant: Variant.FunctionExecution
@@ -992,8 +992,8 @@ describe('transformResult', (): void => {
             },
             {
                 done: false,
-                lineNumberEnd: 2,
-                lineNumberStart: 1,
+                lineEnd: 2,
+                lineStart: 1,
                 name: 'fnName',
                 variant: Variant.FunctionLocation
             }
@@ -1009,7 +1009,7 @@ describe('transformResult', (): void => {
                 checksum: 'md5',
                 done: false,
                 hit: 2,
-                lineNumber: 1,
+                line: 1,
                 variant: Variant.LineLocation
             }
         ],

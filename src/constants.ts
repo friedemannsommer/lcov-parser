@@ -17,7 +17,7 @@ export enum Variant {
      */
     BranchInstrumented,
     /**
-     * Provides branch coverage information, such as line number, block ID, branch (expression), and how often it was used.
+     * Provides branch coverage information, such as line number, block ID, branch, and how often it was used.
      */
     BranchLocation,
     /**

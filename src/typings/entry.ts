@@ -47,9 +47,9 @@ export interface SummaryHitEntry<V extends Variant> extends Entry<V> {
 
 export interface BranchLocationEntry extends Entry<Variant.BranchLocation> {
     block: number
-    expression: string
+    branch: string
     isException: boolean
-    lineNumber: number
+    line: number
     taken: number
 }
 
@@ -58,20 +58,20 @@ export interface FilePathEntry extends Entry<Variant.FilePath> {
 }
 
 export interface FunctionExecutionEntry extends Entry<Variant.FunctionExecution> {
-    called: number
+    hit: number
     name: string
 }
 
 export interface FunctionLocationEntry extends Entry<Variant.FunctionLocation> {
-    lineNumberEnd: number
-    lineNumberStart: number
+    lineEnd: number
+    lineStart: number
     name: string
 }
 
 export interface LineLocationEntry extends Entry<Variant.LineLocation> {
     checksum: string
     hit: number
-    lineNumber: number
+    line: number
 }
 
 export interface TestNameEntry extends Entry<Variant.TestName> {
