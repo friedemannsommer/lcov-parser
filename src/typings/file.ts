@@ -1,28 +1,16 @@
 export interface SectionSummary {
     /**
-     * The overall number of branches found and how often they were hit.
+     * The overall number of branches found and how often they were hit, with a list of instrumented branches.
      */
-    branchSummary: Summary
+    branches: Summary<BranchEntry>
     /**
-     * List of branch entries, which contains one entry for each branch that was found.
+     * The overall number of functions found and how often they were hit, with a lit of instrumented functions.
      */
-    branches: BranchEntry[]
+    functions: Summary<FunctionEntry>
     /**
-     * The overall number of functions found and how often they were hit.
+     * The overall number of found lines and how often they were hit, with a list of instrumented lines.
      */
-    functionSummary: Summary
-    /**
-     * List of function entries, which contains one entry for each found function.
-     */
-    functions: FunctionEntry[]
-    /**
-     * The overall number of found lines and how often they were hit.
-     */
-    lineSummary: Summary
-    /**
-     * List of line entries, which contains one entry for each line that were found.
-     */
-    lines: LineEntry[]
+    lines: Summary<LineEntry>
     /**
      * The section name (also referred to as "test name").
      */
@@ -33,11 +21,15 @@ export interface SectionSummary {
     path: string
 }
 
-export interface Summary {
+export interface Summary<Detail extends LineEntry> {
+    /**
+     * Lists all instrumented branches, functions, or lines.
+     */
+    details: Detail[]
     /**
      * The number of executions for this branch, function, or line.
      */
-    hitCount: number
+    hit: number
     /**
      * The number of branches, functions, or lines found.
      */
@@ -48,11 +40,11 @@ export interface LineEntry {
     /**
      * Number of executions for this line.
      */
-    hitCount: number
+    hit: number
     /**
      * The associated line number.
      */
-    lineNumber: number
+    line: number
 }
 
 export interface FunctionEntry extends LineEntry {
@@ -66,7 +58,7 @@ export interface BranchEntry extends LineEntry {
     /**
      * The block number.
      */
-    blockNumber: number
+    block: number
     /**
      * The expression of the branch.
      */

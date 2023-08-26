@@ -30,25 +30,25 @@ export function handleResult(entry: EntryVariants, functionMap: FunctionMap, sec
             return true
         case Variant.FunctionLocation:
         case Variant.FunctionExecution:
-            createUpdateFunctionSummary(functionMap, section.functions, entry)
+            createUpdateFunctionSummary(functionMap, section.functions.details, entry)
             break
         case Variant.BranchLocation:
-            section.branches.push(createBranchSummary(entry))
+            section.branches.details.push(createBranchSummary(entry))
             break
         case Variant.LineLocation:
-            section.lines.push(createLineSummary(entry))
+            section.lines.details.push(createLineSummary(entry))
             break
         case Variant.BranchInstrumented:
         case Variant.BranchHit:
-            updateSectionSummary(section.branchSummary, entry)
+            updateSectionSummary(section.branches, entry)
             break
         case Variant.FunctionInstrumented:
         case Variant.FunctionHit:
-            updateSectionSummary(section.functionSummary, entry)
+            updateSectionSummary(section.functions, entry)
             break
         case Variant.LineInstrumented:
         case Variant.LineHit:
-            updateSectionSummary(section.lineSummary, entry)
+            updateSectionSummary(section.lines, entry)
             break
     }
 
@@ -78,21 +78,21 @@ export function updateResult(
 
 export function createSection(entry?: TestNameEntry): SectionSummary {
     return {
-        branchSummary: {
-            hitCount: 0,
+        branches: {
+            details: [],
+            hit: 0,
             instrumented: 0
         },
-        branches: [],
-        functionSummary: {
-            hitCount: 0,
+        functions: {
+            details: [],
+            hit: 0,
             instrumented: 0
         },
-        functions: [],
-        lineSummary: {
-            hitCount: 0,
+        lines: {
+            details: [],
+            hit: 0,
             instrumented: 0
         },
-        lines: [],
         name: entry ? entry.name : '',
         path: ''
     }
@@ -111,17 +111,20 @@ function createUpdateFunctionSummary(
         functionMap.set(entry.name, summary)
         functions.push(summary)
     } else if (entry.variant === Variant.FunctionExecution) {
-        functionSummary.hitCount = entry.called
+        functionSummary.hit = entry.called
     } else {
-        functionSummary.lineNumber = entry.lineNumberStart
+        functionSummary.line = entry.lineNumberStart
     }
 }
 
-function updateSectionSummary(summary: Summary, entry: HitEntryVariants | InstrumentedEntryVariants): void {
+function updateSectionSummary<Detail extends LineEntry>(
+    summary: Summary<Detail>,
+    entry: HitEntryVariants | InstrumentedEntryVariants
+): void {
     const variant = entry.variant
 
     if (variant === Variant.BranchHit || variant === Variant.FunctionHit || variant === Variant.LineHit) {
-        summary.hitCount += entry.hit
+        summary.hit += entry.hit
     } else {
         summary.instrumented += entry.found
     }
@@ -129,25 +132,25 @@ function updateSectionSummary(summary: Summary, entry: HitEntryVariants | Instru
 
 function createBranchSummary(entry: BranchLocationEntry): BranchEntry {
     return {
-        blockNumber: entry.block,
+        block: entry.block,
         expression: entry.expression,
-        hitCount: entry.taken,
+        hit: entry.taken,
         isException: entry.isException,
-        lineNumber: entry.lineNumber
+        line: entry.lineNumber
     }
 }
 
 function createFunctionSummary(entry: FunctionLocationEntry | FunctionExecutionEntry): FunctionEntry {
     return {
-        hitCount: entry.variant === Variant.FunctionExecution ? entry.called : 0,
-        lineNumber: entry.variant === Variant.FunctionLocation ? entry.lineNumberStart : 0,
+        hit: entry.variant === Variant.FunctionExecution ? entry.called : 0,
+        line: entry.variant === Variant.FunctionLocation ? entry.lineNumberStart : 0,
         name: entry.name
     }
 }
 
 function createLineSummary(entry: LineLocationEntry): LineEntry {
     return {
-        hitCount: entry.hit,
-        lineNumber: entry.lineNumber
+        hit: entry.hit,
+        line: entry.lineNumber
     }
 }
