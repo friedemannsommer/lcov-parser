@@ -115,6 +115,9 @@ export class LcovStreamParser extends Transform {
         return false
     }
 
+    /**
+     * @internal
+     */
     private static _isTrailingBlankSpace(buffer: Buffer): boolean {
         for (let i = 0; i < buffer.byteLength; i++) {
             if (!isBlankSpace(buffer[i])) {
