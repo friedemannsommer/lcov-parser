@@ -16,10 +16,7 @@ describe('LcovStreamParser', (): void => {
             parser.on('data', (result: SectionSummary): void => {
                 section = result
             })
-            parser.once('error', (err: Error): void => {
-                expect(err).to.be.undefined("parser shouldn't have thrown a exception")
-                reject(err)
-            })
+            parser.once('error', reject)
             parser.once('finish', resolve)
             parser.write(Buffer.from(getRawLcov(defaultFieldNames.testName, 'test_name')))
             parser.write(Buffer.from(getRawLcov(defaultFieldNames.endOfRecord)))
@@ -58,6 +55,25 @@ describe('LcovStreamParser', (): void => {
         ])
     })
 
+    it('should try to resolve incomplete parse result, by appending a newline', async (): Promise<void> => {
+        const parser = new LcovStreamParser()
+        let section: SectionSummary | undefined
+
+        await new Promise<void>((resolve, reject): void => {
+            parser.on('data', (result: SectionSummary): void => {
+                section = result
+            })
+            parser.once('error', reject)
+            parser.once('finish', resolve)
+            parser.write(Buffer.from(getRawLcov(defaultFieldNames.testName, 'post_fix')))
+            parser.write(Buffer.from(defaultFieldNames.filePath + ':'))
+            parser.end()
+        })
+
+        // input doesn't end with 'end_of_record', parser shouldn't yield a section
+        expect(section).to.be.undefined
+    })
+
     it('should reject buffers, because of eof', async (): Promise<void> => {
         const parser = new LcovStreamParser()
         let error: Error | undefined
@@ -71,7 +87,7 @@ describe('LcovStreamParser', (): void => {
                 reject(new Error("stream shouldn't have finished"))
             })
             parser.write(Buffer.from(getRawLcov(defaultFieldNames.testName, 'example_1')))
-            parser.write(Buffer.from(defaultFieldNames.filePath + ':'))
+            parser.write(Buffer.from(defaultFieldNames.filePath))
             parser.end()
         })
 
