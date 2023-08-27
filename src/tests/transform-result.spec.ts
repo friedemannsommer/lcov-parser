@@ -218,7 +218,7 @@ describe('transformBranchLocation', (): void => {
                 branch: '',
                 isException: false,
                 line: 0,
-                taken: 0,
+                hit: 0,
                 variant: Variant.BranchLocation
             }
         ],
@@ -235,7 +235,7 @@ describe('transformBranchLocation', (): void => {
                 branch: '',
                 isException: false,
                 line: 0,
-                taken: 0,
+                hit: 0,
                 variant: Variant.BranchLocation
             }
         ],
@@ -252,7 +252,7 @@ describe('transformBranchLocation', (): void => {
                 branch: '',
                 isException: false,
                 line: 0,
-                taken: 0,
+                hit: 0,
                 variant: Variant.BranchLocation
             }
         ],
@@ -269,7 +269,7 @@ describe('transformBranchLocation', (): void => {
                 branch: '',
                 isException: false,
                 line: 0,
-                taken: 0,
+                hit: 0,
                 variant: Variant.BranchLocation
             }
         ],
@@ -286,7 +286,7 @@ describe('transformBranchLocation', (): void => {
                 branch: 'expr',
                 isException: false,
                 line: 1,
-                taken: 3,
+                hit: 3,
                 variant: Variant.BranchLocation
             }
         ],
@@ -303,7 +303,7 @@ describe('transformBranchLocation', (): void => {
                 branch: 'expr',
                 isException: true,
                 line: 1,
-                taken: 3,
+                hit: 3,
                 variant: Variant.BranchLocation
             }
         ],
@@ -320,7 +320,7 @@ describe('transformBranchLocation', (): void => {
                 branch: 'expr,with,comma',
                 isException: false,
                 line: 1,
-                taken: 3,
+                hit: 3,
                 variant: Variant.BranchLocation
             }
         ],
@@ -337,7 +337,7 @@ describe('transformBranchLocation', (): void => {
                 branch: 'expr,with,comma',
                 isException: true,
                 line: 1,
-                taken: 3,
+                hit: 3,
                 variant: Variant.BranchLocation
             }
         ]
@@ -940,7 +940,7 @@ describe('transformResult', (): void => {
                 branch: 'separated,expr',
                 isException: true,
                 line: 1,
-                taken: 3,
+                hit: 3,
                 variant: Variant.BranchLocation
             }
         ],

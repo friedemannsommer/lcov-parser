@@ -1,6 +1,7 @@
 import { Readable } from 'node:stream'
 
-import { FunctionMap, updateResult } from '../lib/handle-result.js'
+import { Variant } from '../constants.js'
+import { FunctionMap, updateResults } from '../lib/handle-result.js'
 import transformResult from '../lib/transform-result.js'
 import { LcovParser, ParseResult } from '../parser.js'
 import { SectionSummary } from '../typings/file.js'
@@ -11,7 +12,11 @@ export function transformSynchronous(results: ParseResult[]): SectionSummary[] {
     let sectionIndex = 0
 
     for (const parseResult of results) {
-        sectionIndex = updateResult(sectionIndex, transformResult(parseResult), functionMap, result)
+        const entry = transformResult(parseResult)
+
+        if (entry.variant !== Variant.None) {
+            sectionIndex = updateResults(sectionIndex, transformResult(parseResult), functionMap, result)
+        }
     }
 
     return result
@@ -35,7 +40,11 @@ export function transformAsynchronous(parser: LcovParser, stream: Readable): Pro
             }
 
             for (const parseResult of parser.flush()) {
-                sectionIndex = updateResult(sectionIndex, transformResult(parseResult), functionMap, result)
+                const entry = transformResult(parseResult)
+
+                if (entry.variant !== Variant.None) {
+                    sectionIndex = updateResults(sectionIndex, entry, functionMap, result)
+                }
             }
         }
 

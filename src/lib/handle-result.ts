@@ -16,7 +16,7 @@ export type FunctionMap = Map<string, FunctionEntry>
 export function handleResult(entry: EntryVariants, functionMap: FunctionMap, section: SectionSummary): boolean {
     switch (entry.variant) {
         case Variant.TestName:
-            // creating a new test module, to prevent name conflicts simply clear the current (name -> index) map
+            // creating a new test module, to prevent name conflicts simply clear the current FunctionMap
             functionMap.clear()
             section.name = entry.name
             break
@@ -24,7 +24,7 @@ export function handleResult(entry: EntryVariants, functionMap: FunctionMap, sec
             section.path = entry.path
             break
         case Variant.EndOfRecord:
-            // we've left the test module, to prevent name conflicts simply clear the current (name -> index) map
+            // we've left the test module, to prevent name conflicts simply clear the current FunctionMap
             functionMap.clear()
 
             return true
@@ -55,25 +55,26 @@ export function handleResult(entry: EntryVariants, functionMap: FunctionMap, sec
     return false
 }
 
-export function updateResult(
+export function updateResults(
     sectionIndex: number,
     entry: EntryVariants,
     functionMap: FunctionMap,
     sections: SectionSummary[]
 ): number {
     if (entry.variant === Variant.TestName) {
-        if (sectionIndex === sections.length) {
-            sections.push(createSection(entry))
-        } else {
-            sections.push(createSection(entry))
+        const length = sections.length
+        // creating a new test module, clearing the current FunctionMap
+        functionMap.clear()
 
-            return sectionIndex + 1
-        }
-    } else if (handleResult(entry, functionMap, sections[sectionIndex])) {
-        return sectionIndex + 1
+        sections.push(createSection(entry))
+
+        return length
+    } else if (sectionIndex === sections.length) {
+        // prevent OOB, which happens if "TestName" isn't the first variant encountered for a section
+        sections[sectionIndex] = createSection()
     }
 
-    return sectionIndex
+    return handleResult(entry, functionMap, sections[sectionIndex]) ? sectionIndex + 1 : sectionIndex
 }
 
 export function createSection(entry?: TestNameEntry): SectionSummary {
@@ -98,7 +99,7 @@ export function createSection(entry?: TestNameEntry): SectionSummary {
     }
 }
 
-function createUpdateFunctionSummary(
+export function createUpdateFunctionSummary(
     functionMap: FunctionMap,
     functions: FunctionEntry[],
     entry: FunctionLocationEntry | FunctionExecutionEntry
@@ -111,13 +112,13 @@ function createUpdateFunctionSummary(
         functionMap.set(entry.name, summary)
         functions.push(summary)
     } else if (entry.variant === Variant.FunctionExecution) {
-        functionSummary.hit = entry.hit
+        functionSummary.hit += entry.hit
     } else {
         functionSummary.line = entry.lineStart
     }
 }
 
-function updateSectionSummary<Detail extends LineEntry>(
+export function updateSectionSummary<Detail extends LineEntry>(
     summary: Summary<Detail>,
     entry: HitEntryVariants | InstrumentedEntryVariants
 ): void {
@@ -130,17 +131,17 @@ function updateSectionSummary<Detail extends LineEntry>(
     }
 }
 
-function createBranchSummary(entry: BranchLocationEntry): BranchEntry {
+export function createBranchSummary(entry: BranchLocationEntry): BranchEntry {
     return {
         block: entry.block,
         branch: entry.branch,
-        hit: entry.taken,
+        hit: entry.hit,
         isException: entry.isException,
         line: entry.line
     }
 }
 
-function createFunctionSummary(entry: FunctionLocationEntry | FunctionExecutionEntry): FunctionEntry {
+export function createFunctionSummary(entry: FunctionLocationEntry | FunctionExecutionEntry): FunctionEntry {
     return {
         hit: entry.variant === Variant.FunctionExecution ? entry.hit : 0,
         line: entry.variant === Variant.FunctionLocation ? entry.lineStart : 0,
@@ -148,7 +149,7 @@ function createFunctionSummary(entry: FunctionLocationEntry | FunctionExecutionE
     }
 }
 
-function createLineSummary(entry: LineLocationEntry): LineEntry {
+export function createLineSummary(entry: LineLocationEntry): LineEntry {
     return {
         hit: entry.hit,
         line: entry.line

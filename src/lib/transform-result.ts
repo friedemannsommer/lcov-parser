@@ -116,7 +116,7 @@ export function transformBranchLocation(result: ParseResult<Variant.BranchLocati
         branch,
         isException,
         line,
-        taken,
+        hit: taken,
         variant: result.variant
     }
 }

@@ -2,6 +2,7 @@ import { Transform, TransformCallback } from 'node:stream'
 
 import { defaultFieldNames } from '../constants.js'
 import { createSection, FunctionMap, handleResult } from '../lib/handle-result.js'
+import { isBlankSpace } from '../lib/parse.js'
 import transformResult from '../lib/transform-result.js'
 import { LcovParser } from '../parser.js'
 import { StreamOptions } from '../typings/options.js'
@@ -41,7 +42,7 @@ export class LcovStreamParser extends Transform {
      */
     public _transform(chunk: Buffer, encoding: BufferEncoding, callback: TransformCallback): void {
         if (!Buffer.isBuffer(chunk)) {
-            callback(new Error('unexpected chunk type, expected a `Buffer`'))
+            callback(new Error('unexpected chunk type, expected a `Buffer`.'))
             return
         }
 
@@ -53,7 +54,7 @@ export class LcovStreamParser extends Transform {
         this._parser.write(chunk)
         this._processResults()
 
-        callback(null)
+        callback()
     }
 
     /**
@@ -65,22 +66,20 @@ export class LcovStreamParser extends Transform {
         if (results[0].incomplete) {
             const buffer = this._parser.getCurrentBuffer()
 
-            if (buffer !== null && buffer.includes(10)) {
-                callback(new Error('unexpected end of input'))
-                return
-            }
+            if (buffer !== null && !LcovStreamParser._isTrailingBlankSpace(buffer)) {
+                this._parser.write(Buffer.from([10]))
 
-            this.write(Buffer.from([10]))
-
-            if (!this._processResults()) {
-                callback(new Error('unexpected end of input'))
+                if (!this._processResults()) {
+                    callback(new Error('unexpected end of input.'))
+                    return
+                }
             }
         } else if (!this._processResults(results)) {
-            callback(new Error('unexpected end of input'))
+            callback(new Error('unexpected end of input.'))
             return
         }
 
-        callback(null)
+        callback()
     }
 
     /**
@@ -91,13 +90,7 @@ export class LcovStreamParser extends Transform {
      * @returns - Will return `true` if given encoding is supported, `false` otherwise.
      */
     public static supportedEncoding(encoding: BufferEncoding | 'buffer'): boolean {
-        return (
-            encoding === 'ascii' ||
-            encoding === 'utf8' ||
-            encoding === 'utf-8' ||
-            encoding === 'utf16le' ||
-            encoding === 'buffer'
-        )
+        return encoding === 'ascii' || encoding === 'utf8' || encoding === 'utf-8' || encoding === 'buffer'
     }
 
     /**
@@ -120,6 +113,16 @@ export class LcovStreamParser extends Transform {
         }
 
         return false
+    }
+
+    private static _isTrailingBlankSpace(buffer: Buffer): boolean {
+        for (let i = 0; i < buffer.byteLength; i++) {
+            if (!isBlankSpace(buffer[i])) {
+                return false
+            }
+        }
+
+        return true
     }
 }
 

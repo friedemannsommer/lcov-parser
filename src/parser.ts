@@ -101,6 +101,7 @@ export class LcovParser {
 
         while (result.incomplete && this._chunks.size() !== 0) {
             this._buffer = Buffer.concat([this._buffer!.subarray(this._offset), this._chunks.remove()!])
+            this._offset = 0
             result = this._parseResult(this._buffer)
         }
 
@@ -146,6 +147,8 @@ export class LcovParser {
                 return field
             }
         }
+
+        this._resetMatcher()
 
         return LcovParser._defaultResult(false, true)
     }

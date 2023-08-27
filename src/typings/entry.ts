@@ -48,9 +48,9 @@ export interface SummaryHitEntry<V extends Variant> extends Entry<V> {
 export interface BranchLocationEntry extends Entry<Variant.BranchLocation> {
     block: number
     branch: string
+    hit: number
     isException: boolean
     line: number
-    taken: number
 }
 
 export interface FilePathEntry extends Entry<Variant.FilePath> {
