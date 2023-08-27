@@ -57,4 +57,25 @@ describe('LcovStreamParser', (): void => {
             createSection(getTestNameEntry('example_3'))
         ])
     })
+
+    it('should reject buffers, because of eof', async (): Promise<void> => {
+        const parser = new LcovStreamParser()
+        let error: Error | undefined
+
+        await new Promise<void>((resolve, reject): void => {
+            parser.once('error', (err: Error): void => {
+                error = err
+                resolve()
+            })
+            parser.once('finish', (): void => {
+                reject(new Error("stream shouldn't have finished"))
+            })
+            parser.write(Buffer.from(getRawLcov(defaultFieldNames.testName, 'example_1')))
+            parser.write(Buffer.from(defaultFieldNames.filePath + ':'))
+            parser.end()
+        })
+
+        expect(error).to.be.instanceof(Error)
+        expect(error!.message).to.eq('unexpected end of input.')
+    })
 })
