@@ -59,11 +59,28 @@ describe('transformAsynchronous', (): void => {
 
     it('should transform Buffer values into section', async (): Promise<void> => {
         const parser = new LcovParser(defaultFieldNames)
+        const stream = new Readable({ autoDestroy: true, objectMode: false })
+
+        stream.push(getRawLcov(defaultFieldNames.testName, 'example_1'))
+        stream.push(getRawLcov(defaultFieldNames.filePath, 'path/to/file.ext'))
+        stream.push(getRawLcov(defaultFieldNames.endOfRecord))
+        stream.push(null)
+
+        expect(await transformAsynchronous(parser, stream)).to.eql([
+            {
+                ...createSection(getTestNameEntry('example_1')),
+                path: 'path/to/file.ext'
+            }
+        ])
+    })
+
+    it('should transform string values into section', async (): Promise<void> => {
+        const parser = new LcovParser(defaultFieldNames)
         const stream = new Readable({ autoDestroy: true, objectMode: true })
 
-        stream.push(Buffer.from(getRawLcov(defaultFieldNames.testName, 'example_1')))
-        stream.push(Buffer.from(getRawLcov(defaultFieldNames.filePath, 'path/to/file.ext')))
-        stream.push(Buffer.from(getRawLcov(defaultFieldNames.endOfRecord)))
+        stream.push(getRawLcov(defaultFieldNames.testName, 'example_1'))
+        stream.push(getRawLcov(defaultFieldNames.filePath, 'path/to/file.ext'))
+        stream.push(getRawLcov(defaultFieldNames.endOfRecord))
         stream.push(null)
 
         expect(await transformAsynchronous(parser, stream)).to.eql([
