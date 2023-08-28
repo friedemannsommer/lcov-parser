@@ -44,6 +44,18 @@ describe('LcovParser - Field names', (): void => {
 })
 
 describe('LcovParser - Chunks', (): void => {
+    it('should return `done: true` if there are no chunks and buffer available', (): void => {
+        const parser = new LcovParser(defaultFieldNames)
+        const result = parser.read()
+
+        expect(result).to.eql({
+            done: true,
+            incomplete: false,
+            value: null,
+            variant: Variant.None
+        })
+    })
+
     it('should not parse chunk without trailing newline', (): void => {
         const parser = new LcovParser(defaultFieldNames)
 
@@ -84,20 +96,36 @@ describe('LcovParser - Chunks', (): void => {
 
         const result = parser.flush()
 
-        expect(result).to.have.length(2)
+        expect(result).to.eql([
+            {
+                done: false,
+                incomplete: false,
+                value: ['example'],
+                variant: Variant.TestName
+            },
+            {
+                done: true,
+                incomplete: false,
+                value: null,
+                variant: Variant.None
+            }
+        ])
+    })
+})
 
-        expect(result[0]).to.eql({
-            done: false,
-            incomplete: false,
-            value: ['example'],
-            variant: Variant.TestName
-        })
+describe('LcovParser - Current buffer', (): void => {
+    it('should return `null` if no buffer is available', (): void => {
+        const parser = new LcovParser(defaultFieldNames)
 
-        expect(result[1]).to.eql({
-            done: true,
-            incomplete: false,
-            value: null,
-            variant: Variant.None
-        })
+        expect(parser.getCurrentBuffer()).to.be.null
+    })
+
+    it('should return `Buffer` if no buffer is available', (): void => {
+        const parser = new LcovParser(defaultFieldNames)
+
+        parser.write(Buffer.from('not relevant'))
+        parser.read()
+
+        expect(Buffer.isBuffer(parser.getCurrentBuffer()), 'isBuffer').to.be.true
     })
 })
