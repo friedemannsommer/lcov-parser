@@ -340,6 +340,23 @@ describe('transformBranchLocation', (): void => {
                 hit: 3,
                 variant: Variant.BranchLocation
             }
+        ],
+        [
+            {
+                done: false,
+                incomplete: true,
+                value: ['1', '2', 'expr', '-'],
+                variant: Variant.BranchLocation
+            },
+            {
+                block: 2,
+                done: false,
+                branch: 'expr',
+                isException: false,
+                line: 1,
+                hit: 0,
+                variant: Variant.BranchLocation
+            }
         ]
     ]
 
