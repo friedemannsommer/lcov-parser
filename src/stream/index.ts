@@ -30,8 +30,9 @@ export class LcovStreamParser extends Transform {
 
         super({
             ...streamOpts,
-            writableObjectMode: false,
-            readableObjectMode: true
+            decodeStrings: true,
+            readableObjectMode: true,
+            writableObjectMode: false
         })
 
         this._parser = parser ?? new LcovParser(fieldNames ?? defaultFieldNames)
@@ -41,11 +42,6 @@ export class LcovStreamParser extends Transform {
      * @internal
      */
     public _transform(chunk: Buffer, encoding: BufferEncoding, callback: TransformCallback): void {
-        if (!Buffer.isBuffer(chunk)) {
-            callback(new Error('unexpected chunk type, expected a `Buffer`.'))
-            return
-        }
-
         if (!LcovStreamParser.supportedEncoding(encoding)) {
             callback(new Error(`received chunk with unsupported encoding (${encoding}).`))
             return

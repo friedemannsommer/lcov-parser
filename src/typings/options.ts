@@ -19,7 +19,10 @@ export interface Options {
 }
 
 export interface StreamOptions
-    extends Omit<TransformOptions, 'transform' | 'flush' | 'writableObjectMode' | 'readableObjectMode'> {
+    extends Omit<
+        TransformOptions,
+        'transform' | 'flush' | 'writableObjectMode' | 'readableObjectMode' | 'decodeStrings'
+    > {
     /**
      * The field names to use for parsing. These will only be used if {@link StreamOptions#parser} is not present.
      */
