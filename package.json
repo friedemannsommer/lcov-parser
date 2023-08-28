@@ -37,7 +37,7 @@
   "files": [
     "dist/*"
   ],
-  "homepage": "https://github.com/friedemannsommer/lcov-parser",
+  "homepage": "https://friedemannsommer.github.io/lcov-parser/",
   "keywords": [
     "lcov",
     "parse",
