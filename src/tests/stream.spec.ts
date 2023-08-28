@@ -65,8 +65,8 @@ describe('LcovStreamParser', (): void => {
             })
             parser.once('error', reject)
             parser.once('finish', resolve)
-            parser.write(Buffer.from(getRawLcov(defaultFieldNames.testName, 'post_fix')))
-            parser.write(Buffer.from(defaultFieldNames.filePath + ':'))
+            parser.write(getRawLcov(defaultFieldNames.testName, 'post_fix'))
+            parser.write(defaultFieldNames.filePath + ':')
             parser.end()
         })
 
@@ -76,22 +76,19 @@ describe('LcovStreamParser', (): void => {
 
     it('should reject buffers, because of eof', async (): Promise<void> => {
         const parser = new LcovStreamParser()
-        let error: Error | undefined
-
-        await new Promise<void>((resolve, reject): void => {
+        const error = await new Promise<Error>((resolve, reject): void => {
             parser.once('error', (err: Error): void => {
-                error = err
-                resolve()
+                resolve(err)
             })
             parser.once('finish', (): void => {
                 reject(new Error("stream shouldn't have finished"))
             })
-            parser.write(Buffer.from(getRawLcov(defaultFieldNames.testName, 'example_1')))
+            parser.write(getRawLcov(defaultFieldNames.testName, 'example_1'))
             parser.write(Buffer.from(defaultFieldNames.filePath))
             parser.end()
         })
 
         expect(error).to.be.instanceof(Error)
-        expect(error!.message).to.eq('unexpected end of input.')
+        expect(error.message).to.eq('unexpected end of input.')
     })
 })
