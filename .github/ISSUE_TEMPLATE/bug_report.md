@@ -1,6 +1,6 @@
 ---
 name: Bug report
-about: Create a report to help us improve
+about: Create a report to improve the package
 title: ''
 labels: bug
 assignees: friedemannsommer
@@ -12,9 +12,9 @@ A clear and concise description of what the bug is.
 
 **To Reproduce**
 Steps to reproduce the behavior:
-1. Go to '...'
-2. Click on '....'
-3. Scroll down to '....'
+1. Creation of parser instance with default field names
+2. Calling function "abc"
+3. Calling function "xyz"
 4. See error
 
 **Expected behavior**
