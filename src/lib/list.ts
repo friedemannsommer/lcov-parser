@@ -1,4 +1,4 @@
-export interface ListNode<T> {
+interface ListNode<T> {
     next: ListNode<T> | null
     value: T
 }
