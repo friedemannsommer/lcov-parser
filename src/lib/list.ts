@@ -3,7 +3,7 @@ export interface ListNode<T> {
     value: T
 }
 
-export class List<T> {
+export default class List<T> {
     private _tail: ListNode<T> | null = null
     private _head: ListNode<T> | null = null
     private _size: number = 0

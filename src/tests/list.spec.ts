@@ -1,6 +1,6 @@
 import { expect } from 'chai'
 
-import { List } from '../lib/list.js'
+import List from '../lib/list.js'
 
 describe('List', (): void => {
     it('should correctly update `size` on `insert`', (): void => {

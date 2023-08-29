@@ -1,7 +1,7 @@
 import { Variant } from './constants.js'
 import ByteMatch from './lib/byte-match.js'
 import { isNonEmptyField } from './lib/field-variant.js'
-import { List } from './lib/list.js'
+import List from './lib/list.js'
 import { generateFieldLookup } from './lib/lookup.js'
 import { FieldNames } from './typings/options.js'
 
