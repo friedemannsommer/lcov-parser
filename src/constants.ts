@@ -5,7 +5,7 @@ import { fieldNames } from './lib/field-names.js'
  */
 export enum Variant {
     /**
-     * Used for {@link ParseResult#incomplete} and {@link ParseResult#done} results.
+     * Used for {@link parser.ParseResult#incomplete} and {@link parser.ParseResult#done} results.
      */
     None,
     /**
