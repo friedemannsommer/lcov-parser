@@ -4,7 +4,7 @@ import { Variant } from '../constants.js'
 import { FunctionMap, updateResults } from '../lib/handle-result.js'
 import transformResult from '../lib/transform-result.js'
 import { LcovParser, ParseResult } from '../parser.js'
-import { SectionSummary } from '../typings/file.js'
+import type { SectionSummary } from '../typings/file.js'
 
 export function transformSynchronous(results: ParseResult[]): SectionSummary[] {
     const functionMap: FunctionMap = new Map()

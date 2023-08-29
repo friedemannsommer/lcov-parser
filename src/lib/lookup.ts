@@ -1,5 +1,5 @@
 import { Variant } from '../constants.js'
-import { FieldNames } from '../typings/options.js'
+import type { FieldNames } from '../typings/options.js'
 import ByteMatch from './byte-match.js'
 import { encode } from './utf-8.js'
 

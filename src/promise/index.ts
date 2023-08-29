@@ -2,8 +2,8 @@ import { Readable } from 'node:stream'
 
 import { defaultFieldNames } from '../constants.js'
 import { LcovParser } from '../parser.js'
-import { SectionSummary } from '../typings/file.js'
-import { Options } from '../typings/options.js'
+import type { SectionSummary } from '../typings/file.js'
+import type { Options } from '../typings/options.js'
 import { transformAsynchronous, transformSynchronous } from './transform.js'
 
 /**

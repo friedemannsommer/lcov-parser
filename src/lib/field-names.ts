@@ -1,4 +1,4 @@
-import { FieldNames } from '../typings/options.js'
+import type { FieldNames } from '../typings/options.js'
 
 /**
  * @returns - An object which contains the default field names

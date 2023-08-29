@@ -1,6 +1,6 @@
 import type { Readable, TransformOptions } from 'node:stream'
 
-import { LcovParser } from '../parser.js'
+import type { LcovParser } from '../parser.js'
 
 export interface Options {
     /**

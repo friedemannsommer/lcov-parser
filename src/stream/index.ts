@@ -5,7 +5,8 @@ import { createSection, FunctionMap, handleResult } from '../lib/handle-result.j
 import { isBlankSpace } from '../lib/parse.js'
 import transformResult from '../lib/transform-result.js'
 import { LcovParser } from '../parser.js'
-import { StreamOptions } from '../typings/options.js'
+import type { SectionSummary } from '../typings/file.js'
+import type { StreamOptions } from '../typings/options.js'
 
 /**
  * A [Transform](https://nodejs.org/api/stream.html#class-streamtransform)
@@ -19,7 +20,7 @@ export class LcovStreamParser extends Transform {
     /**
      * @internal
      */
-    private _current = createSection()
+    private _current: SectionSummary = createSection()
     /**
      * @internal
      */

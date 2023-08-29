@@ -1,6 +1,6 @@
 import { Variant } from '../constants.js'
-import { ParseResult } from '../parser.js'
-import {
+import type { ParseResult } from '../parser.js'
+import type {
     BranchLocationEntry,
     EndOfRecordEntry,
     EntryVariants,

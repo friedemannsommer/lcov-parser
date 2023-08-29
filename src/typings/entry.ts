@@ -1,4 +1,4 @@
-import { Variant } from '../constants.js'
+import type { Variant } from '../constants.js'
 
 export type EntryVariants =
     | NoneEntry

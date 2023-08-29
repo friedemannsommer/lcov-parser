@@ -1,5 +1,5 @@
 import { Variant } from '../constants.js'
-import {
+import type {
     BranchLocationEntry,
     EntryVariants,
     FunctionExecutionEntry,
@@ -9,7 +9,7 @@ import {
     LineLocationEntry,
     TestNameEntry
 } from '../typings/entry.js'
-import { BranchEntry, FunctionEntry, LineEntry, SectionSummary, Summary } from '../typings/file.js'
+import type { BranchEntry, FunctionEntry, LineEntry, SectionSummary, Summary } from '../typings/file.js'
 
 export type FunctionMap = Map<string, FunctionEntry>
 
