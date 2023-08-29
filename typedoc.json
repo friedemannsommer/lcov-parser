@@ -11,7 +11,7 @@
   ],
   "githubPages": false,
   "htmlLang": "en",
-  "name": "TypeScript PostMessage handler",
+  "name": "LCOV parser",
   "out": "docs",
   "plugin": [
     "@mxssfd/typedoc-theme",
