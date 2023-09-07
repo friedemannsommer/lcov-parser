@@ -1057,6 +1057,19 @@ describe('transformResult', (): void => {
                 version: '1.0',
                 variant: Variant.Version
             }
+        ],
+        [
+            {
+                done: false,
+                incomplete: false,
+                value: ['hello world'],
+                variant: Variant.Comment
+            },
+            {
+                comment: 'hello world',
+                done: false,
+                variant: Variant.Comment
+            }
         ]
     ]
 
