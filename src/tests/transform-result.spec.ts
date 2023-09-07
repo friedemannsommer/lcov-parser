@@ -1100,7 +1100,7 @@ describe('transformComment', (): void => {
             },
             {
                 comment: '1 2 3',
-                done: true,
+                done: false,
                 variant: Variant.Comment
             }
         ],
@@ -1113,7 +1113,7 @@ describe('transformComment', (): void => {
             },
             {
                 comment: '1,2,3',
-                done: true,
+                done: false,
                 variant: Variant.Comment
             }
         ]

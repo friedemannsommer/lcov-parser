@@ -32,7 +32,7 @@ describe('LcovParser - Field names', (): void => {
             expect(result[0]).to.eql({
                 done: false,
                 incomplete: false,
-                value: isEmptyFieldVariant ? null : ['test', 'data'],
+                value: isEmptyFieldVariant ? null : variant === Variant.Comment ? [':test', 'data'] : ['test', 'data'],
                 variant
             })
 
@@ -134,7 +134,7 @@ describe('LcovParser - Current buffer', (): void => {
 })
 
 describe('LcovParser - Comments', (): void => {
-    it('should ignore comments', (): void => {
+    it('should parse comment', (): void => {
         const parser = new LcovParser(defaultFieldNames)
 
         parser.write(
@@ -145,7 +145,7 @@ describe('LcovParser - Comments', (): void => {
         )
 
         expect(parser.read()).to.eql(getParseResult(Variant.TestName, ['test']))
-        expect(parser.read()).to.eql(getParseResult(Variant.None, null))
+        expect(parser.read()).to.eql(getParseResult(Variant.Comment, [defaultFieldNames.filePath + ':example.file']))
         expect(parser.read()).to.eql(getParseResult(Variant.None, null, true))
     })
 
@@ -160,7 +160,7 @@ describe('LcovParser - Comments', (): void => {
         )
 
         expect(parser.read()).to.eql(getParseResult(Variant.TestName, ['test']))
-        expect(parser.read()).to.eql(getParseResult(Variant.None, null, false, true))
+        expect(parser.read()).to.eql(getParseResult(Variant.Comment, null, false, true))
     })
 })
 

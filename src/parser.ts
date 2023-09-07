@@ -165,12 +165,18 @@ export class LcovParser {
             if (matcher.compare(byte) && matcher.matched()) {
                 const variant = this._variants[nameIndex]
                 const nonEmptyField = isNonEmptyField(variant)
+                const isComment = variant === Variant.Comment
 
-                if (nonEmptyField && byteIndex + 1 < length && buf[byteIndex + 1] !== 58 /* ':' (colon) */) {
+                if (
+                    nonEmptyField &&
+                    !isComment /* comments are not required to contain a ':' (colon) */ &&
+                    byteIndex + 1 < length &&
+                    buf[byteIndex + 1] !== 58 /* ':' (colon) */
+                ) {
                     continue
                 }
 
-                const result = nonEmptyField ? LcovParser._parseValue(buf, byteIndex + 1) : null
+                const result = nonEmptyField ? LcovParser._parseValue(buf, byteIndex + 1, isComment) : null
                 let value = null
 
                 if (result !== null) {
@@ -212,24 +218,24 @@ export class LcovParser {
     /**
      * @internal
      */
-    private static _parseValue(buf: Buffer, offset: number): ParseValueResult | null {
+    private static _parseValue(buf: Buffer, offset: number, startAtOffset: boolean): ParseValueResult | null {
         const length = buf.byteLength
-        let start = -1
+        let start = startAtOffset ? offset : -1
 
         for (let index = offset; index < length; index++) {
-            switch (buf[index]) {
-                case 58 /* ':' (colon) */:
-                    start = index + 1
-                    break
-                case 10 /* '\n' (new line) */:
-                    if (start === -1) {
-                        return null
-                    }
+            const byte = buf[index]
 
-                    return {
-                        lastIndex: index,
-                        value: LcovParser._parseSlice(buf, start, index)
-                    }
+            if (!startAtOffset && byte === 58 /* ':' (colon) */) {
+                start = index + 1
+            } else if (byte === 10 /* '\n' (new line) */) {
+                if (start === -1) {
+                    return null
+                }
+
+                return {
+                    lastIndex: index,
+                    value: LcovParser._parseSlice(buf, start, index)
+                }
             }
         }
 

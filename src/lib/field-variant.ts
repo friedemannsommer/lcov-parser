@@ -5,6 +5,7 @@ export type NonEmptyVariants =
     | Variant.BranchHit
     | Variant.BranchInstrumented
     | Variant.BranchLocation
+    | Variant.Comment
     | Variant.FilePath
     | Variant.FunctionExecution
     | Variant.FunctionHit
