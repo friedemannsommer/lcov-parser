@@ -9,6 +9,7 @@ export function fieldNames(): FieldNames {
         branchHit: 'BRH',
         branchInstrumented: 'BRF',
         branchLocation: 'BRDA',
+        comment: '#',
         endOfRecord: 'end_of_record',
         filePath: 'SF',
         functionExecution: 'FNDA',

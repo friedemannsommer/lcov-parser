@@ -1,10 +1,10 @@
 import type { Variant } from '../constants.js'
 
 export type EntryVariants =
-    | NoneEntry
     | BranchHitEntry
     | BranchInstrumentedEntry
     | BranchLocationEntry
+    | CommentEntry
     | EndOfRecordEntry
     | FilePathEntry
     | FunctionExecutionEntry
@@ -14,6 +14,7 @@ export type EntryVariants =
     | LineHitEntry
     | LineInstrumentedEntry
     | LineLocationEntry
+    | NoneEntry
     | TestNameEntry
     | VersionEntry
 
@@ -80,4 +81,8 @@ export interface TestNameEntry extends Entry<Variant.TestName> {
 
 export interface VersionEntry extends Entry<Variant.Version> {
     version: string
+}
+
+export interface CommentEntry extends Entry<Variant.Comment> {
+    comment: string
 }

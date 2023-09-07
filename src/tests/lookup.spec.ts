@@ -70,6 +70,7 @@ describe('Lookup - generateFieldLookup', (): void => {
             [Variant.BranchHit, new ByteMatch([66, 82, 72])],
             [Variant.BranchInstrumented, new ByteMatch([66, 82, 70])],
             [Variant.BranchLocation, new ByteMatch([66, 82, 68, 65])],
+            [Variant.None, new ByteMatch([35])],
             [Variant.EndOfRecord, new ByteMatch([101, 110, 100, 95, 111, 102, 95, 114, 101, 99, 111, 114, 100])],
             [Variant.FilePath, new ByteMatch([83, 70])],
             [Variant.FunctionExecution, new ByteMatch([70, 78, 68, 65])],

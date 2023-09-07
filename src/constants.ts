@@ -21,6 +21,10 @@ export enum Variant {
      */
     BranchLocation,
     /**
+     * A comment string.
+     */
+    Comment,
+    /**
      * Signals the end of a section.
      */
     EndOfRecord,

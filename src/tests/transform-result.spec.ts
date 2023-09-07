@@ -4,6 +4,7 @@ import { Variant } from '../constants.js'
 import transformResult, {
     intoNone,
     transformBranchLocation,
+    transformComment,
     transformEndOfRecord,
     transformFilePath,
     transformFunctionExecution,
@@ -17,6 +18,7 @@ import transformResult, {
 import { ParseResult } from '../parser.js'
 import {
     BranchLocationEntry,
+    CommentEntry,
     EndOfRecordEntry,
     Entry,
     EntryVariants,
@@ -1059,4 +1061,63 @@ describe('transformResult', (): void => {
     ]
 
     processTestData(testData, transformResult)
+})
+
+describe('transformComment', (): void => {
+    const testData: TestData<Variant.Comment, CommentEntry> = [
+        [
+            {
+                done: false,
+                incomplete: false,
+                value: null,
+                variant: Variant.Comment
+            },
+            {
+                comment: '',
+                done: false,
+                variant: Variant.Comment
+            }
+        ],
+        [
+            {
+                done: true,
+                incomplete: false,
+                value: [],
+                variant: Variant.Comment
+            },
+            {
+                comment: '',
+                done: true,
+                variant: Variant.Comment
+            }
+        ],
+        [
+            {
+                done: false,
+                incomplete: false,
+                value: ['1 2 3'],
+                variant: Variant.Comment
+            },
+            {
+                comment: '1 2 3',
+                done: true,
+                variant: Variant.Comment
+            }
+        ],
+        [
+            {
+                done: false,
+                incomplete: false,
+                value: ['1', '2', '3'],
+                variant: Variant.Comment
+            },
+            {
+                comment: '1,2,3',
+                done: true,
+                variant: Variant.Comment
+            }
+        ]
+    ]
+
+    processTestData(testData, transformComment)
 })

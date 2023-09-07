@@ -55,7 +55,7 @@ describe('LcovStreamParser', (): void => {
         ])
     })
 
-    it('should try to resolve incomplete parse result, by appending a newline', async (): Promise<void> => {
+    it('should try to resolve incomplete parse result, by appending a new line', async (): Promise<void> => {
         const parser = new LcovStreamParser()
         let section: SectionSummary | undefined
 

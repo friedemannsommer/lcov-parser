@@ -37,6 +37,7 @@ export interface FieldNames {
     branchHit: string
     branchInstrumented: string
     branchLocation: string
+    comment: string
     endOfRecord: string
     filePath: string
     functionExecution: string

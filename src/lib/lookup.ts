@@ -51,6 +51,8 @@ export function mapFieldName(fieldName: keyof FieldNames): Variant {
             return Variant.BranchInstrumented
         case 'branchLocation':
             return Variant.BranchLocation
+        case 'comment':
+            return Variant.Comment
         case 'endOfRecord':
             return Variant.EndOfRecord
         case 'filePath':

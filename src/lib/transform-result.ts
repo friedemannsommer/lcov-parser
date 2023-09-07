@@ -2,6 +2,7 @@ import { Variant } from '../constants.js'
 import type { ParseResult } from '../parser.js'
 import type {
     BranchLocationEntry,
+    CommentEntry,
     EndOfRecordEntry,
     EntryVariants,
     FilePathEntry,
@@ -53,6 +54,8 @@ export default function transformResult(result: ParseResult): EntryVariants {
             return transformTestName(result as ParseResult<Variant.TestName>)
         case Variant.Version:
             return transformVersion(result as ParseResult<Variant.Version>)
+        case Variant.Comment:
+            return transformComment(result as ParseResult<Variant.Comment>)
     }
 }
 
@@ -233,5 +236,13 @@ export function transformVersion(result: ParseResult<Variant.Version>): VersionE
         done: result.done,
         variant: result.variant,
         version
+    }
+}
+
+export function transformComment(result: ParseResult<Variant.Comment>): CommentEntry {
+    return {
+        done: result.done,
+        variant: result.variant,
+        comment: result.value !== null ? result.value.join(',') : ''
     }
 }

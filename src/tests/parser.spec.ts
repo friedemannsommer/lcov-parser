@@ -5,6 +5,7 @@ import { isEmptyField } from '../lib/field-variant.js'
 import { mapFieldName } from '../lib/lookup.js'
 import { LcovParser } from '../parser.js'
 import { FieldNames } from '../typings/options.js'
+import { getParseResult, getRawLcov } from './lib/parse.js'
 
 describe('LcovParser - Field names', (): void => {
     for (const key of Object.keys(defaultFieldNames) as Array<keyof FieldNames>) {
@@ -18,6 +19,8 @@ describe('LcovParser - Field names', (): void => {
 
             if (!isEmptyFieldVariant) {
                 chunk += ':test,data\n'
+            } else {
+                chunk += '\n'
             }
 
             parser.write(Buffer.from(chunk))
@@ -56,7 +59,7 @@ describe('LcovParser - Chunks', (): void => {
         })
     })
 
-    it('should not parse chunk without trailing newline', (): void => {
+    it('should not parse chunk without trailing new line', (): void => {
         const parser = new LcovParser(defaultFieldNames)
 
         parser.write(Buffer.from(defaultFieldNames.testName + ':example'))
@@ -71,7 +74,7 @@ describe('LcovParser - Chunks', (): void => {
         })
     })
 
-    it('should parse chunk with trailing newline', (): void => {
+    it('should parse chunk with trailing new line', (): void => {
         const parser = new LcovParser(defaultFieldNames)
 
         parser.write(Buffer.from(defaultFieldNames.testName + ':example\n'))
@@ -127,5 +130,55 @@ describe('LcovParser - Current buffer', (): void => {
         parser.read()
 
         expect(Buffer.isBuffer(parser.getCurrentBuffer()), 'isBuffer').to.be.true
+    })
+})
+
+describe('LcovParser - Comments', (): void => {
+    it('should ignore comments', (): void => {
+        const parser = new LcovParser(defaultFieldNames)
+
+        parser.write(
+            Buffer.from(
+                getRawLcov(defaultFieldNames.testName, 'test') +
+                    getRawLcov('#' + defaultFieldNames.filePath, 'example.file')
+            )
+        )
+
+        expect(parser.read()).to.eql(getParseResult(Variant.TestName, ['test']))
+        expect(parser.read()).to.eql(getParseResult(Variant.None, null))
+        expect(parser.read()).to.eql(getParseResult(Variant.None, null, true))
+    })
+
+    it('should return incomplete for comment without new line', (): void => {
+        const parser = new LcovParser(defaultFieldNames)
+
+        parser.write(
+            Buffer.from(
+                getRawLcov(defaultFieldNames.testName, 'test') +
+                    getRawLcov('#' + defaultFieldNames.filePath, 'example.file').slice(0, -1)
+            )
+        )
+
+        expect(parser.read()).to.eql(getParseResult(Variant.TestName, ['test']))
+        expect(parser.read()).to.eql(getParseResult(Variant.None, null, false, true))
+    })
+})
+
+describe('LcovParser - empty fields', (): void => {
+    it('should process "end_of_record" correctly', (): void => {
+        const parser = new LcovParser(defaultFieldNames)
+
+        parser.write(Buffer.from(getRawLcov(defaultFieldNames.endOfRecord)))
+
+        expect(parser.read()).to.eql(getParseResult(Variant.EndOfRecord))
+        expect(parser.read()).to.eql(getParseResult(Variant.None, null, true))
+    })
+
+    it('should return incomplete for "end_of_record" without new line', (): void => {
+        const parser = new LcovParser(defaultFieldNames)
+
+        parser.write(Buffer.from(getRawLcov(defaultFieldNames.endOfRecord).slice(0, -1)))
+
+        expect(parser.read()).to.eql(getParseResult(Variant.None, null, false, true))
     })
 })

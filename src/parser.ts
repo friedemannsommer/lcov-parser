@@ -170,14 +170,20 @@ export class LcovParser {
                     continue
                 }
 
-                const result = nonEmptyField ? this._parseValue(buf, byteIndex + 1) : null
+                const result = nonEmptyField ? LcovParser._parseValue(buf, byteIndex + 1) : null
                 let value = null
 
                 if (result !== null) {
                     this._offset = result.lastIndex + 1
                     value = result.value
                 } else if (!nonEmptyField) {
-                    this._offset += matcher.size
+                    const newLineIndex = LcovParser._seekNextLine(buf, byteIndex + 1)
+
+                    if (newLineIndex !== -1) {
+                        this._offset = matcher.size + newLineIndex + 1
+                    } else {
+                        return LcovParser._defaultResult(false, true)
+                    }
                 }
 
                 this._resetMatcher()
@@ -206,7 +212,7 @@ export class LcovParser {
     /**
      * @internal
      */
-    private _parseValue(buf: Buffer, offset: number): ParseValueResult | null {
+    private static _parseValue(buf: Buffer, offset: number): ParseValueResult | null {
         const length = buf.byteLength
         let start = -1
 
@@ -215,7 +221,7 @@ export class LcovParser {
                 case 58 /* ':' (colon) */:
                     start = index + 1
                     break
-                case 10 /* '\n' (newline) */:
+                case 10 /* '\n' (new line) */:
                     if (start === -1) {
                         return null
                     }
@@ -228,6 +234,18 @@ export class LcovParser {
         }
 
         return null
+    }
+
+    private static _seekNextLine(buf: Buffer, offset: number): number {
+        const length = buf.byteLength
+
+        for (let index = offset; index < length; index++) {
+            if (buf[index] === 10 /* '\n' (new line) */) {
+                return index
+            }
+        }
+
+        return -1
     }
 
     /**
