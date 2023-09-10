@@ -1,0 +1,121 @@
+[
+  {
+    "branches": {
+      "details": [
+        {
+          "block": 1,
+          "branch": "0",
+          "hit": 1,
+          "isException": false,
+          "line": 1
+        },
+        {
+          "block": 1,
+          "branch": "1",
+          "hit": 1,
+          "isException": false,
+          "line": 1
+        },
+        {
+          "block": 1,
+          "branch": "2",
+          "hit": 0,
+          "isException": false,
+          "line": 1
+        },
+        {
+          "block": 2,
+          "branch": "0",
+          "hit": 1,
+          "isException": false,
+          "line": 1
+        },
+        {
+          "block": 2,
+          "branch": "1",
+          "hit": 0,
+          "isException": false,
+          "line": 1
+        },
+        {
+          "block": 0,
+          "branch": "0",
+          "hit": 0,
+          "isException": false,
+          "line": 11
+        },
+        {
+          "block": 0,
+          "branch": "1",
+          "hit": 0,
+          "isException": false,
+          "line": 11
+        }
+      ],
+      "hit": 4,
+      "instrumented": 5
+    },
+    "functions": {
+      "details": [
+        {
+          "hit": 0,
+          "line": 1,
+          "name": "fcn"
+        },
+        {
+          "hit": 2,
+          "line": 1,
+          "name": "alias"
+        },
+        {
+          "hit": 1,
+          "line": 3,
+          "name": "noCommonAlias"
+        },
+        {
+          "hit": 0,
+          "line": 11,
+          "name": "onlyA"
+        }
+      ],
+      "hit": 3,
+      "instrumented": 4
+    },
+    "lines": {
+      "details": [
+        {
+          "hit": 1,
+          "line": 1
+        },
+        {
+          "hit": 0,
+          "line": 2
+        },
+        {
+          "hit": 0,
+          "line": 3
+        },
+        {
+          "hit": 1,
+          "line": 4
+        },
+        {
+          "hit": 0,
+          "line": 10
+        },
+        {
+          "hit": 0,
+          "line": 11
+        },
+        {
+          "hit": 0,
+          "line": 12
+        }
+      ],
+      "hit": 2,
+      "instrumented": 7
+    },
+    "name": "",
+    "path": "a.cpp"
+  }
+]
