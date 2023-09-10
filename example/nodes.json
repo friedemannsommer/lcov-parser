@@ -1,0 +1,335 @@
+[
+  {
+    "done": false,
+    "incomplete": false,
+    "value": [
+      "example"
+    ],
+    "variant": 14
+  },
+  {
+    "done": false,
+    "incomplete": false,
+    "value": [
+      " source: https://github.com/linux-test-project/lcov/blob/07a1127c2b4390abf4a516e9763fb28a956a9ce4/tests/lcov/merge/a.info#L1-L38"
+    ],
+    "variant": 4
+  },
+  {
+    "done": false,
+    "incomplete": false,
+    "value": [
+      "a.cpp"
+    ],
+    "variant": 6
+  },
+  {
+    "done": false,
+    "incomplete": false,
+    "value": [
+      "1",
+      "1"
+    ],
+    "variant": 13
+  },
+  {
+    "done": false,
+    "incomplete": false,
+    "value": [
+      "common line:  my count is zero and yours is nonzero"
+    ],
+    "variant": 4
+  },
+  {
+    "done": false,
+    "incomplete": false,
+    "value": [
+      "2",
+      "0"
+    ],
+    "variant": 13
+  },
+  {
+    "done": false,
+    "incomplete": false,
+    "value": [
+      "3",
+      "0"
+    ],
+    "variant": 13
+  },
+  {
+    "done": false,
+    "incomplete": false,
+    "value": [
+      "4",
+      "1"
+    ],
+    "variant": 13
+  },
+  {
+    "done": false,
+    "incomplete": false,
+    "value": [
+      "10",
+      "0"
+    ],
+    "variant": 13
+  },
+  {
+    "done": false,
+    "incomplete": false,
+    "value": [
+      "11",
+      "0"
+    ],
+    "variant": 13
+  },
+  {
+    "done": false,
+    "incomplete": false,
+    "value": [
+      "12",
+      "0"
+    ],
+    "variant": 13
+  },
+  {
+    "done": false,
+    "incomplete": false,
+    "value": [
+      "7"
+    ],
+    "variant": 12
+  },
+  {
+    "done": false,
+    "incomplete": false,
+    "value": [
+      "2"
+    ],
+    "variant": 11
+  },
+  {
+    "done": false,
+    "incomplete": false,
+    "value": [
+      "1",
+      "2",
+      "fcn"
+    ],
+    "variant": 10
+  },
+  {
+    "done": false,
+    "incomplete": false,
+    "value": [
+      "1",
+      "2",
+      "alias"
+    ],
+    "variant": 10
+  },
+  {
+    "done": false,
+    "incomplete": false,
+    "value": [
+      "3",
+      "3",
+      "noCommonAlias"
+    ],
+    "variant": 10
+  },
+  {
+    "done": false,
+    "incomplete": false,
+    "value": [
+      "11",
+      "11",
+      "onlyA"
+    ],
+    "variant": 10
+  },
+  {
+    "done": false,
+    "incomplete": false,
+    "value": [
+      "4"
+    ],
+    "variant": 9
+  },
+  {
+    "done": false,
+    "incomplete": false,
+    "value": [
+      "3"
+    ],
+    "variant": 8
+  },
+  {
+    "done": false,
+    "incomplete": false,
+    "value": [
+      " my count is zero yours is nonzero"
+    ],
+    "variant": 4
+  },
+  {
+    "done": false,
+    "incomplete": false,
+    "value": [
+      "0",
+      "fcn"
+    ],
+    "variant": 7
+  },
+  {
+    "done": false,
+    "incomplete": false,
+    "value": [
+      "2",
+      "alias"
+    ],
+    "variant": 7
+  },
+  {
+    "done": false,
+    "incomplete": false,
+    "value": [
+      "0",
+      "onlyA"
+    ],
+    "variant": 7
+  },
+  {
+    "done": false,
+    "incomplete": false,
+    "value": [
+      "1",
+      "noCommonAlias"
+    ],
+    "variant": 7
+  },
+  {
+    "done": false,
+    "incomplete": false,
+    "value": [
+      "1",
+      "1",
+      "0",
+      "1"
+    ],
+    "variant": 3
+  },
+  {
+    "done": false,
+    "incomplete": false,
+    "value": [
+      "1",
+      "1",
+      "1",
+      "1"
+    ],
+    "variant": 3
+  },
+  {
+    "done": false,
+    "incomplete": false,
+    "value": [
+      "1",
+      "1",
+      "2",
+      "-"
+    ],
+    "variant": 3
+  },
+  {
+    "done": false,
+    "incomplete": false,
+    "value": [
+      "1",
+      "2",
+      "0",
+      "1"
+    ],
+    "variant": 3
+  },
+  {
+    "done": false,
+    "incomplete": false,
+    "value": [
+      " common branch expr count zero in my",
+      " nonzero in you"
+    ],
+    "variant": 4
+  },
+  {
+    "done": false,
+    "incomplete": false,
+    "value": [
+      "1",
+      "2",
+      "1",
+      "0"
+    ],
+    "variant": 3
+  },
+  {
+    "done": false,
+    "incomplete": false,
+    "value": [
+      " branch in A only"
+    ],
+    "variant": 4
+  },
+  {
+    "done": false,
+    "incomplete": false,
+    "value": [
+      "11",
+      "0",
+      "0",
+      "0"
+    ],
+    "variant": 3
+  },
+  {
+    "done": false,
+    "incomplete": false,
+    "value": [
+      "11",
+      "0",
+      "1",
+      "0"
+    ],
+    "variant": 3
+  },
+  {
+    "done": false,
+    "incomplete": false,
+    "value": [
+      "5"
+    ],
+    "variant": 2
+  },
+  {
+    "done": false,
+    "incomplete": false,
+    "value": [
+      "4"
+    ],
+    "variant": 1
+  },
+  {
+    "done": false,
+    "incomplete": false,
+    "value": null,
+    "variant": 5
+  },
+  {
+    "done": true,
+    "incomplete": false,
+    "value": null,
+    "variant": 0
+  }
+]

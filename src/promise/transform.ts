@@ -15,7 +15,7 @@ export function transformSynchronous(results: ParseResult[]): SectionSummary[] {
         const entry = transformResult(parseResult)
 
         if (entry.variant !== Variant.None) {
-            sectionIndex = updateResults(sectionIndex, transformResult(parseResult), functionMap, result)
+            sectionIndex = updateResults(sectionIndex, entry, functionMap, result)
         }
     }
 

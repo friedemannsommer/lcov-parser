@@ -1,4 +1,5 @@
-TN:
+TN:example
+# source: https://github.com/linux-test-project/lcov/blob/07a1127c2b4390abf4a516e9763fb28a956a9ce4/tests/lcov/merge/a.info#L1-L38
 SF:a.cpp
 DA:1,1
 #common line:  my count is zero and yours is nonzero
