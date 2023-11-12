@@ -3,17 +3,17 @@
     "done": false,
     "incomplete": false,
     "value": [
-      "example"
+      " source: https://github.com/linux-test-project/lcov/blob/07a1127c2b4390abf4a516e9763fb28a956a9ce4/tests/lcov/merge/a.info#L1-L38"
     ],
-    "variant": 14
+    "variant": 4
   },
   {
     "done": false,
     "incomplete": false,
     "value": [
-      " source: https://github.com/linux-test-project/lcov/blob/07a1127c2b4390abf4a516e9763fb28a956a9ce4/tests/lcov/merge/a.info#L1-L38"
+      "example"
     ],
-    "variant": 4
+    "variant": 14
   },
   {
     "done": false,

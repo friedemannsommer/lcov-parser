@@ -431,8 +431,11 @@ describe('updateResults', (): void => {
             [
                 getTestNameEntry('example #1'),
                 getFilePathEntry('path/to/file.ext'),
+                getEndOfRecord(),
                 getTestNameEntry('example #2'),
-                getTestNameEntry('example #3')
+                getEndOfRecord(),
+                getTestNameEntry('example #3'),
+                getEndOfRecord()
             ],
             [
                 {

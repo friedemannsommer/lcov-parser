@@ -24,7 +24,7 @@ export function handleResult(entry: EntryVariants, functionMap: FunctionMap, sec
             section.path = entry.path
             break
         case Variant.EndOfRecord:
-            // we've left the test module, to prevent name conflicts simply clear the current FunctionMap
+            // we've left the test module, to prevent name conflicts clear the current FunctionMap
             functionMap.clear()
 
             return true
@@ -61,16 +61,8 @@ export function updateResults(
     functionMap: FunctionMap,
     sections: SectionSummary[]
 ): number {
-    if (entry.variant === Variant.TestName) {
-        const length = sections.length
-        // creating a new test module, clearing the current FunctionMap
-        functionMap.clear()
-
-        sections.push(createSection(entry))
-
-        return length
-    } else if (sectionIndex === sections.length) {
-        // prevent OOB, which happens if "TestName" isn't the first variant encountered for a section
+    if (sectionIndex === sections.length) {
+        // the section for the current index doesn't exist, creating a new one with default values
         sections[sectionIndex] = createSection()
     }
 
