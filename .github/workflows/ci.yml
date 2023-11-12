@@ -35,6 +35,9 @@ jobs:
           CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
 
   publish:
+    permissions:
+      contents: read
+      id-token: write
     needs:
       - check
     runs-on: ubuntu-latest
