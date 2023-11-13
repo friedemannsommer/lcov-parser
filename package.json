@@ -21,21 +21,40 @@
     "ts-node": "10.9.1",
     "typedoc": "0.25.3",
     "typedoc-plugin-mdn-links": "3.1.0",
-    "typescript": "5.2.2"
+    "typescript": "5.2.2",
+    "unbuild": "2.0.0"
   },
   "engines": {
     "node": ">=16"
   },
   "exports": {
-    ".": "./dist/index.js",
-    "./constants": "./dist/constants.js",
-    "./lib/field-variant": "./dist/lib/field-variant.js",
-    "./parser": "./dist/parser.js",
-    "./promise": "./dist/promise/index.js",
-    "./stream": "./dist/stream/index.js"
+    ".": {
+      "import": "./dist/index.mjs",
+      "require": "./dist/index.cjs"
+    },
+    "./constants": {
+      "import": "./dist/constants.mjs",
+      "require": "./dist/constants.cjs"
+    },
+    "./lib/field-variant": {
+      "import": "./dist/lib/field-variant.mjs",
+      "require": "./dist/lib/field-variant.cjs"
+    },
+    "./parser": {
+      "import": "./dist/parser.mjs",
+      "require": "./dist/parser.cjs"
+    },
+    "./promise": {
+      "import": "./dist/promise/index.mjs",
+      "require": "./dist/promise/index.cjs"
+    },
+    "./stream": {
+      "import": "./dist/stream/index.mjs",
+      "require": "./dist/stream/index.cjs"
+    }
   },
   "files": [
-    "dist/*"
+    "dist"
   ],
   "homepage": "https://friedemannsommer.github.io/lcov-parser/",
   "keywords": [
@@ -44,7 +63,7 @@
     "parser"
   ],
   "license": "MIT",
-  "main": "./dist/index.js",
+  "main": "./dist/index.cjs",
   "name": "@friedemannsommer/lcov-parser",
   "repository": {
     "type": "git",
@@ -52,7 +71,7 @@
   },
   "scripts": {
     "build": "tsc --project tsconfig.json",
-    "build:dist": "tsc --project build.tsconfig.json",
+    "build:dist": "unbuild",
     "check": "npm run build -- --noEmit",
     "docs": "typedoc",
     "fmt": "prettier -c src",
@@ -60,6 +79,7 @@
     "test": "mocha",
     "coverage": "c8 mocha"
   },
+  "sideEffects": false,
   "type": "module",
   "version": "3.0.2"
 }

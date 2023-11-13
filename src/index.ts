@@ -1,7 +1,7 @@
 import lcovParser from './promise/index.js'
 
-export { FieldNames } from './typings/options.js'
-export { BranchEntry, LineEntry, SectionSummary, Summary, FunctionEntry } from './typings/file.js'
+export type { FieldNames } from './typings/options.js'
+export type { BranchEntry, LineEntry, SectionSummary, Summary, FunctionEntry } from './typings/file.js'
 
 /**
  * An asynchronous LCOV parser, which will return a `Promise` with the parsed sections.
