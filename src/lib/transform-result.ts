@@ -175,8 +175,8 @@ export function transformFunctionLocation(result: ParseResult<Variant.FunctionLo
             lineEnd < lineStart || result.value.length === 2
                 ? result.value[1]
                 : result.value.length >= 3
-                ? result.value[2]
-                : ''
+                  ? result.value[2]
+                  : ''
     }
 
     return {
