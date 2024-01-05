@@ -1,5 +1,5 @@
 module.exports = {
-    'node-option': ['experimental-specifier-resolution=node', 'loader=ts-node/esm'],
+    'node-option': ['import=./node/register.mjs'],
     extension: ['ts'],
     spec: 'src/tests/**/*.spec.ts'
 }
