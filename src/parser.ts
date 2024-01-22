@@ -186,7 +186,7 @@ export class LcovParser {
                     const newLineIndex = LcovParser._seekNextLine(buf, byteIndex + 1)
 
                     if (newLineIndex !== -1) {
-                        this._offset = matcher.size + newLineIndex + 1
+                        this._offset = newLineIndex + 1
                     } else {
                         return LcovParser._defaultResult(false, true)
                     }

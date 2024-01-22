@@ -27,21 +27,13 @@ describe('LcovParser - Field names', (): void => {
 
             const result = parser.flush()
 
-            expect(result).to.have.length(2)
-
-            expect(result[0]).to.eql({
-                done: false,
-                incomplete: false,
-                value: isEmptyFieldVariant ? null : variant === Variant.Comment ? [':test', 'data'] : ['test', 'data'],
-                variant
-            })
-
-            expect(result[1]).to.eql({
-                done: true,
-                incomplete: false,
-                value: null,
-                variant: Variant.None
-            })
+            expect(result).to.eql([
+                getParseResult(
+                    variant,
+                    isEmptyFieldVariant ? null : variant === Variant.Comment ? [':test', 'data'] : ['test', 'data']
+                ),
+                getParseResult(Variant.None, null, true)
+            ])
         })
     }
 })
@@ -51,12 +43,7 @@ describe('LcovParser - Chunks', (): void => {
         const parser = new LcovParser(defaultFieldNames)
         const result = parser.read()
 
-        expect(result).to.eql({
-            done: true,
-            incomplete: false,
-            value: null,
-            variant: Variant.None
-        })
+        expect(result).to.eql(getParseResult(Variant.None, null, true))
     })
 
     it('should not parse chunk without trailing new line', (): void => {
@@ -66,12 +53,7 @@ describe('LcovParser - Chunks', (): void => {
 
         const result = parser.read()
 
-        expect(result).to.eql({
-            done: false,
-            incomplete: true,
-            value: null,
-            variant: Variant.TestName
-        })
+        expect(result).to.eql(getParseResult(Variant.TestName, null, false, true))
     })
 
     it('should parse chunk with trailing new line', (): void => {
@@ -81,12 +63,7 @@ describe('LcovParser - Chunks', (): void => {
 
         const result = parser.read()
 
-        expect(result).to.eql({
-            done: false,
-            incomplete: false,
-            value: ['example'],
-            variant: Variant.TestName
-        })
+        expect(result).to.eql(getParseResult(Variant.TestName, ['example']))
     })
 
     it('should parse multiple chunks into one result', (): void => {
@@ -99,19 +76,67 @@ describe('LcovParser - Chunks', (): void => {
 
         const result = parser.flush()
 
+        expect(result).to.eql([getParseResult(Variant.TestName, ['example']), getParseResult(Variant.None, null, true)])
+    })
+
+    it('should parse multiple chunks into multiple results', (): void => {
+        const parser = new LcovParser(defaultFieldNames)
+        const chunks = [
+            defaultFieldNames.testName,
+            ':',
+            'example',
+            '\n',
+            defaultFieldNames.version,
+            ':',
+            '2',
+            '\n',
+            defaultFieldNames.filePath,
+            ':',
+            'directory/file.ext',
+            '\n'
+        ]
+
+        for (const chunk of chunks) {
+            parser.write(Buffer.from(chunk))
+        }
+
+        const result = parser.flush()
+
         expect(result).to.eql([
-            {
-                done: false,
-                incomplete: false,
-                value: ['example'],
-                variant: Variant.TestName
-            },
-            {
-                done: true,
-                incomplete: false,
-                value: null,
-                variant: Variant.None
-            }
+            getParseResult(Variant.TestName, ['example']),
+            getParseResult(Variant.Version, ['2']),
+            getParseResult(Variant.FilePath, ['directory/file.ext']),
+            getParseResult(Variant.None, null, true)
+        ])
+    })
+
+    it('should parse multiple sections into multiple results', (): void => {
+        const parser = new LcovParser(defaultFieldNames)
+        const buffer = Buffer.from(
+            [
+                // section #1
+                defaultFieldNames.testName + ':example 1',
+                defaultFieldNames.filePath + ':file.ext',
+                defaultFieldNames.endOfRecord,
+                // section #2
+                defaultFieldNames.testName + ':example 2',
+                defaultFieldNames.filePath + ':directory/file.ext',
+                defaultFieldNames.endOfRecord
+            ].join('\n') + '\n'
+        )
+
+        parser.write(buffer)
+
+        const result = parser.flush()
+
+        expect(result).to.eql([
+            getParseResult(Variant.TestName, ['example 1']),
+            getParseResult(Variant.FilePath, ['file.ext']),
+            getParseResult(Variant.EndOfRecord, null),
+            getParseResult(Variant.TestName, ['example 2']),
+            getParseResult(Variant.FilePath, ['directory/file.ext']),
+            getParseResult(Variant.EndOfRecord, null),
+            getParseResult(Variant.None, null, true)
         ])
     })
 })
