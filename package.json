@@ -21,7 +21,7 @@
     "ts-node": "10.9.2",
     "typedoc": "0.25.11",
     "typedoc-plugin-mdn-links": "3.1.17",
-    "typescript": "5.3.3",
+    "typescript": "5.4.2",
     "unbuild": "2.0.0"
   },
   "engines": {
