@@ -67,7 +67,7 @@
   "name": "@friedemannsommer/lcov-parser",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/friedemannsommer/lcov-parser.git"
+    "url": "https://github.com/friedemannsommer/lcov-parser.git"
   },
   "scripts": {
     "build": "tsc --project tsconfig.json",
