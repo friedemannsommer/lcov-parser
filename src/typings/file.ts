@@ -4,7 +4,7 @@ export interface SectionSummary {
      */
     branches: Summary<BranchEntry>
     /**
-     * The overall number of functions found and how often they were hit, with a lit of instrumented functions.
+     * The overall number of functions found and how often they were hit, with a list of instrumented functions.
      */
     functions: Summary<FunctionEntry>
     /**
