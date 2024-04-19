@@ -81,9 +81,10 @@
     "check:biome": "biome check src",
     "check:ci": "biome ci src && npm run check:ts",
     "check:ts": "tsc --project tsconfig.json --noEmit",
+    "coverage": "c8 mocha",
     "docs": "typedoc",
-    "test": "mocha",
-    "coverage": "c8 mocha"
+    "release": "npm run build && changeset publish",
+    "test": "mocha"
   },
   "sideEffects": false,
   "type": "module",
