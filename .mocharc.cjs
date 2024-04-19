@@ -1,5 +1,9 @@
+const nodeVersion = process.version
+const nodeMajorVersion = Number.parseInt(nodeVersion.slice(1, nodeVersion.indexOf('.')))
+
 module.exports = {
-    'node-option': [process.version.startsWith('v16.') ? 'require=ts-node/register' : 'import=./node/register.mjs'],
+    'node-option': nodeMajorVersion > 16 ? ['import=./node/register.mjs'] : undefined,
     extension: ['ts'],
-    spec: 'src/tests/**/*.spec.ts'
+    spec: 'src/tests/**/*.spec.ts',
+    loader: nodeMajorVersion <= 16 ? 'ts-node/esm' : undefined
 }
