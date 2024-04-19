@@ -1,10 +1,15 @@
 const nodeVersion = process.version
 const nodeMajorVersion = Number.parseInt(nodeVersion.slice(1, nodeVersion.indexOf('.')))
-
-module.exports = {
+const mochaOptions = {
     extensions: ['ts'],
-    loader: nodeMajorVersion <= 16 ? 'ts-node/esm' : undefined,
-    'node-option': nodeMajorVersion > 16 ? ['import=./node/register.mjs'] : undefined,
-    require: nodeMajorVersion <= 16 ? 'ts-node/register' : undefined,
     spec: 'src/tests/**/*.spec.ts'
 }
+
+if (nodeMajorVersion <= 16) {
+    mochaOptions.loader = 'ts-node/esm'
+    mochaOptions.require = 'ts-node/register'
+} else {
+    mochaOptions['node-option'] = ['import=./node/register.mjs']
+}
+
+module.exports = mochaOptions
