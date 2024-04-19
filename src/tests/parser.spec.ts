@@ -1,10 +1,10 @@
 import { expect } from 'chai'
 
-import { defaultFieldNames, Variant } from '../constants.js'
+import { Variant, defaultFieldNames } from '../constants.js'
 import { isEmptyField } from '../lib/field-variant.js'
 import { mapFieldName } from '../lib/lookup.js'
 import { LcovParser } from '../parser.js'
-import { FieldNames } from '../typings/options.js'
+import type { FieldNames } from '../typings/options.js'
 import { getParseResult, getRawLcov } from './lib/parse.js'
 
 describe('LcovParser - Field names', (): void => {
@@ -49,7 +49,7 @@ describe('LcovParser - Chunks', (): void => {
     it('should not parse chunk without trailing new line', (): void => {
         const parser = new LcovParser(defaultFieldNames)
 
-        parser.write(Buffer.from(defaultFieldNames.testName + ':example'))
+        parser.write(Buffer.from(`${defaultFieldNames.testName}:example`))
 
         const result = parser.read()
 
@@ -59,7 +59,7 @@ describe('LcovParser - Chunks', (): void => {
     it('should parse chunk with trailing new line', (): void => {
         const parser = new LcovParser(defaultFieldNames)
 
-        parser.write(Buffer.from(defaultFieldNames.testName + ':example\n'))
+        parser.write(Buffer.from(`${defaultFieldNames.testName}:example\n`))
 
         const result = parser.read()
 
@@ -113,16 +113,16 @@ describe('LcovParser - Chunks', (): void => {
     it('should parse multiple sections into multiple results', (): void => {
         const parser = new LcovParser(defaultFieldNames)
         const buffer = Buffer.from(
-            [
+            `${[
                 // section #1
-                defaultFieldNames.testName + ':example 1',
-                defaultFieldNames.filePath + ':file.ext',
+                `${defaultFieldNames.testName}:example 1`,
+                `${defaultFieldNames.filePath}:file.ext`,
                 defaultFieldNames.endOfRecord,
                 // section #2
-                defaultFieldNames.testName + ':example 2',
-                defaultFieldNames.filePath + ':directory/file.ext',
+                `${defaultFieldNames.testName}:example 2`,
+                `${defaultFieldNames.filePath}:directory/file.ext`,
                 defaultFieldNames.endOfRecord
-            ].join('\n') + '\n'
+            ].join('\n')}\n`
         )
 
         parser.write(buffer)
@@ -165,12 +165,12 @@ describe('LcovParser - Comments', (): void => {
         parser.write(
             Buffer.from(
                 getRawLcov(defaultFieldNames.testName, 'test') +
-                    getRawLcov('#' + defaultFieldNames.filePath, 'example.file')
+                    getRawLcov(`#${defaultFieldNames.filePath}`, 'example.file')
             )
         )
 
         expect(parser.read()).to.eql(getParseResult(Variant.TestName, ['test']))
-        expect(parser.read()).to.eql(getParseResult(Variant.Comment, [defaultFieldNames.filePath + ':example.file']))
+        expect(parser.read()).to.eql(getParseResult(Variant.Comment, [`${defaultFieldNames.filePath}:example.file`]))
         expect(parser.read()).to.eql(getParseResult(Variant.None, null, true))
     })
 
@@ -180,7 +180,7 @@ describe('LcovParser - Comments', (): void => {
         parser.write(
             Buffer.from(
                 getRawLcov(defaultFieldNames.testName, 'test') +
-                    getRawLcov('#' + defaultFieldNames.filePath, 'example.file').slice(0, -1)
+                    getRawLcov(`#${defaultFieldNames.filePath}`, 'example.file').slice(0, -1)
             )
         )
 

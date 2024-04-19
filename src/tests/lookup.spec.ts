@@ -1,9 +1,9 @@
 import { expect } from 'chai'
 
-import { defaultFieldNames, Variant } from '../constants.js'
+import { Variant, defaultFieldNames } from '../constants.js'
 import ByteMatch from '../lib/byte-match.js'
-import { generateFieldLookup, LookupResult, mapFieldName, mapFieldNames, sortFieldNames } from '../lib/lookup.js'
-import { FieldNames } from '../typings/options.js'
+import { type LookupResult, generateFieldLookup, mapFieldName, mapFieldNames, sortFieldNames } from '../lib/lookup.js'
+import type { FieldNames } from '../typings/options.js'
 
 const fieldVariants: Array<[Variant, keyof FieldNames]> = [
     [Variant.BranchHit, 'branchHit'],

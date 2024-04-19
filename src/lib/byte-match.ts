@@ -1,6 +1,6 @@
 export default class ByteMatch {
     public readonly size: number
-    private _offset: number = 0
+    private _offset = 0
 
     public constructor(private readonly _buffer: number[]) {
         this.size = _buffer.length

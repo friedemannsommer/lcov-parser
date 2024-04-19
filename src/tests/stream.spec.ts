@@ -3,7 +3,7 @@ import { expect } from 'chai'
 import { defaultFieldNames } from '../constants.js'
 import { createSection } from '../lib/handle-result.js'
 import LcovStreamParser from '../stream/index.js'
-import { SectionSummary } from '../typings/file.js'
+import type { SectionSummary } from '../typings/file.js'
 import { getTestNameEntry } from './lib/entry.js'
 import { getRawLcov } from './lib/parse.js'
 
@@ -66,7 +66,7 @@ describe('LcovStreamParser', (): void => {
             parser.once('error', reject)
             parser.once('finish', resolve)
             parser.write(getRawLcov(defaultFieldNames.testName, 'post_fix'))
-            parser.write(defaultFieldNames.filePath + ':')
+            parser.write(`${defaultFieldNames.filePath}:`)
             parser.end()
         })
 

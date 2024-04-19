@@ -37,6 +37,7 @@ export function sortFieldNames(names: Variant[], values: ByteMatch[]): LookupRes
     }
 
     for (let index = 0; index < names.length; index++) {
+        // biome-ignore lint/style/noNonNullAssertion: the name is guaranteed to exist at this point
         sortedNames[indexMap.get(values[index])!] = names[index]
     }
 

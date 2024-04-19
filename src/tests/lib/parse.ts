@@ -1,5 +1,5 @@
-import { Variant } from '../../constants.js'
-import { ParseResult } from '../../parser.js'
+import type { Variant } from '../../constants.js'
+import type { ParseResult } from '../../parser.js'
 
 export function getParseResult<V extends Variant>(
     variant: V,
@@ -17,8 +17,8 @@ export function getParseResult<V extends Variant>(
 
 export function getRawLcov(fieldName: string, value?: string): string {
     if (value) {
-        return fieldName + ':' + value + '\n'
+        return `${fieldName}:${value}\n`
     }
 
-    return fieldName + '\n'
+    return `${fieldName}\n`
 }

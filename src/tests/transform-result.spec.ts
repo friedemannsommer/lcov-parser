@@ -15,8 +15,8 @@ import transformResult, {
     transformTestName,
     transformVersion
 } from '../lib/transform-result.js'
-import { ParseResult } from '../parser.js'
-import {
+import type { ParseResult } from '../parser.js'
+import type {
     BranchLocationEntry,
     CommentEntry,
     EndOfRecordEntry,
@@ -44,7 +44,7 @@ function processTestData<V extends Variant, E extends Entry<V>>(
         const [result, expected] = testData[index]
 
         it(`should parse (${Variant[result.variant]}) result with "done: ${result.done}" and value ${
-            result.value ? 'length: ' + result.value.length : '"null"'
+            result.value ? `length: ${result.value.length}` : '"null"'
         } #${index + 1}`, (): void => {
             expect(transformFn(result)).to.eql(expected)
         })

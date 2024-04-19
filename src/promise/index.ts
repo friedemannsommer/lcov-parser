@@ -38,6 +38,6 @@ export function lcovParser(options: Options): Promise<SectionSummary[]> {
     return Promise.reject(new Error("given `from` type isn't supported."))
 }
 
-export { Options }
+export type { Options }
 
 export default lcovParser

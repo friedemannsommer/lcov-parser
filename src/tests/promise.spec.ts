@@ -1,5 +1,5 @@
-import { expect } from 'chai'
 import { Readable } from 'node:stream'
+import { expect } from 'chai'
 
 import { defaultFieldNames } from '../constants.js'
 import { createSection } from '../lib/handle-result.js'

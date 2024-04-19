@@ -1,7 +1,7 @@
-import { Transform, TransformCallback } from 'node:stream'
+import { Transform, type TransformCallback } from 'node:stream'
 
 import { defaultFieldNames } from '../constants.js'
-import { createSection, FunctionMap, handleResult } from '../lib/handle-result.js'
+import { type FunctionMap, createSection, handleResult } from '../lib/handle-result.js'
 import { isBlankSpace } from '../lib/parse.js'
 import transformResult from '../lib/transform-result.js'
 import { LcovParser } from '../parser.js'
@@ -126,6 +126,6 @@ export class LcovStreamParser extends Transform {
     }
 }
 
-export { StreamOptions }
+export type { StreamOptions }
 
 export default LcovStreamParser

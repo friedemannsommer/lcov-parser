@@ -2,9 +2,9 @@
  * Tries to parse the given value as `number`, if the result is `NaN` zero is returned instead.
  */
 export function parseInteger(val: string): number {
-    const num = parseInt(val)
+    const num = Number.parseInt(val)
 
-    if (isNaN(num)) {
+    if (Number.isNaN(num)) {
         return 0
     }
 

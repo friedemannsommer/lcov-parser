@@ -3,14 +3,6 @@ import { defineBuildConfig } from 'unbuild'
 export default defineBuildConfig({
     clean: true,
     declaration: true,
-    entries: [
-        './src/index.ts',
-        './src/constants.ts',
-        './src/lib/field-variant.ts',
-        './src/parser.ts',
-        './src/promise/index.ts',
-        './src/stream/index.ts'
-    ],
     outDir: 'dist',
     rollup: {
         emitCJS: true,

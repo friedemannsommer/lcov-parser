@@ -7,67 +7,67 @@ export enum Variant {
     /**
      * Used for {@link parser.ParseResult#incomplete} and {@link parser.ParseResult#done} results.
      */
-    None,
+    None = 0,
     /**
      * Number of branches hit.
      */
-    BranchHit,
+    BranchHit = 1,
     /**
      * Number of branches found.
      */
-    BranchInstrumented,
+    BranchInstrumented = 2,
     /**
      * Provides branch coverage information, such as line number, block ID, branch, and how often it was used.
      */
-    BranchLocation,
+    BranchLocation = 3,
     /**
      * A comment string.
      */
-    Comment,
+    Comment = 4,
     /**
      * Signals the end of a section.
      */
-    EndOfRecord,
+    EndOfRecord = 5,
     /**
      * The source file path.
      */
-    FilePath,
+    FilePath = 6,
     /**
      * Call count for a given function, identified by name.
      */
-    FunctionExecution,
+    FunctionExecution = 7,
     /**
      * Number of functions hit.
      */
-    FunctionHit,
+    FunctionHit = 8,
     /**
      * Number of functions found.
      */
-    FunctionInstrumented,
+    FunctionInstrumented = 9,
     /**
      * Start and end line numbers for a given function, identified by name.
      */
-    FunctionLocation,
+    FunctionLocation = 10,
     /**
      * Number of lines with a non-zero execution count.
      */
-    LineHit,
+    LineHit = 11,
     /**
      * Number of instrumented lines.
      */
-    LineInstrumented,
+    LineInstrumented = 12,
     /**
      * The execution count for a line, identified by line number.
      */
-    LineLocation,
+    LineLocation = 13,
     /**
      * The test name.
      */
-    TestName,
+    TestName = 14,
     /**
      * The source code version ID.
      */
-    Version
+    Version = 15
 }
 
 /**

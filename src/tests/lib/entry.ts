@@ -1,5 +1,5 @@
 import { Variant } from '../../constants.js'
-import {
+import type {
     BranchLocationEntry,
     EndOfRecordEntry,
     FilePathEntry,

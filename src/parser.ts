@@ -1,9 +1,9 @@
 import { Variant } from './constants.js'
-import ByteMatch from './lib/byte-match.js'
+import type ByteMatch from './lib/byte-match.js'
 import { isNonEmptyField } from './lib/field-variant.js'
 import List from './lib/list.js'
 import { generateFieldLookup } from './lib/lookup.js'
-import { FieldNames } from './typings/options.js'
+import type { FieldNames } from './typings/options.js'
 
 /**
  * A parsed LCOV field entry.
@@ -48,7 +48,7 @@ export class LcovParser {
     /**
      * @internal
      */
-    private _offset: number = 0
+    private _offset = 0
     /**
      * @internal
      */
@@ -97,9 +97,11 @@ export class LcovParser {
             this._offset = 0
         }
 
+        // biome-ignore lint/style/noNonNullAssertion: the buffer is guaranteed to exist (see conditions above)
         let result = this._parseResult(this._buffer!)
 
         while (result.incomplete && this._chunks.size() !== 0) {
+            // biome-ignore lint/style/noNonNullAssertion: it's already established that the buffer exists and the while condition ensures that a chunk exists
             this._buffer = Buffer.concat([this._buffer!.subarray(this._offset), this._chunks.remove()!])
             this._offset = 0
             result = this._parseResult(this._buffer)

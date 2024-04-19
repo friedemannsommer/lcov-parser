@@ -2,17 +2,17 @@ import { expect } from 'chai'
 
 import { Variant } from '../constants.js'
 import {
+    type FunctionMap,
     createBranchSummary,
     createFunctionSummary,
     createLineSummary,
     createSection,
     createUpdateFunctionSummary,
-    FunctionMap,
     handleResult,
     updateResults,
     updateSectionSummary
 } from '../lib/handle-result.js'
-import {
+import type {
     BranchHitEntry,
     BranchInstrumentedEntry,
     BranchLocationEntry,
@@ -25,7 +25,7 @@ import {
     LineInstrumentedEntry,
     LineLocationEntry
 } from '../typings/entry.js'
-import { FunctionEntry, LineEntry, SectionSummary, Summary } from '../typings/file.js'
+import type { FunctionEntry, LineEntry, SectionSummary, Summary } from '../typings/file.js'
 import {
     getBranchLocationEntry,
     getEndOfRecord,

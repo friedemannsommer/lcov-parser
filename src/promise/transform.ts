@@ -1,9 +1,9 @@
-import { Readable } from 'node:stream'
+import type { Readable } from 'node:stream'
 
 import { Variant } from '../constants.js'
-import { FunctionMap, updateResults } from '../lib/handle-result.js'
+import { type FunctionMap, updateResults } from '../lib/handle-result.js'
 import transformResult from '../lib/transform-result.js'
-import { LcovParser, ParseResult } from '../parser.js'
+import type { LcovParser, ParseResult } from '../parser.js'
 import type { SectionSummary } from '../typings/file.js'
 
 export function transformSynchronous(results: ParseResult[]): SectionSummary[] {
