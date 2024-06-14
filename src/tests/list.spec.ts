@@ -7,7 +7,7 @@ describe('List', (): void => {
         const instance = new List<number>()
 
         for (let i = 0; i < 100; i++) {
-            instance.insert(i)
+            instance.append(i)
             expect(instance.size()).to.eq(i + 1)
         }
     })
@@ -15,7 +15,7 @@ describe('List', (): void => {
     it('should correctly update `size` on `remove`', (): void => {
         const instance = new List<number>()
 
-        instance.insert(0)
+        instance.append(0)
         expect(instance.size()).to.eq(1)
         expect(instance.remove()).to.eq(0)
         expect(instance.size()).to.eq(0)
@@ -32,7 +32,7 @@ describe('List', (): void => {
         const instance = new List<number>()
 
         for (let i = 0; i < 5; i++) {
-            instance.insert(i)
+            instance.append(i)
             expect(instance.peek()).to.eq(0)
         }
 

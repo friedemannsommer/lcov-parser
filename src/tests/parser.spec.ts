@@ -2,7 +2,7 @@ import { expect } from 'chai'
 
 import { Variant, defaultFieldNames } from '../constants.js'
 import { isEmptyField } from '../lib/field-variant.js'
-import { mapFieldName } from '../lib/lookup.js'
+import { FIELD_NAME_MAP } from '../lib/lookup.js'
 import { LcovParser } from '../parser.js'
 import type { FieldNames } from '../typings/options.js'
 import { getParseResult, getRawLcov } from './lib/parse.js'
@@ -10,7 +10,7 @@ import { getParseResult, getRawLcov } from './lib/parse.js'
 describe('LcovParser - Field names', (): void => {
     for (const key of Object.keys(defaultFieldNames) as Array<keyof FieldNames>) {
         const fieldName = defaultFieldNames[key]
-        const variant = mapFieldName(key)
+        const variant = FIELD_NAME_MAP[key]
         const isEmptyFieldVariant = isEmptyField(variant)
 
         it(`should parse "${fieldName}" (${key})`, (): void => {

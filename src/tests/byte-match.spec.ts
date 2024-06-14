@@ -35,3 +35,22 @@ describe('ByteMatch - reset', (): void => {
         expect(instance.matched()).to.be.false
     })
 })
+
+describe('ByteMatch - out of order', (): void => {
+    it('should not match values out of order', () => {
+        const instance = new ByteMatch([0, 1, 2])
+
+        expect(instance.compare(2)).to.be.false
+        expect(instance.compare(1)).to.be.false
+        expect(instance.compare(0)).to.be.true
+        expect(instance.matched()).to.be.false
+    })
+
+    it('should not match partial values', () => {
+        const instance = new ByteMatch([0, 1, 2])
+
+        expect(instance.compare(1)).to.be.false
+        expect(instance.compare(2)).to.be.false
+        expect(instance.matched()).to.be.false
+    })
+})

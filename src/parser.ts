@@ -1,8 +1,7 @@
 import { Variant } from './constants.js'
-import type ByteMatch from './lib/byte-match.js'
 import { isNonEmptyField } from './lib/field-variant.js'
 import List from './lib/list.js'
-import { generateFieldLookup } from './lib/lookup.js'
+import { type FieldOptions, generateFieldLookup } from './lib/lookup.js'
 import type { FieldNames } from './typings/options.js'
 
 /**
@@ -56,17 +55,10 @@ export class LcovParser {
     /**
      * @internal
      */
-    private readonly _variants: Variant[]
-    /**
-     * @internal
-     */
-    private readonly _fieldNames: ByteMatch[]
+    private readonly _fields: FieldOptions[]
 
     public constructor(fieldNames: FieldNames) {
-        const [labels, names] = generateFieldLookup(fieldNames)
-
-        this._variants = labels
-        this._fieldNames = names
+        this._fields = generateFieldLookup(fieldNames)
     }
 
     /**
@@ -74,7 +66,7 @@ export class LcovParser {
      * @param chunk - A `Buffer` with UTF-8 encoding
      */
     public write(chunk: Buffer): void {
-        this._chunks.insert(chunk)
+        this._chunks.append(chunk)
     }
 
     /**
@@ -161,11 +153,11 @@ export class LcovParser {
     private _matchFields(buf: Buffer, byteIndex: number, length: number): ParseResult | null {
         const byte = buf[byteIndex]
 
-        for (let nameIndex = 0; nameIndex < this._fieldNames.length; nameIndex++) {
-            const matcher = this._fieldNames[nameIndex]
+        for (let nameIndex = 0; nameIndex < this._fields.length; nameIndex++) {
+            const field = this._fields[nameIndex]
 
-            if (matcher.compare(byte) && matcher.matched()) {
-                const variant = this._variants[nameIndex]
+            if (field.matcher.compare(byte) && field.matcher.matched()) {
+                const variant = field.variant
                 const nonEmptyField = isNonEmptyField(variant)
                 const isComment = variant === Variant.Comment
 
@@ -212,8 +204,8 @@ export class LcovParser {
      * @internal
      */
     private _resetMatcher(): void {
-        for (const matcher of this._fieldNames) {
-            matcher.reset()
+        for (const matcher of this._fields) {
+            matcher.matcher.reset()
         }
     }
 

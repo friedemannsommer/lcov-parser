@@ -8,22 +8,20 @@ export default class List<T> {
     private _tail: ListNode<T> | null = null
     private _size = 0
 
-    public insert(value: T): void {
-        const lastNode = this._tail
-        const node: ListNode<T> = {
+    public append(value: T): void {
+        const newNode: ListNode<T> = {
             next: null,
             value
         }
 
-        if (lastNode !== null) {
-            lastNode.next = node
-        }
-
         if (this._head === null) {
-            this._head = node
+            this._head = this._tail = newNode
+        } else {
+            // biome-ignore lint/style/noNonNullAssertion: either head and tail are not null, or they're both null
+            this._tail!.next = newNode
+            this._tail = newNode
         }
 
-        this._tail = node
         this._size++
     }
 

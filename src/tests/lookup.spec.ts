@@ -2,7 +2,7 @@ import { expect } from 'chai'
 
 import { Variant, defaultFieldNames } from '../constants.js'
 import ByteMatch from '../lib/byte-match.js'
-import { type LookupResult, generateFieldLookup, mapFieldName, mapFieldNames, sortFieldNames } from '../lib/lookup.js'
+import { FIELD_NAME_MAP, type FieldOptions, generateFieldLookup, sortFieldNames } from '../lib/lookup.js'
 import type { FieldNames } from '../typings/options.js'
 
 const fieldVariants: Array<[Variant, keyof FieldNames]> = [
@@ -23,45 +23,36 @@ const fieldVariants: Array<[Variant, keyof FieldNames]> = [
     [Variant.Version, 'version']
 ]
 
-describe('Lookup - mapFieldNames', (): void => {
-    it('should map all known fields to valid variants', (): void => {
-        expect(mapFieldNames(fieldVariants.map(([, fieldName]) => fieldName))).to.eql(
-            fieldVariants.map(([variant]) => variant)
-        )
-    })
-})
-
 describe('Lookup - mapFieldName', (): void => {
     for (const [variant, fieldName] of fieldVariants) {
         it(`should map field "${fieldName}" to "${Variant[variant]}"`, (): void => {
-            expect(mapFieldName(fieldName)).to.eq(variant)
+            expect(FIELD_NAME_MAP[fieldName]).to.eq(variant)
         })
     }
 })
 
 describe('Lookup - sortFieldNames', (): void => {
     it('should sort by value size (DESC)', (): void => {
-        const value_1 = new ByteMatch([0])
-        const value_2 = new ByteMatch([0, 1])
-        const value_3 = new ByteMatch([0, 1, 2])
-
-        expect(sortFieldNames([Variant.None, Variant.TestName, Variant.Version], [value_1, value_3, value_2])).to.eql([
-            [Variant.TestName, Variant.Version, Variant.None],
-            [value_3, value_2, value_1]
-        ])
-    })
-
-    it('sort should be stable by value size (DESC)', (): void => {
-        const value_3_a = new ByteMatch([0, 1, 2])
-        const value_3_b = new ByteMatch([0, 1, 2])
-        const value_3_c = new ByteMatch([0, 1, 2])
+        expect(
+            sortFieldNames(
+                { variant: Variant.Comment, matcher: new ByteMatch([0]) },
+                { variant: Variant.Comment, matcher: new ByteMatch([1]) }
+            )
+        ).to.eq(0)
 
         expect(
-            sortFieldNames([Variant.None, Variant.TestName, Variant.Version], [value_3_a, value_3_c, value_3_b])
-        ).to.eql([
-            [Variant.None, Variant.TestName, Variant.Version],
-            [value_3_c, value_3_b, value_3_a]
-        ])
+            sortFieldNames(
+                { variant: Variant.Comment, matcher: new ByteMatch([0]) },
+                { variant: Variant.Comment, matcher: new ByteMatch([0, 1]) }
+            )
+        ).to.greaterThan(0)
+
+        expect(
+            sortFieldNames(
+                { variant: Variant.Comment, matcher: new ByteMatch([0, 1]) },
+                { variant: Variant.Comment, matcher: new ByteMatch([0]) }
+            )
+        ).to.lessThan(0)
     })
 })
 
@@ -88,14 +79,11 @@ describe('Lookup - generateFieldLookup', (): void => {
         expected.sort(([, matcherA], [, matcherB]) => (matcherA.size > matcherB.size ? -1 : 1))
 
         expect(generateFieldLookup(defaultFieldNames)).to.eql(
-            expected.reduce(
-                (prev, [variant, matcher]) => {
-                    prev[0].push(variant)
-                    prev[1].push(matcher)
-
-                    return prev
-                },
-                [[], []] as LookupResult
+            expected.map(
+                ([variant, matcher]): FieldOptions => ({
+                    variant,
+                    matcher
+                })
             )
         )
     })
