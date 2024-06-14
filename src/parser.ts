@@ -7,7 +7,7 @@ import type { FieldNames } from './typings/options.js'
 /**
  * A list of {@link ParseResult}s that have been flushed from the parser.
  * This typing is used to make it clear that there will always be at least one result.
- * @see {@link Parser#flush}
+ * @see {@link LcovParser#flush}
  */
 export type FlushedResults = [ParseResult, ...ParseResult[]]
 
