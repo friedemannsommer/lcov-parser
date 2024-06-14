@@ -25,15 +25,33 @@ describe('LcovParser - Field names', (): void => {
 
             parser.write(Buffer.from(chunk))
 
-            const result = parser.flush()
-
-            expect(result).to.eql([
+            expect(parser.flush()).to.eql([
                 getParseResult(
                     variant,
                     isEmptyFieldVariant ? null : variant === Variant.Comment ? [':test', 'data'] : ['test', 'data']
                 ),
                 getParseResult(Variant.None, null, true)
             ])
+        })
+    }
+})
+
+describe('LcovParser - Invalid fields', (): void => {
+    for (const key of Object.keys(defaultFieldNames) as Array<keyof FieldNames>) {
+        const fieldName = defaultFieldNames[key]
+        const variant = FIELD_NAME_MAP[key]
+
+        if (isEmptyField(variant) || variant === Variant.Comment) {
+            // these fields either don't have a value, or a value is not required (comments)
+            continue
+        }
+
+        it(`should return incomplete result for "${fieldName}" (${key})"`, (): void => {
+            const parser = new LcovParser(defaultFieldNames)
+
+            parser.write(Buffer.from(`${fieldName}test,data\n`))
+
+            expect(parser.read()).to.eql(getParseResult(Variant.None, null, false, true))
         })
     }
 })

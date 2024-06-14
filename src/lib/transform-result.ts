@@ -171,12 +171,12 @@ export function transformFunctionLocation(result: ParseResult<Variant.FunctionLo
     if (result.value !== null && result.value.length >= 2) {
         lineStart = parseInteger(result.value[0])
         lineEnd = parseInteger(result.value[1])
-        name =
-            lineEnd < lineStart || result.value.length === 2
-                ? result.value[1]
-                : result.value.length >= 3
-                  ? result.value[2]
-                  : ''
+
+        if (lineEnd < lineStart || result.value.length === 2) {
+            name = result.value[1]
+        } else if (result.value.length >= 3) {
+            name = result.value[2]
+        }
     }
 
     return {

@@ -4,7 +4,7 @@ import { defaultFieldNames } from '../constants.js'
 import { type FunctionMap, createSection, handleResult } from '../lib/handle-result.js'
 import { isBlankSpace } from '../lib/parse.js'
 import transformResult from '../lib/transform-result.js'
-import { LcovParser } from '../parser.js'
+import { type FlushedResults, LcovParser } from '../parser.js'
 import type { SectionSummary } from '../typings/file.js'
 import type { StreamOptions } from '../typings/options.js'
 
@@ -49,7 +49,7 @@ export class LcovStreamParser extends Transform {
         }
 
         this._parser.write(chunk)
-        this._processResults()
+        this._processResults(this._parser.flush())
 
         callback()
     }
@@ -64,9 +64,10 @@ export class LcovStreamParser extends Transform {
             const buffer = this._parser.getCurrentBuffer()
 
             if (buffer !== null && !LcovStreamParser._isTrailingBlankSpace(buffer)) {
+                // write a trailing newline to ensure that the last line can be processed
                 this._parser.write(Buffer.from([10]))
 
-                if (!this._processResults()) {
+                if (!this._processResults(this._parser.flush())) {
                     callback(new Error('unexpected end of input.'))
                     return
                 }
@@ -93,7 +94,7 @@ export class LcovStreamParser extends Transform {
     /**
      * @internal
      */
-    private _processResults(results = this._parser.flush()): boolean {
+    private _processResults(results: FlushedResults): boolean {
         for (const result of results) {
             if (result.incomplete) {
                 return false

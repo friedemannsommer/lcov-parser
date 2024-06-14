@@ -5,6 +5,13 @@ import { type FieldOptions, generateFieldLookup } from './lib/lookup.js'
 import type { FieldNames } from './typings/options.js'
 
 /**
+ * A list of {@link ParseResult}s that have been flushed from the parser.
+ * This typing is used to make it clear that there will always be at least one result.
+ * @see {@link Parser#flush}
+ */
+export type FlushedResults = [ParseResult, ...ParseResult[]]
+
+/**
  * A parsed LCOV field entry.
  * It may be incomplete, check the {@link ParseResult#done} and {@link ParseResult#incomplete} fields.
  */
@@ -105,9 +112,9 @@ export class LcovParser {
     /**
      * Try to parse as many results as possible with the currently available chunks.
      */
-    public flush(): ParseResult[] {
+    public flush(): FlushedResults {
         let result = this.read()
-        const parseResults: ParseResult[] = [result]
+        const parseResults: FlushedResults = [result]
 
         while (!result.done && !result.incomplete) {
             result = this.read()
@@ -214,7 +221,7 @@ export class LcovParser {
      */
     private static _parseValue(buf: Buffer, offset: number, startAtOffset: boolean): ParseValueResult | null {
         const length = buf.byteLength
-        let start = startAtOffset ? offset : -1
+        let start = offset
 
         for (let index = offset; index < length; index++) {
             const byte = buf[index]
@@ -222,10 +229,6 @@ export class LcovParser {
             if (!startAtOffset && byte === 58 /* ':' (colon) */) {
                 start = index + 1
             } else if (byte === 10 /* '\n' (new line) */) {
-                if (start === -1) {
-                    return null
-                }
-
                 return {
                     lastIndex: index,
                     value: LcovParser._parseSlice(buf, start, index)
