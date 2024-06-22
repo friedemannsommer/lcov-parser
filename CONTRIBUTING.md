@@ -21,32 +21,37 @@ We encourage you to check that the tests pass locally before submitting a
 pull request with your changes. If anything does not pass, it will be easier to
 debug, iterate, and fix locally than waiting for the CI servers.
 
-### Check types and emit compilation output to "dist" directory
-
 ```shell
 npm run test
 ```
 
-### Check types
+### Check types and emit compilation output to "dist" directory
+
+```shell
+npm run build
+```
+
+### Check types, formatting, and lints
 
 ```shell
 npm run check
 ```
 
-## Running the lints
-
-This project uses ESLint and Prettier to keep the code style somewhat similar across all files. Please check that your
-changes pass these lints locally before submitting a pull request with your changes. We recognize that this is not a
-solution that will work correctly in every situation and that there may be situations where these tools cause errors.
-
-### ESLint
+### Check types
 
 ```shell
-npm run lint
+npm run check:ts
 ```
 
-### Prettier
+## Running the lints
+
+This project uses [Biome](https://github.com/biomejs/biome) to keep the code style somewhat similar across all files.
+Please check that your changes pass these lints locally before submitting a pull request with your changes.
+We recognize that this is not a solution that will work correctly in every situation and that there may be situations
+where these tools cause errors.
+
+### Biome (lints, formatting)
 
 ```shell
-npm run fmt
+npm run check:biome
 ```
