@@ -1,5 +1,11 @@
 # @friedemannsommer/lcov-parser
 
+## 4.0.1
+
+### Patch Changes
+
+- [#141](https://github.com/friedemannsommer/lcov-parser/pull/141) [`45856e9`](https://github.com/friedemannsommer/lcov-parser/commit/45856e969d5abdb4aa8ce5c54a49587b9ecbc13a) Thanks [@friedemannsommer](https://github.com/friedemannsommer)! - Fixed a bug which stripped everything up to the last colon, when parsing field values that contain colons.
+
 ## 4.0.0
 
 ### Major Changes
