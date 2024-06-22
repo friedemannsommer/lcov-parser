@@ -177,7 +177,11 @@ export class LcovParser {
                     continue
                 }
 
-                const result = nonEmptyField ? LcovParser._parseValue(buf, byteIndex + 1, isComment) : null
+                // if the current field is a comment, offset the current index by one
+                // (so that it points to the value just after the field token).
+                // for any other non-empty field, we've already checked that the next value is a colon,
+                // so we can offset the index by two.
+                const result = nonEmptyField ? LcovParser._parseValue(buf, byteIndex + (isComment ? 1 : 2)) : null
                 let value = null
 
                 if (result !== null) {
@@ -219,19 +223,16 @@ export class LcovParser {
     /**
      * @internal
      */
-    private static _parseValue(buf: Buffer, offset: number, startAtOffset: boolean): ParseValueResult | null {
+    private static _parseValue(buf: Buffer, offset: number): ParseValueResult | null {
         const length = buf.byteLength
-        let start = offset
 
         for (let index = offset; index < length; index++) {
             const byte = buf[index]
 
-            if (!startAtOffset && byte === 58 /* ':' (colon) */) {
-                start = index + 1
-            } else if (byte === 10 /* '\n' (new line) */) {
+            if (byte === 10 /* '\n' (new line) */) {
                 return {
                     lastIndex: index,
-                    value: LcovParser._parseSlice(buf, start, index)
+                    value: LcovParser._parseSlice(buf, offset, index)
                 }
             }
         }

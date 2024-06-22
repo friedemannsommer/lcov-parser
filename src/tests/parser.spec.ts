@@ -225,3 +225,32 @@ describe('LcovParser - empty fields', (): void => {
         expect(parser.read()).to.eql(getParseResult(Variant.None, null, false, true))
     })
 })
+
+describe('LcovParser - Paths containing colons', (): void => {
+    it('should process valid Windows like path', (): void => {
+        const parser = new LcovParser(defaultFieldNames)
+
+        parser.write(
+            Buffer.from(
+                getRawLcov(
+                    defaultFieldNames.filePath,
+                    'C:\\Users\\Example\\Documents\\Projects\\example\\src\\example.file'
+                )
+            )
+        )
+
+        expect(parser.read()).to.eql(
+            getParseResult(Variant.FilePath, ['C:\\Users\\Example\\Documents\\Projects\\example\\src\\example.file'])
+        )
+        expect(parser.read()).to.eql(getParseResult(Variant.None, null, true))
+    })
+
+    it('should process a path containing multiple colons', (): void => {
+        const parser = new LcovParser(defaultFieldNames)
+
+        parser.write(Buffer.from(getRawLcov(defaultFieldNames.filePath, '/this/is/a/path:with:colons')))
+
+        expect(parser.read()).to.eql(getParseResult(Variant.FilePath, ['/this/is/a/path:with:colons']))
+        expect(parser.read()).to.eql(getParseResult(Variant.None, null, true))
+    })
+})
