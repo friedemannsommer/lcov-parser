@@ -10,7 +10,7 @@
     "src/stream/index.ts"
   ],
   "githubPages": false,
-  "htmlLang": "en",
+  "lang": "en",
   "name": "LCOV parser",
   "out": "docs",
   "plugin": [
