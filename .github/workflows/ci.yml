@@ -19,9 +19,9 @@ jobs:
       fail-fast: false
       matrix:
         node_version:
-          - 16
           - 18
           - 20
+          - 22
     steps:
       - uses: actions/checkout@v4.1.7
       - uses: actions/setup-node@v4.0.3
@@ -33,7 +33,7 @@ jobs:
         run: npm run test
 
   check:
-    name: Check
+    name: Code quality and coverage report
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4.1.7
