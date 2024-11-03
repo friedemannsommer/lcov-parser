@@ -64,7 +64,7 @@ export interface BranchEntry extends LineEntry {
      */
     branch: string
     /**
-     * Possibly a `catch` or otherwise exception related branch.
+     * Possibly a `catch` or otherwise exception-related branch.
      */
     isException: boolean
 }
