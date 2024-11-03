@@ -11,13 +11,13 @@ export default class ByteMatch {
             this._offset = 0
         }
 
-        const matched = this._buffer[this._offset] === value
-
-        if (matched) {
+        if (this._buffer[this._offset] === value) {
             this._offset++
+
+            return true
         }
 
-        return matched
+        return false
     }
 
     public matched(): boolean {
