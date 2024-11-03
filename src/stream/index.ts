@@ -82,7 +82,7 @@ export class LcovStreamParser extends Transform {
 
     /**
      * Accepts a [BufferEncoding](https://nodejs.org/api/buffer.html#buffers-and-character-encodings)
-     * as argument and returns whether it is supported by this parser.
+     * as an argument and returns whether it is supported by this parser.
      *
      * @param encoding - The encoding to check whether this parser supports it.
      * @returns - Will return `true` if given encoding is supported, `false` otherwise.
