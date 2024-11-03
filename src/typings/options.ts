@@ -13,7 +13,7 @@ export interface Options {
      */
     from: string | Readable | Buffer | ArrayBuffer
     /**
-     * A parser instance that should be used for parsing, instead of creating a new one internally.
+     * A parser instance that should be used for parsing instead of creating a new one internally.
      */
     parser?: LcovParser
 }
@@ -28,7 +28,7 @@ export interface StreamOptions
      */
     fieldNames?: FieldNames
     /**
-     * A parser instance that should be used for parsing, instead of creating a new one internally.
+     * A parser instance that should be used for parsing instead of creating a new one internally.
      */
     parser?: LcovParser
 }
