@@ -17,7 +17,7 @@ export default class List<T> {
         if (this._head === null) {
             this._head = this._tail = newNode
         } else {
-            // biome-ignore lint/style/noNonNullAssertion: either head and tail are not null, or they're both null
+            // biome-ignore lint/style/noNonNullAssertion: either head and tail aren't null, or they're both null
             this._tail!.next = newNode
             this._tail = newNode
         }

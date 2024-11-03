@@ -34,7 +34,7 @@ export function generateFieldLookup(fieldNameMap: FieldNames): FieldOptions[] {
     for (let index = 0; index < fieldCount; index++) {
         fields[index] = {
             // technically, we should check whether the field name is in the map,
-            // but in the name of performance we're not going to do that
+            // but in the name of performance, we're not going to do that
             variant: FIELD_NAME_MAP[fieldEntries[index][0]],
             matcher: new ByteMatch(encode(fieldEntries[index][1]))
         }
