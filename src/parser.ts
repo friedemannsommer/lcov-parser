@@ -224,16 +224,12 @@ export class LcovParser {
      * @internal
      */
     private static _parseValue(buf: Buffer, offset: number): ParseValueResult | null {
-        const length = buf.byteLength
+        const endOfLineIndex = LcovParser._seekNextLine(buf, offset)
 
-        for (let index = offset; index < length; index++) {
-            const byte = buf[index]
-
-            if (byte === 10 /* '\n' (new line) */) {
-                return {
-                    lastIndex: index,
-                    value: LcovParser._parseSlice(buf, offset, index)
-                }
+        if (endOfLineIndex !== -1) {
+            return {
+                lastIndex: endOfLineIndex,
+                value: LcovParser._parseSlice(buf, offset, endOfLineIndex)
             }
         }
 
