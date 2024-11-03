@@ -31,7 +31,7 @@ export interface ParseResult<V extends Variant = Variant> {
      */
     value: string[] | null
     /**
-     * Variant fo the current field entry. See {@link Variant} for more information.
+     * Variant of the current field entry. See {@link Variant} for more information.
      */
     variant: V
 }
@@ -77,7 +77,7 @@ export class LcovParser {
     }
 
     /**
-     * Try to parse a result, this may fail if there's no or insufficient data.
+     * Try to parse a result, this may fail if there is no or insufficient data.
      * Check the `done` and `incomplete` fields for `false` values.
      */
     public read(): ParseResult {
@@ -100,7 +100,7 @@ export class LcovParser {
         let result = this._parseResult(this._buffer!)
 
         while (result.incomplete && this._chunks.size() !== 0) {
-            // biome-ignore lint/style/noNonNullAssertion: it's already established that the buffer exists and the while condition ensures that a chunk exists
+            // biome-ignore lint/style/noNonNullAssertion: it is already established that the buffer exists and the while condition ensures that a chunk exists
             this._buffer = Buffer.concat([this._buffer!.subarray(this._offset), this._chunks.remove()!])
             this._offset = 0
             result = this._parseResult(this._buffer)
@@ -125,7 +125,7 @@ export class LcovParser {
     }
 
     /**
-     * @returns Buffer - If there's a buffer available returns the remaining slice of it, otherwise returns `null`.
+     * @returns Buffer - If there is a buffer available returns the remaining slice of it, otherwise returns `null`.
      */
     public getCurrentBuffer(): Buffer | null {
         if (this._buffer && this._offset < this._buffer.byteLength) {
