@@ -1,5 +1,13 @@
 # @friedemannsommer/lcov-parser
 
+## 4.0.2
+
+### Patch Changes
+
+- [`61ddab5`](https://github.com/friedemannsommer/lcov-parser/commit/61ddab50465f2b72a4a916298ea9e476e613a44f) Thanks [@friedemannsommer](https://github.com/friedemannsommer)! - Reduced code complexity in `LcovParser` and `ByteMatch`
+
+- [`61ddab5`](https://github.com/friedemannsommer/lcov-parser/commit/61ddab50465f2b72a4a916298ea9e476e613a44f) Thanks [@friedemannsommer](https://github.com/friedemannsommer)! - Corrected several minor typos and fixed minor grammatical errors
+
 ## 4.0.1
 
 ### Patch Changes
