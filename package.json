@@ -17,7 +17,7 @@
     "mocha": "10.8.2",
     "ts-node": "10.9.2",
     "typedoc": "0.26.11",
-    "typedoc-plugin-mdn-links": "4.0.2",
+    "typedoc-plugin-mdn-links": "4.0.3",
     "typescript": "5.6.3",
     "unbuild": "2.0.0"
   },
