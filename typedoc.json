@@ -14,8 +14,7 @@
   "name": "LCOV parser",
   "out": "docs",
   "plugin": [
-    "@mxssfd/typedoc-theme",
+    "typedoc-github-theme",
     "typedoc-plugin-mdn-links"
-  ],
-  "theme": "my-theme"
+  ]
 }
