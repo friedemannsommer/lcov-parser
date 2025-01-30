@@ -2,20 +2,31 @@ import type { Readable, TransformOptions } from 'node:stream'
 
 import type { LcovParser } from '../parser.js'
 
-export interface Options {
+export interface SharedOptions {
     /**
-     * The field names to use for parsing. These will only be used if {@link Options#parser} is not present.
+     * The field names to use for parsing. These will only be used if the `parser` field is not defined.
      */
     fieldNames?: FieldNames
+    /**
+     * A parser instance that should be used for parsing instead of creating a new one internally.
+     */
+    parser?: LcovParser
+}
+
+export interface Options extends SharedOptions {
     /**
      * Input source to read from.
      * This can be a `string`, [Readable](https://nodejs.org/api/stream.html#readable-streams), `Buffer`, or `ArrayBuffer`.
      */
     from: string | Readable | Buffer | ArrayBuffer
+}
+
+export interface SyncOptions extends SharedOptions {
     /**
-     * A parser instance that should be used for parsing instead of creating a new one internally.
+     * Input source to read from.
+     * This can be a `string`, `Buffer`, or `ArrayBuffer`.
      */
-    parser?: LcovParser
+    from: string | Buffer | ArrayBuffer
 }
 
 export interface StreamOptions
