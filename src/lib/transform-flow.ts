@@ -1,10 +1,10 @@
 import type { Readable } from 'node:stream'
 
 import { Variant } from '../constants.js'
-import { type FunctionMap, updateResults } from '../lib/handle-result.js'
-import transformResult from '../lib/transform-result.js'
 import type { LcovParser, ParseResult } from '../parser.js'
 import type { SectionSummary } from '../typings/file.js'
+import { type FunctionMap, updateResults } from './handle-result.js'
+import transformResult from './transform-result.js'
 
 export function transformSynchronous(results: ParseResult[]): SectionSummary[] {
     const functionMap: FunctionMap = new Map()

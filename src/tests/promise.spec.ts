@@ -7,7 +7,7 @@ import lcovParser from '../promise/index.js'
 import { getTestNameEntry } from './lib/entry.js'
 import { getRawLcov } from './lib/parse.js'
 
-describe('lcovParser', (): void => {
+describe('promise/lcovParser', (): void => {
     it('parse from stream', async (): Promise<void> => {
         const stream = new Readable({
             autoDestroy: true,

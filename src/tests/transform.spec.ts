@@ -3,8 +3,8 @@ import { expect } from 'chai'
 
 import { Variant, defaultFieldNames } from '../constants.js'
 import { createSection } from '../lib/handle-result.js'
+import { transformAsynchronous, transformSynchronous } from '../lib/transform-flow.js'
 import { LcovParser } from '../parser.js'
-import { transformAsynchronous, transformSynchronous } from '../promise/transform.js'
 import { getTestNameEntry } from './lib/entry.js'
 import { getParseResult, getRawLcov } from './lib/parse.js'
 

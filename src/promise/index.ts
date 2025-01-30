@@ -1,10 +1,10 @@
 import { Readable } from 'node:stream'
 
 import { defaultFieldNames } from '../constants.js'
+import { transformAsynchronous, transformSynchronous } from '../lib/transform-flow.js'
 import { LcovParser } from '../parser.js'
 import type { SectionSummary } from '../typings/file.js'
 import type { Options } from '../typings/options.js'
-import { transformAsynchronous, transformSynchronous } from './transform.js'
 
 /**
  * Tries to parse the given input (passed by {@link Options#from}) into sections.
