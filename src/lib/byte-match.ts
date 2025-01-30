@@ -2,8 +2,8 @@ export default class ByteMatch {
     public readonly size: number
     private _offset = 0
 
-    public constructor(private readonly _buffer: number[]) {
-        this.size = _buffer.length
+    public constructor(private readonly _buffer: Uint8Array) {
+        this.size = _buffer.byteLength
     }
 
     public compare(value: number): boolean {

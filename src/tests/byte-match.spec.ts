@@ -8,7 +8,7 @@ describe('ByteMatch - buffer size', (): void => {
             const buffer = Array(bufferSize)
                 .fill(0)
                 .map((_, index) => index)
-            const instance = new ByteMatch(buffer)
+            const instance = new ByteMatch(new Uint8Array(buffer))
 
             expect(instance.size).to.eq(bufferSize)
 
@@ -23,8 +23,7 @@ describe('ByteMatch - buffer size', (): void => {
 
 describe('ByteMatch - reset', (): void => {
     it('should reset match cursor', () => {
-        const buffer = [0, 1, 2]
-        const instance = new ByteMatch(buffer)
+        const instance = new ByteMatch(new Uint8Array([0, 1, 2]))
 
         expect(instance.compare(0)).to.be.true
         expect(instance.compare(1)).to.be.true
@@ -38,7 +37,7 @@ describe('ByteMatch - reset', (): void => {
 
 describe('ByteMatch - out of order', (): void => {
     it('should not match values out of order', () => {
-        const instance = new ByteMatch([0, 1, 2])
+        const instance = new ByteMatch(new Uint8Array([0, 1, 2]))
 
         expect(instance.compare(2)).to.be.false
         expect(instance.compare(1)).to.be.false
@@ -47,7 +46,7 @@ describe('ByteMatch - out of order', (): void => {
     })
 
     it('should not match partial values', () => {
-        const instance = new ByteMatch([0, 1, 2])
+        const instance = new ByteMatch(new Uint8Array([0, 1, 2]))
 
         expect(instance.compare(1)).to.be.false
         expect(instance.compare(2)).to.be.false

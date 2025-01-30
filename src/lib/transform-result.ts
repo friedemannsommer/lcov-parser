@@ -22,41 +22,33 @@ export type ParseResultInstrumented = ParseResult<
     Variant.BranchInstrumented | Variant.FunctionInstrumented | Variant.LineInstrumented
 >
 
+const handlers = {
+    [Variant.BranchHit]: transformHit,
+    [Variant.FunctionHit]: transformHit,
+    [Variant.LineHit]: transformHit,
+    [Variant.BranchInstrumented]: transformInstrumented,
+    [Variant.FunctionInstrumented]: transformInstrumented,
+    [Variant.LineInstrumented]: transformInstrumented,
+    [Variant.BranchLocation]: transformBranchLocation,
+    [Variant.EndOfRecord]: transformEndOfRecord,
+    [Variant.FilePath]: transformFilePath,
+    [Variant.FunctionExecution]: transformFunctionExecution,
+    [Variant.FunctionLocation]: transformFunctionLocation,
+    [Variant.LineLocation]: transformLineLocation,
+    [Variant.TestName]: transformTestName,
+    [Variant.Version]: transformVersion,
+    [Variant.Comment]: transformComment
+}
+
 export default function transformResult(result: ParseResult): EntryVariants {
     if (result.incomplete) {
         return intoNone(result)
     }
 
-    switch (result.variant) {
-        case Variant.None:
-            return intoNone(result)
-        case Variant.BranchHit:
-        case Variant.FunctionHit:
-        case Variant.LineHit:
-            return transformHit(result as ParseResultHit)
-        case Variant.BranchInstrumented:
-        case Variant.FunctionInstrumented:
-        case Variant.LineInstrumented:
-            return transformInstrumented(result as ParseResultInstrumented)
-        case Variant.BranchLocation:
-            return transformBranchLocation(result as ParseResult<Variant.BranchLocation>)
-        case Variant.EndOfRecord:
-            return transformEndOfRecord(result as ParseResult<Variant.EndOfRecord>)
-        case Variant.FilePath:
-            return transformFilePath(result as ParseResult<Variant.FilePath>)
-        case Variant.FunctionExecution:
-            return transformFunctionExecution(result as ParseResult<Variant.FunctionExecution>)
-        case Variant.FunctionLocation:
-            return transformFunctionLocation(result as ParseResult<Variant.FunctionLocation>)
-        case Variant.LineLocation:
-            return transformLineLocation(result as ParseResult<Variant.LineLocation>)
-        case Variant.TestName:
-            return transformTestName(result as ParseResult<Variant.TestName>)
-        case Variant.Version:
-            return transformVersion(result as ParseResult<Variant.Version>)
-        case Variant.Comment:
-            return transformComment(result as ParseResult<Variant.Comment>)
-    }
+    const handler = handlers[result.variant as Exclude<Variant, Variant.None>]
+    // since the `handlers` record contains too many different functions, does TypeScript reduce the type to never
+    // so to be able to call the handler which is known to accept the given result cast it to never
+    return handler ? handler(result as never) : intoNone(result)
 }
 
 export function intoNone(result: ParseResult): NoneEntry {
@@ -67,30 +59,22 @@ export function intoNone(result: ParseResult): NoneEntry {
     }
 }
 
+function parseIntValue(result: ParseResult): number {
+    return result.value?.[0] !== undefined ? parseInteger(result.value[0]) : 0
+}
+
 export function transformHit(result: ParseResultHit): HitEntryVariants {
-    let hit = 0
-
-    if (result.value !== null && result.value.length !== 0) {
-        hit = parseInteger(result.value[0])
-    }
-
     return {
         done: result.done,
-        hit,
+        hit: parseIntValue(result),
         variant: result.variant
     }
 }
 
 export function transformInstrumented(result: ParseResultInstrumented): InstrumentedEntryVariants {
-    let found = 0
-
-    if (result.value !== null && result.value.length !== 0) {
-        found = parseInteger(result.value[0])
-    }
-
     return {
         done: result.done,
-        found,
+        found: parseIntValue(result),
         variant: result.variant
     }
 }
@@ -115,11 +99,11 @@ export function transformBranchLocation(result: ParseResult<Variant.BranchLocati
 
     return {
         block,
-        done: result.done,
         branch,
+        done: result.done,
+        hit: taken,
         isException,
         line,
-        hit: taken,
         variant: result.variant
     }
 }
@@ -132,16 +116,9 @@ export function transformEndOfRecord(result: ParseResult<Variant.EndOfRecord>): 
 }
 
 export function transformFilePath(result: ParseResult<Variant.FilePath>): FilePathEntry {
-    let path = ''
-
-    if (result.value !== null && result.value.length !== 0) {
-        // if there were "," (semicolons), add them back by joining the whole array
-        path = result.value.join(',')
-    }
-
     return {
         done: result.done,
-        path,
+        path: result.value?.join(',') ?? '',
         variant: result.variant
     }
 }
@@ -212,30 +189,18 @@ export function transformLineLocation(result: ParseResult<Variant.LineLocation>)
 }
 
 export function transformTestName(result: ParseResult<Variant.TestName>): TestNameEntry {
-    let name = ''
-
-    if (result.value !== null && result.value.length !== 0) {
-        name = result.value[0]
-    }
-
     return {
         done: result.done,
-        name,
+        name: result.value?.[0] ?? '',
         variant: result.variant
     }
 }
 
 export function transformVersion(result: ParseResult<Variant.Version>): VersionEntry {
-    let version = ''
-
-    if (result.value !== null && result.value.length !== 0) {
-        version = result.value[0]
-    }
-
     return {
         done: result.done,
         variant: result.variant,
-        version
+        version: result.value?.[0] ?? ''
     }
 }
 

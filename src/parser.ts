@@ -41,6 +41,8 @@ interface ParseValueResult {
     value: string[]
 }
 
+const newLineChar = 10 /* UTF-8 `\n` */
+
 /**
  * Parses the given chunks based on the provided {@link FieldNames}.
  * Please note that a {@link LcovParser#write} call doesn't imply any parsing,
@@ -142,7 +144,7 @@ export class LcovParser {
         const length = buf.byteLength
 
         for (let byteIndex = this._offset; byteIndex < length; byteIndex++) {
-            const field = this._matchFields(buf, byteIndex, length)
+            const field = this._matchFields(buf, byteIndex)
 
             if (field !== null) {
                 return field
@@ -157,7 +159,7 @@ export class LcovParser {
     /**
      * @internal
      */
-    private _matchFields(buf: Buffer, byteIndex: number, length: number): ParseResult | null {
+    private _matchFields(buf: Buffer, byteIndex: number): ParseResult | null {
         const byte = buf[byteIndex]
 
         for (let nameIndex = 0; nameIndex < this._fields.length; nameIndex++) {
@@ -171,7 +173,7 @@ export class LcovParser {
                 if (
                     nonEmptyField &&
                     !isComment /* comments are not required to contain a ':' (colon) */ &&
-                    byteIndex + 1 < length &&
+                    byteIndex + 1 < buf.byteLength &&
                     buf[byteIndex + 1] !== 58 /* ':' (colon) */
                 ) {
                     continue
@@ -188,7 +190,7 @@ export class LcovParser {
                     this._offset = result.lastIndex + 1
                     value = result.value
                 } else if (!nonEmptyField) {
-                    const newLineIndex = LcovParser._seekNextLine(buf, byteIndex + 1)
+                    const newLineIndex = buf.indexOf(newLineChar, byteIndex + 1)
 
                     if (newLineIndex !== -1) {
                         this._offset = newLineIndex + 1
@@ -224,7 +226,7 @@ export class LcovParser {
      * @internal
      */
     private static _parseValue(buf: Buffer, offset: number): ParseValueResult | null {
-        const endOfLineIndex = LcovParser._seekNextLine(buf, offset)
+        const endOfLineIndex = buf.indexOf(newLineChar, offset)
 
         if (endOfLineIndex !== -1) {
             return {
@@ -234,18 +236,6 @@ export class LcovParser {
         }
 
         return null
-    }
-
-    private static _seekNextLine(buf: Buffer, offset: number): number {
-        const length = buf.byteLength
-
-        for (let index = offset; index < length; index++) {
-            if (buf[index] === 10 /* '\n' (new line) */) {
-                return index
-            }
-        }
-
-        return -1
     }
 
     /**
