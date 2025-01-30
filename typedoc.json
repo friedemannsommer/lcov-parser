@@ -7,7 +7,8 @@
     "src/lib/field-variant.ts",
     "src/parser.ts",
     "src/promise/index.ts",
-    "src/stream/index.ts"
+    "src/stream/index.ts",
+    "src/sync/index.ts"
   ],
   "githubPages": false,
   "lang": "en",

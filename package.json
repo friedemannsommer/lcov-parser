@@ -54,6 +54,11 @@
       "types": "./dist/stream/index.d.ts",
       "import": "./dist/stream/index.mjs",
       "require": "./dist/stream/index.cjs"
+    },
+    "./sync": {
+      "types": "./dist/sync/index.d.ts",
+      "import": "./dist/sync/index.mjs",
+      "require": "./dist/sync/index.cjs"
     }
   },
   "files": [
