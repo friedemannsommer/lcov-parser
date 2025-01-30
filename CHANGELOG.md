@@ -1,5 +1,13 @@
 # @friedemannsommer/lcov-parser
 
+## 4.0.3
+
+### Patch Changes
+
+- [`dda3117`](https://github.com/friedemannsommer/lcov-parser/commit/dda3117c04847e2fc2bf2f0094a1b360317c696a) Thanks [@friedemannsommer](https://github.com/friedemannsommer)! - Replaced UTF-8 encoding implementation with [`TextEncoder`](https://developer.mozilla.org/en-US/docs/Web/API/TextEncoder)
+
+- [`bb4c033`](https://github.com/friedemannsommer/lcov-parser/commit/bb4c03382d438950bbc4e879bf65bbd3366d8ec8) Thanks [@friedemannsommer](https://github.com/friedemannsommer)! - Added synchronous implementation to be able to parse an in-memory slice without using `await` or `Promise`
+
 ## 4.0.2
 
 ### Patch Changes
