@@ -8,6 +8,7 @@ import type { SyncOptions } from '../typings/options.js'
  * Tries to parse the given input (passed by {@link SyncOptions#from}) into sections.
  *
  * @param options - The parse options must include the {@link SyncOptions#from} field.
+ * @throws {Error} - If the given {@link SyncOptions#from} type is not supported.
  */
 export function lcovParser(options: SyncOptions): SectionSummary[] {
     const { fieldNames, from, parser } = options
