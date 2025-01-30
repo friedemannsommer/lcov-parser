@@ -29,17 +29,17 @@ npm i -DE @friedemannsommer/lcov-parser
 [`string`][string-glossary] data
 
 ```typescript
-import lcovParser from "@friedemannsommer/lcov-parser"
+import lcovParser from "@friedemannsommer/lcov-parser/sync"
 
-const sections = await lcovParser({from: "<LCOV data>"})
+const sections = lcovParser({ from: "<LCOV data>" })
 ```
 
 [`Buffer`][buffer-docs] / [`ArrayBuffer`][array-buffer-docs]
 
 ```typescript
-import lcovParser from "@friedemannsommer/lcov-parser"
+import lcovParser from "@friedemannsommer/lcov-parser/sync"
 
-const sections = await lcovParser({from: Buffer.from("<LCOV data>")})
+const sections = lcovParser({ from: Buffer.from("<LCOV data>") })
 ```
 
 [`Readable`][readable-docs] streams
@@ -49,7 +49,7 @@ import lcovParser from "@friedemannsommer/lcov-parser"
 import {createReadStream} from "node:fs"
 
 const lcovFile = createReadStream(new URL("path/to/lcov.info", import.meta.url))
-const sections = await lcovParser({from: lcovFile})
+const sections = await lcovParser({ from: lcovFile })
 ```
 
 For more details, take a look at the documentation,
