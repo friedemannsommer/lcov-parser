@@ -65,9 +65,11 @@ export class LcovParser {
      * @internal
      */
     private readonly _fields: FieldOptions[]
+    private readonly _fieldsLength: number
 
     public constructor(fieldNames: FieldNames) {
         this._fields = generateFieldLookup(fieldNames)
+        this._fieldsLength = this._fields.length
     }
 
     /**
@@ -162,7 +164,7 @@ export class LcovParser {
     private _matchFields(buf: Buffer, byteIndex: number): ParseResult | null {
         const byte = buf[byteIndex]
 
-        for (let nameIndex = 0; nameIndex < this._fields.length; nameIndex++) {
+        for (let nameIndex = 0; nameIndex < this._fieldsLength; nameIndex++) {
             const field = this._fields[nameIndex]
 
             if (field.matcher.compare(byte) && field.matcher.matched()) {
@@ -172,7 +174,7 @@ export class LcovParser {
 
                 if (
                     nonEmptyField &&
-                    !isComment /* comments are not required to contain a ':' (colon) */ &&
+                    !isComment /* comments aren't required to contain a ':' (colon) */ &&
                     byteIndex + 1 < buf.byteLength &&
                     buf[byteIndex + 1] !== 58 /* ':' (colon) */
                 ) {
@@ -217,8 +219,8 @@ export class LcovParser {
      * @internal
      */
     private _resetMatcher(): void {
-        for (const matcher of this._fields) {
-            matcher.matcher.reset()
+        for (let index = 0; index < this._fieldsLength; index++) {
+            this._fields[index].matcher.reset()
         }
     }
 
@@ -247,12 +249,12 @@ export class LcovParser {
 
         for (let index = start; index < end; index++) {
             if (buf[index] === 44 /* ',' (comma) */) {
-                values.push(buf.subarray(offset, index).toString())
+                values.push(buf.toString('utf-8', offset, index))
                 offset = index + 1
             }
         }
 
-        values.push(buf.subarray(offset, end).toString())
+        values.push(buf.toString('utf-8', offset, end))
 
         return values
     }
