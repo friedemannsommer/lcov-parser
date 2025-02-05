@@ -1,5 +1,11 @@
 # @friedemannsommer/lcov-parser
 
+## 4.0.4
+
+### Patch Changes
+
+- [`49a37c2`](https://github.com/friedemannsommer/lcov-parser/commit/49a37c2981c45de3f0f63ceab409462e7d814ba6) Thanks [@friedemannsommer](https://github.com/friedemannsommer)! - Optimize parser performance
+
 ## 4.0.3
 
 ### Patch Changes
