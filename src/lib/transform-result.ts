@@ -6,7 +6,9 @@ import type {
     EndOfRecordEntry,
     EntryVariants,
     FilePathEntry,
+    FunctionAliasEntry,
     FunctionExecutionEntry,
+    FunctionLeaderEntry,
     FunctionLocationEntry,
     HitEntryVariants,
     InstrumentedEntryVariants,
@@ -32,7 +34,9 @@ const handlers = {
     [Variant.BranchLocation]: transformBranchLocation,
     [Variant.EndOfRecord]: transformEndOfRecord,
     [Variant.FilePath]: transformFilePath,
+    [Variant.FunctionAlias]: transformFunctionAlias,
     [Variant.FunctionExecution]: transformFunctionExecution,
+    [Variant.FunctionLeader]: transformFunctionLeader,
     [Variant.FunctionLocation]: transformFunctionLocation,
     [Variant.LineLocation]: transformLineLocation,
     [Variant.TestName]: transformTestName,
@@ -209,5 +213,48 @@ export function transformComment(result: ParseResult<Variant.Comment>): CommentE
         done: result.done,
         variant: result.variant,
         comment: result.value !== null ? result.value.join(',') : ''
+    }
+}
+
+export function transformFunctionAlias(result: ParseResult<Variant.FunctionAlias>): FunctionAliasEntry {
+    let name = ''
+    let hit = 0
+    let index = 0
+
+    if (result.value != null && result.value.length >= 3) {
+        index = parseInteger(result.value[0])
+        hit = parseInteger(result.value[1])
+        name = result.value[2]
+    }
+
+    return {
+        done: result.done,
+        hit,
+        index,
+        name,
+        variant: result.variant
+    }
+}
+
+export function transformFunctionLeader(result: ParseResult<Variant.FunctionLeader>): FunctionLeaderEntry {
+    let lineStart = 0
+    let lineEnd = NaN
+    let index = 0
+
+    if (result.value !== null && result.value.length >= 2) {
+        index = parseInteger(result.value[0])
+        lineStart = parseInteger(result.value[1])
+
+        if (result.value.length >= 3) {
+            lineEnd = parseInteger(result.value[2])
+        }
+    }
+
+    return {
+        done: result.done,
+        lineEnd,
+        lineStart,
+        index,
+        variant: result.variant
     }
 }

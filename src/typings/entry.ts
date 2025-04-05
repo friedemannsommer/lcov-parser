@@ -7,9 +7,11 @@ export type EntryVariants =
     | CommentEntry
     | EndOfRecordEntry
     | FilePathEntry
+    | FunctionAliasEntry
     | FunctionExecutionEntry
     | FunctionHitEntry
     | FunctionInstrumentedEntry
+    | FunctionLeaderEntry
     | FunctionLocationEntry
     | LineHitEntry
     | LineInstrumentedEntry
@@ -85,4 +87,16 @@ export interface VersionEntry extends Entry<Variant.Version> {
 
 export interface CommentEntry extends Entry<Variant.Comment> {
     comment: string
+}
+
+export interface FunctionLeaderEntry extends Entry<Variant.FunctionLeader> {
+    index: number
+    lineEnd: number
+    lineStart: number
+}
+
+export interface FunctionAliasEntry extends Entry<Variant.FunctionAlias> {
+    hit: number
+    index: number
+    name: string
 }
