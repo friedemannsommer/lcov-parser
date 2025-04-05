@@ -1,7 +1,7 @@
 import { Transform, type TransformCallback } from 'node:stream'
 
 import { defaultFieldNames } from '../constants.js'
-import { type FunctionMap, createSection, handleResult } from '../lib/handle-result.js'
+import { type FunctionLeaders, type FunctionMap, createSection, handleResult } from '../lib/handle-result.js'
 import { isBlankSpace } from '../lib/parse.js'
 import transformResult from '../lib/transform-result.js'
 import { type FlushedResults, LcovParser } from '../parser.js'
@@ -13,6 +13,10 @@ import type { StreamOptions } from '../typings/options.js'
  * stream which accepts `Buffer` chunks as input and outputs {@link SectionSummary} objects.
  */
 export class LcovStreamParser extends Transform {
+    /**
+     * @internal
+     */
+    private readonly _functionLeaders: FunctionLeaders = new Map()
     /**
      * @internal
      */
@@ -104,7 +108,7 @@ export class LcovStreamParser extends Transform {
                 return true
             }
 
-            if (handleResult(transformResult(result), this._functionMap, this._current)) {
+            if (handleResult(transformResult(result), this._functionLeaders, this._functionMap, this._current)) {
                 this.push(this._current)
                 this._current = createSection()
             }

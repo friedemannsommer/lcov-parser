@@ -2,6 +2,7 @@ import { expect } from 'chai'
 
 import { Variant } from '../constants.js'
 import {
+    type FunctionLeaders,
     type FunctionMap,
     createBranchSummary,
     createFunctionSummary,
@@ -187,12 +188,14 @@ describe('createUpdateFunctionSummary', (): void => {
             ]
         ]
     ]
+    const functionLeaders: FunctionLeaders = new Map()
     const functionMap: FunctionMap = new Map()
     const fnList: FunctionEntry[] = []
 
     for (const [name, entries] of testData) {
         for (const [variant, value] of entries) {
             createUpdateFunctionSummary(
+                functionLeaders,
                 functionMap,
                 fnList,
                 variant === Variant.FunctionLocation
@@ -243,10 +246,11 @@ describe('createUpdateFunctionSummary', (): void => {
 
 describe('handleResult', (): void => {
     it('should update section name', (): void => {
+        const functionLeaders: FunctionLeaders = new Map()
         const functionMap: FunctionMap = new Map([['a', createFunctionSummary(getFunctionExecutionEntry('a', 1))]])
         const section = createSection()
 
-        expect(handleResult(getTestNameEntry('test'), functionMap, section)).to.be.false
+        expect(handleResult(getTestNameEntry('test'), functionLeaders, functionMap, section)).to.be.false
         expect(functionMap.size).to.eq(0, 'should have cleared the functionMap')
         expect(section).to.eql({
             ...createSection(),
@@ -255,10 +259,11 @@ describe('handleResult', (): void => {
     })
 
     it('should update section file path', (): void => {
+        const functionLeaders: FunctionLeaders = new Map()
         const functionMap: FunctionMap = new Map()
         const section = createSection()
 
-        expect(handleResult(getFilePathEntry('path/to/file.ext'), functionMap, section)).to.be.false
+        expect(handleResult(getFilePathEntry('path/to/file.ext'), functionLeaders, functionMap, section)).to.be.false
         expect(section).to.eql({
             ...createSection(),
             path: 'path/to/file.ext'
@@ -266,21 +271,23 @@ describe('handleResult', (): void => {
     })
 
     it('should clear function map and signal to create a new section', (): void => {
+        const functionLeaders: FunctionLeaders = new Map()
         const functionMap: FunctionMap = new Map([['b', createFunctionSummary(getFunctionLocationEntry('b', 0))]])
         const section = createSection()
 
-        expect(handleResult(getEndOfRecord(), functionMap, section)).to.be.true
+        expect(handleResult(getEndOfRecord(), functionLeaders, functionMap, section)).to.be.true
         expect(section).to.eql(createSection())
     })
 
     it(`should create function summary from "${Variant[Variant.FunctionLocation]}"`, (): void => {
+        const functionLeaders: FunctionLeaders = new Map()
         const functionMap: FunctionMap = new Map()
         const entry = getFunctionLocationEntry('test', 1)
         const section = createSection()
         const expectedSection = createSection()
         const expectedSummary = createFunctionSummary({ ...entry })
 
-        expect(handleResult(entry, functionMap, section)).to.be.false
+        expect(handleResult(entry, functionLeaders, functionMap, section)).to.be.false
         expect(functionMap.get('test')).to.eql(expectedSummary)
         expect(section).to.eql({
             ...expectedSection,
@@ -292,13 +299,14 @@ describe('handleResult', (): void => {
     })
 
     it(`should create function summary from "${Variant[Variant.FunctionExecution]}"`, (): void => {
+        const functionLeaders: FunctionLeaders = new Map()
         const functionMap: FunctionMap = new Map()
         const entry = getFunctionExecutionEntry('test', 2)
         const section = createSection()
         const expectedSection = createSection()
         const expectedSummary = createFunctionSummary({ ...entry })
 
-        expect(handleResult(entry, functionMap, section)).to.be.false
+        expect(handleResult(entry, functionLeaders, functionMap, section)).to.be.false
         expect(functionMap.get('test')).to.eql(expectedSummary)
         expect(section).to.eql({
             ...expectedSection,
@@ -310,6 +318,7 @@ describe('handleResult', (): void => {
     })
 
     it('should create and update function summary', (): void => {
+        const functionLeaders: FunctionLeaders = new Map()
         const functionMap: FunctionMap = new Map()
         const locationEntry = getFunctionLocationEntry('test', 1)
         const executionEntry = getFunctionExecutionEntry('test', 2)
@@ -319,8 +328,8 @@ describe('handleResult', (): void => {
 
         expectedSummary.hit = 2
 
-        expect(handleResult(locationEntry, functionMap, section)).to.be.false
-        expect(handleResult(executionEntry, functionMap, section)).to.be.false
+        expect(handleResult(locationEntry, functionLeaders, functionMap, section)).to.be.false
+        expect(handleResult(executionEntry, functionLeaders, functionMap, section)).to.be.false
         expect(functionMap.get('test')).to.eql(expectedSummary)
         expect(section).to.eql({
             ...expectedSection,
@@ -332,13 +341,14 @@ describe('handleResult', (): void => {
     })
 
     it(`should create branch entry from "${Variant[Variant.BranchLocation]}"`, (): void => {
+        const functionLeaders: FunctionLeaders = new Map()
         const functionMap: FunctionMap = new Map()
         const section = createSection()
         const entry: BranchLocationEntry = getBranchLocationEntry()
         const expectedSection = createSection()
         const expectedSummary = createBranchSummary({ ...entry })
 
-        expect(handleResult(entry, functionMap, section)).to.be.false
+        expect(handleResult(entry, functionLeaders, functionMap, section)).to.be.false
         expect(functionMap.size).to.eq(0)
         expect(section).to.eql({
             ...expectedSection,
@@ -350,13 +360,14 @@ describe('handleResult', (): void => {
     })
 
     it(`should create line entry from "${Variant[Variant.LineLocation]}"`, (): void => {
+        const functionLeaders: FunctionLeaders = new Map()
         const functionMap: FunctionMap = new Map()
         const section = createSection()
         const entry: LineLocationEntry = getLineLocationEntry()
         const expectedSection = createSection()
         const expectedSummary = createLineSummary({ ...entry })
 
-        expect(handleResult(entry, functionMap, section)).to.be.false
+        expect(handleResult(entry, functionLeaders, functionMap, section)).to.be.false
         expect(functionMap.size).to.eq(0)
         expect(section).to.eql({
             ...expectedSection,
@@ -368,13 +379,14 @@ describe('handleResult', (): void => {
     })
 
     it('should update branch summary', (): void => {
+        const functionLeaders: FunctionLeaders = new Map()
         const functionMap: FunctionMap = new Map()
         const section = createSection()
         const instrumentedEntry: BranchInstrumentedEntry = getInstrumentedEntry(Variant.BranchInstrumented, 2)
         const hitEntry: BranchHitEntry = getHitEntry(Variant.BranchHit, 4)
 
-        expect(handleResult(instrumentedEntry, functionMap, section)).to.be.false
-        expect(handleResult(hitEntry, functionMap, section)).to.be.false
+        expect(handleResult(instrumentedEntry, functionLeaders, functionMap, section)).to.be.false
+        expect(handleResult(hitEntry, functionLeaders, functionMap, section)).to.be.false
         expect(functionMap.size).to.eq(0)
         expect(section).to.eql({
             ...createSection(),
@@ -387,13 +399,14 @@ describe('handleResult', (): void => {
     })
 
     it('should update function summary', (): void => {
+        const functionLeaders: FunctionLeaders = new Map()
         const functionMap: FunctionMap = new Map()
         const section = createSection()
         const instrumentedEntry: FunctionInstrumentedEntry = getInstrumentedEntry(Variant.FunctionInstrumented, 2)
         const hitEntry: FunctionHitEntry = getHitEntry(Variant.FunctionHit, 4)
 
-        expect(handleResult(instrumentedEntry, functionMap, section)).to.be.false
-        expect(handleResult(hitEntry, functionMap, section)).to.be.false
+        expect(handleResult(instrumentedEntry, functionLeaders, functionMap, section)).to.be.false
+        expect(handleResult(hitEntry, functionLeaders, functionMap, section)).to.be.false
         expect(functionMap.size).to.eq(0)
         expect(section).to.eql({
             ...createSection(),
@@ -406,13 +419,14 @@ describe('handleResult', (): void => {
     })
 
     it('should update line summary', (): void => {
+        const functionLeaders: FunctionLeaders = new Map()
         const functionMap: FunctionMap = new Map()
         const section = createSection()
         const instrumentedEntry: LineInstrumentedEntry = getInstrumentedEntry(Variant.LineInstrumented, 2)
         const hitEntry: LineHitEntry = getHitEntry(Variant.LineHit, 4)
 
-        expect(handleResult(instrumentedEntry, functionMap, section)).to.be.false
-        expect(handleResult(hitEntry, functionMap, section)).to.be.false
+        expect(handleResult(instrumentedEntry, functionLeaders, functionMap, section)).to.be.false
+        expect(handleResult(hitEntry, functionLeaders, functionMap, section)).to.be.false
         expect(functionMap.size).to.eq(0)
         expect(section).to.eql({
             ...createSection(),
@@ -494,12 +508,13 @@ describe('updateResults', (): void => {
 
     for (const [entries, expectedSections] of testData) {
         it(`should update sections based on values from (${entries.length}) entries`, (): void => {
+            const functionLeaders: FunctionLeaders = new Map()
             const functionMap: FunctionMap = new Map()
             const sections: SectionSummary[] = []
             let sectionIndex = 0
 
             for (const entry of entries) {
-                sectionIndex = updateResults(sectionIndex, entry, functionMap, sections)
+                sectionIndex = updateResults(sectionIndex, entry, functionLeaders, functionMap, sections)
             }
 
             expect(sections).to.eql(expectedSections)
