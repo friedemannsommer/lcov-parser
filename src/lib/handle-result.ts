@@ -16,7 +16,12 @@ import type { BranchEntry, FunctionEntry, LineEntry, SectionSummary, Summary } f
 export type FunctionMap = Map<string, FunctionEntry>
 export type FunctionLeaders = Map<number, FunctionLeaderEntry>
 
-export function handleResult(entry: EntryVariants, functionLeaders: FunctionLeaders, functionMap: FunctionMap, section: SectionSummary): boolean {
+export function handleResult(
+    entry: EntryVariants,
+    functionLeaders: FunctionLeaders,
+    functionMap: FunctionMap,
+    section: SectionSummary
+): boolean {
     switch (entry.variant) {
         case Variant.TestName:
             // creating a new test module, to prevent name conflicts simply clear the current FunctionMap

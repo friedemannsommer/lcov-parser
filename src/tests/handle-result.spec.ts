@@ -168,24 +168,12 @@ describe('updateSectionSummary', (): void => {
 describe('createUpdateFunctionSummary', (): void => {
     const functionLeaders: FunctionLeaders = new Map([
         [0, getFunctionLeaderEntry(0, 1)],
-        [1, getFunctionLeaderEntry(2, 5)],
-    ]);
+        [1, getFunctionLeaderEntry(2, 5)]
+    ])
 
     const testData: Array<[string, Array<FunctionLocationEntry | FunctionExecutionEntry | FunctionAliasEntry>]> = [
-        [
-            'test_a',
-            [
-                getFunctionLocationEntry('test_a', 4),
-                getFunctionExecutionEntry('test_a', 2),
-            ],
-        ],
-        [
-            'test_b',
-            [
-                getFunctionExecutionEntry('test_b', 3),
-                getFunctionLocationEntry('test_b', 6),
-            ]
-        ],
+        ['test_a', [getFunctionLocationEntry('test_a', 4), getFunctionExecutionEntry('test_a', 2)]],
+        ['test_b', [getFunctionExecutionEntry('test_b', 3), getFunctionLocationEntry('test_b', 6)]],
         [
             'test_c',
             [
@@ -194,28 +182,17 @@ describe('createUpdateFunctionSummary', (): void => {
                 getFunctionExecutionEntry('test_c', 2),
                 getFunctionLocationEntry('test_c', 5),
                 getFunctionExecutionEntry('test_c', 1),
-                getFunctionLocationEntry('test_c', 4),
+                getFunctionLocationEntry('test_c', 4)
             ]
         ],
-        [
-            'test_d',
-            [
-                getFunctionAliasEntry(0, 9, 'test_d'),
-                getFunctionAliasEntry(1, 7, 'test_d'),
-            ]
-        ]
+        ['test_d', [getFunctionAliasEntry(0, 9, 'test_d'), getFunctionAliasEntry(1, 7, 'test_d')]]
     ]
     const functionMap: FunctionMap = new Map()
     const fnList: FunctionEntry[] = []
 
     for (const [name, entries] of testData) {
         for (const entry of entries) {
-            createUpdateFunctionSummary(
-                functionLeaders,
-                functionMap,
-                fnList,
-                entry
-            )
+            createUpdateFunctionSummary(functionLeaders, functionMap, fnList, entry)
         }
 
         it(`should create function summary for "${name}" based on (${entries.length}) entries`, (): void => {
@@ -237,15 +214,17 @@ describe('createUpdateFunctionSummary', (): void => {
         )
     })
 
-    function getLastLocation(entries: Array<FunctionLocationEntry | FunctionExecutionEntry | FunctionAliasEntry>): number {
+    function getLastLocation(
+        entries: Array<FunctionLocationEntry | FunctionExecutionEntry | FunctionAliasEntry>
+    ): number {
         for (let index = entries.length - 1; index >= 0; index--) {
             const entry = entries[index]
 
             if (entry.variant === Variant.FunctionLocation) {
-                return entry.lineStart;
+                return entry.lineStart
             }
             if (entry.variant === Variant.FunctionAlias) {
-                return functionLeaders.get(entry.index)?.lineStart ?? 0;
+                return functionLeaders.get(entry.index)?.lineStart ?? 0
             }
         }
 

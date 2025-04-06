@@ -1279,7 +1279,7 @@ describe('transformFunctionAlias', (): void => {
     ]
 
     processTestData(testData, transformFunctionAlias)
-});
+})
 
 describe('transformFunctionLeader', (): void => {
     const testData: TestData<Variant.FunctionLeader, FunctionLeaderEntry> = [
@@ -1361,4 +1361,4 @@ describe('transformFunctionLeader', (): void => {
     ]
 
     processTestData(testData, transformFunctionLeader)
-});
+})
