@@ -238,7 +238,7 @@ export function transformFunctionAlias(result: ParseResult<Variant.FunctionAlias
 
 export function transformFunctionLeader(result: ParseResult<Variant.FunctionLeader>): FunctionLeaderEntry {
     let lineStart = 0
-    let lineEnd = NaN
+    let lineEnd = 0
     let index = 0
 
     if (result.value !== null && result.value.length >= 2) {

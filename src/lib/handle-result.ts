@@ -14,14 +14,14 @@ import type {
 import type { BranchEntry, FunctionEntry, LineEntry, SectionSummary, Summary } from '../typings/file.js'
 
 export type FunctionMap = Map<string, FunctionEntry>
-export type FunctionLeaders = Map<Number, FunctionLeaderEntry>
+export type FunctionLeaders = Map<number, FunctionLeaderEntry>
 
 export function handleResult(entry: EntryVariants, functionLeaders: FunctionLeaders, functionMap: FunctionMap, section: SectionSummary): boolean {
     switch (entry.variant) {
         case Variant.TestName:
             // creating a new test module, to prevent name conflicts simply clear the current FunctionMap
             functionMap.clear()
-            functionLeaders.clear();
+            functionLeaders.clear()
             section.name = entry.name
             break
         case Variant.FilePath:
@@ -30,7 +30,7 @@ export function handleResult(entry: EntryVariants, functionLeaders: FunctionLead
         case Variant.EndOfRecord:
             // we've left the test module, to prevent name conflicts clear the current FunctionMap
             functionMap.clear()
-            functionLeaders.clear();
+            functionLeaders.clear()
             return true
         case Variant.FunctionLeader:
             functionLeaders.set(entry.index, entry)
@@ -108,17 +108,27 @@ export function createUpdateFunctionSummary(
 ): void {
     const functionSummary = functionMap.get(entry.name)
     if (entry.variant === Variant.FunctionAlias) {
-        functions.push({
-            hit: entry.hit,
-            line: functionLeaders.get(entry.index)?.lineStart || 0,
-            name: entry.name
-        })
-        return;
+        // biome-ignore lint/style/noNonNullAssertion: Leader always comes before aliases of a function
+        const functionLeader = functionLeaders.get(entry.index)!
+        if (functionSummary === undefined) {
+            const summary = {
+                hit: entry.hit,
+                line: functionLeaders.get(entry.index)?.lineStart || 0,
+                name: entry.name
+            }
+
+            functionMap.set(entry.name, summary)
+            functions.push(summary)
+        } else {
+            functionSummary.hit += entry.hit
+            functionSummary.line = functionLeader.lineStart
+        }
+        return
     }
 
     if (functionSummary === undefined) {
         const summary = createFunctionSummary(entry)
-        
+
         functionMap.set(entry.name, summary)
         functions.push(summary)
     } else if (entry.variant === Variant.FunctionExecution) {

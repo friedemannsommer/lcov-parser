@@ -18,8 +18,11 @@ import type {
     BranchInstrumentedEntry,
     BranchLocationEntry,
     EntryVariants,
+    FunctionAliasEntry,
+    FunctionExecutionEntry,
     FunctionHitEntry,
     FunctionInstrumentedEntry,
+    FunctionLocationEntry,
     HitEntryVariants,
     InstrumentedEntryVariants,
     LineHitEntry,
@@ -31,7 +34,9 @@ import {
     getBranchLocationEntry,
     getEndOfRecord,
     getFilePathEntry,
+    getFunctionAliasEntry,
     getFunctionExecutionEntry,
+    getFunctionLeaderEntry,
     getFunctionLocationEntry,
     getHitEntry,
     getInstrumentedEntry,
@@ -161,53 +166,62 @@ describe('updateSectionSummary', (): void => {
 })
 
 describe('createUpdateFunctionSummary', (): void => {
-    const testData: Array<[string, Array<[Variant, number]>]> = [
+    const functionLeaders: FunctionLeaders = new Map([
+        [0, getFunctionLeaderEntry(0, 1)],
+        [1, getFunctionLeaderEntry(2, 5)],
+    ]);
+
+    const testData: Array<[string, Array<FunctionLocationEntry | FunctionExecutionEntry | FunctionAliasEntry>]> = [
         [
             'test_a',
             [
-                [Variant.FunctionLocation, 4],
-                [Variant.FunctionExecution, 2]
-            ]
+                getFunctionLocationEntry('test_a', 4),
+                getFunctionExecutionEntry('test_a', 2),
+            ],
         ],
         [
             'test_b',
             [
-                [Variant.FunctionExecution, 3],
-                [Variant.FunctionLocation, 6]
+                getFunctionExecutionEntry('test_b', 3),
+                getFunctionLocationEntry('test_b', 6),
             ]
         ],
         [
             'test_c',
             [
-                [Variant.FunctionExecution, 3],
-                [Variant.FunctionLocation, 6],
-                [Variant.FunctionExecution, 2],
-                [Variant.FunctionLocation, 5],
-                [Variant.FunctionExecution, 1],
-                [Variant.FunctionLocation, 4]
+                getFunctionExecutionEntry('test_c', 3),
+                getFunctionLocationEntry('test_c', 6),
+                getFunctionExecutionEntry('test_c', 2),
+                getFunctionLocationEntry('test_c', 5),
+                getFunctionExecutionEntry('test_c', 1),
+                getFunctionLocationEntry('test_c', 4),
+            ]
+        ],
+        [
+            'test_d',
+            [
+                getFunctionAliasEntry(0, 9, 'test_d'),
+                getFunctionAliasEntry(1, 7, 'test_d'),
             ]
         ]
     ]
-    const functionLeaders: FunctionLeaders = new Map()
     const functionMap: FunctionMap = new Map()
     const fnList: FunctionEntry[] = []
 
     for (const [name, entries] of testData) {
-        for (const [variant, value] of entries) {
+        for (const entry of entries) {
             createUpdateFunctionSummary(
                 functionLeaders,
                 functionMap,
                 fnList,
-                variant === Variant.FunctionLocation
-                    ? getFunctionLocationEntry(name, value)
-                    : getFunctionExecutionEntry(name, value)
+                entry
             )
         }
 
         it(`should create function summary for "${name}" based on (${entries.length}) entries`, (): void => {
             expect(functionMap.get(name)).to.eql({
-                hit: getSumByVariant(entries, Variant.FunctionExecution),
-                line: getLastEntryValue(entries, Variant.FunctionLocation),
+                hit: getHits(entries),
+                line: getLastLocation(entries),
                 name
             })
         })
@@ -216,29 +230,32 @@ describe('createUpdateFunctionSummary', (): void => {
     it(`should have created (${testData.length}) entries with provided values`, (): void => {
         expect(fnList).to.eql(
             testData.map(([name, entries]) => ({
-                hit: getSumByVariant(entries, Variant.FunctionExecution),
-                line: getLastEntryValue(entries, Variant.FunctionLocation),
+                hit: getHits(entries),
+                line: getLastLocation(entries),
                 name
             }))
         )
     })
 
-    function getLastEntryValue(entries: Array<[Variant, number]>, expectedVariant: Variant): number {
+    function getLastLocation(entries: Array<FunctionLocationEntry | FunctionExecutionEntry | FunctionAliasEntry>): number {
         for (let index = entries.length - 1; index >= 0; index--) {
-            const [variant, value] = entries[index]
+            const entry = entries[index]
 
-            if (variant === expectedVariant) {
-                return value
+            if (entry.variant === Variant.FunctionLocation) {
+                return entry.lineStart;
+            }
+            if (entry.variant === Variant.FunctionAlias) {
+                return functionLeaders.get(entry.index)?.lineStart ?? 0;
             }
         }
 
         return 0
     }
 
-    function getSumByVariant(entries: Array<[Variant, number]>, expectedVariant: Variant): number {
+    function getHits(entries: Array<FunctionLocationEntry | FunctionExecutionEntry | FunctionAliasEntry>): number {
         return entries.reduce(
-            (previousValue, [variant, value]): number =>
-                variant === expectedVariant ? previousValue + value : previousValue,
+            (previousValue, entry): number =>
+                entry.variant !== Variant.FunctionLocation ? previousValue + entry.hit : previousValue,
             0
         )
     }

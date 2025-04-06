@@ -67,8 +67,8 @@ describe('Lookup - generateFieldLookup', (): void => {
                 Variant.EndOfRecord,
                 new ByteMatch(new Uint8Array([101, 110, 100, 95, 111, 102, 95, 114, 101, 99, 111, 114, 100]))
             ],
-            [Variant.FunctionAlias, new ByteMatch(new Uint8Array([70, 78, 65]))],
             [Variant.FilePath, new ByteMatch(new Uint8Array([83, 70]))],
+            [Variant.FunctionAlias, new ByteMatch(new Uint8Array([70, 78, 65]))],
             [Variant.FunctionExecution, new ByteMatch(new Uint8Array([70, 78, 68, 65]))],
             [Variant.FunctionHit, new ByteMatch(new Uint8Array([70, 78, 72]))],
             [Variant.FunctionInstrumented, new ByteMatch(new Uint8Array([70, 78, 70]))],
