@@ -37,10 +37,8 @@ export function handleResult(
             functionMap.clear()
             functionLeaders.clear()
             return true
-        case Variant.FunctionLeader:
-            functionLeaders.set(entry.index, entry)
-            break
         case Variant.FunctionAlias:
+        case Variant.FunctionLeader:
         case Variant.FunctionLocation:
         case Variant.FunctionExecution:
             createUpdateFunctionSummary(functionLeaders, functionMap, section.functions.details, entry)
@@ -109,12 +107,41 @@ export function createUpdateFunctionSummary(
     functionLeaders: FunctionLeaders,
     functionMap: FunctionMap,
     functions: FunctionEntry[],
-    entry: FunctionAliasEntry | FunctionLocationEntry | FunctionExecutionEntry
+    entry: FunctionAliasEntry | FunctionLeaderEntry | FunctionLocationEntry | FunctionExecutionEntry
 ): void {
+    if (entry.variant === Variant.FunctionLeader) {
+        const functionLeader = functionLeaders.get(entry.index)
+        if (functionLeader === undefined) {
+            functionLeaders.set(entry.index, entry)
+        } else {
+            functionLeader.lineEnd = entry.lineEnd
+            functionLeader.lineStart = entry.lineStart
+            for (const alias of functionLeader.aliases) {
+                const functionSummary = functionMap.get(alias.name)
+                if (functionSummary != null) {
+                    functionSummary.line = entry.lineStart
+                }
+            }
+        }
+        return
+    }
+
     const functionSummary = functionMap.get(entry.name)
     if (entry.variant === Variant.FunctionAlias) {
-        // biome-ignore lint/style/noNonNullAssertion: Leader always comes before aliases of a function
-        const functionLeader = functionLeaders.get(entry.index)!
+        const functionLeader = functionLeaders.get(entry.index)
+        if (functionLeader === undefined) {
+            functionLeaders.set(entry.index, {
+                aliases: [entry],
+                lineEnd: 0,
+                lineStart: 0,
+                index: entry.index,
+                done: true,
+                variant: Variant.FunctionLeader
+            })
+        } else {
+            functionLeader.aliases.push(entry)
+        }
+
         if (functionSummary === undefined) {
             const summary = {
                 hit: entry.hit,
@@ -126,7 +153,7 @@ export function createUpdateFunctionSummary(
             functions.push(summary)
         } else {
             functionSummary.hit += entry.hit
-            functionSummary.line = functionLeader.lineStart
+            functionSummary.line = functionLeader?.lineStart ?? 0
         }
         return
     }

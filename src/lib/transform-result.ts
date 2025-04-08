@@ -255,6 +255,7 @@ export function transformFunctionLeader(result: ParseResult<Variant.FunctionLead
         lineEnd,
         lineStart,
         index,
+        aliases: [],
         variant: result.variant
     }
 }

@@ -61,6 +61,7 @@ export function getFunctionLeaderEntry(index: number, value: number): FunctionLe
         index,
         lineStart: value,
         lineEnd: 0,
+        aliases: [],
         variant: Variant.FunctionLeader
     }
 }

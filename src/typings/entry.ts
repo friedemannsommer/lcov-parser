@@ -89,14 +89,15 @@ export interface CommentEntry extends Entry<Variant.Comment> {
     comment: string
 }
 
-export interface FunctionLeaderEntry extends Entry<Variant.FunctionLeader> {
-    index: number
-    lineEnd: number
-    lineStart: number
-}
-
 export interface FunctionAliasEntry extends Entry<Variant.FunctionAlias> {
     hit: number
     index: number
     name: string
+}
+
+export interface FunctionLeaderEntry extends Entry<Variant.FunctionLeader> {
+    index: number
+    lineEnd: number
+    lineStart: number
+    aliases: FunctionAliasEntry[]
 }

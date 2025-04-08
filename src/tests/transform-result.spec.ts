@@ -1033,6 +1033,7 @@ describe('transformResult', (): void => {
                 index: 1,
                 lineStart: 10,
                 lineEnd: 12,
+                aliases: [],
                 variant: Variant.FunctionLeader
             }
         ],
@@ -1280,6 +1281,7 @@ describe('transformFunctionLeader', (): void => {
                 index: 0,
                 lineEnd: 0,
                 lineStart: 0,
+                aliases: [],
                 variant: Variant.FunctionLeader
             }
         ],
@@ -1295,6 +1297,7 @@ describe('transformFunctionLeader', (): void => {
                 index: 0,
                 lineEnd: 0,
                 lineStart: 0,
+                aliases: [],
                 variant: Variant.FunctionLeader
             }
         ],
@@ -1310,6 +1313,7 @@ describe('transformFunctionLeader', (): void => {
                 index: 1,
                 lineEnd: 0,
                 lineStart: 1,
+                aliases: [],
                 variant: Variant.FunctionLeader
             }
         ],
@@ -1325,6 +1329,7 @@ describe('transformFunctionLeader', (): void => {
                 index: 1,
                 lineEnd: 2,
                 lineStart: 1,
+                aliases: [],
                 variant: Variant.FunctionLeader
             }
         ]

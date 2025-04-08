@@ -22,6 +22,7 @@ import type {
     FunctionExecutionEntry,
     FunctionHitEntry,
     FunctionInstrumentedEntry,
+    FunctionLeaderEntry,
     FunctionLocationEntry,
     HitEntryVariants,
     InstrumentedEntryVariants,
@@ -166,12 +167,9 @@ describe('updateSectionSummary', (): void => {
 })
 
 describe('createUpdateFunctionSummary', (): void => {
-    const functionLeaders: FunctionLeaders = new Map([
-        [0, getFunctionLeaderEntry(0, 1)],
-        [1, getFunctionLeaderEntry(2, 5)]
-    ])
-
-    const testData: Array<[string, Array<FunctionLocationEntry | FunctionExecutionEntry | FunctionAliasEntry>]> = [
+    const testData: Array<
+        [string, Array<FunctionAliasEntry | FunctionLeaderEntry | FunctionLocationEntry | FunctionExecutionEntry>]
+    > = [
         ['test_a', [getFunctionLocationEntry('test_a', 4), getFunctionExecutionEntry('test_a', 2)]],
         ['test_b', [getFunctionExecutionEntry('test_b', 3), getFunctionLocationEntry('test_b', 6)]],
         [
@@ -185,9 +183,27 @@ describe('createUpdateFunctionSummary', (): void => {
                 getFunctionLocationEntry('test_c', 4)
             ]
         ],
-        ['test_d', [getFunctionAliasEntry(0, 9, 'test_d'), getFunctionAliasEntry(1, 7, 'test_d')]]
+        [
+            'test_d',
+            [
+                getFunctionLeaderEntry(0, 1),
+                getFunctionAliasEntry(0, 9, 'test_d'),
+                getFunctionLeaderEntry(1, 5),
+                getFunctionAliasEntry(1, 7, 'test_d')
+            ]
+        ],
+        [
+            'test_e',
+            [
+                getFunctionAliasEntry(2, 9, 'test_e'),
+                getFunctionAliasEntry(3, 7, 'test_e'),
+                getFunctionLeaderEntry(3, 1),
+                getFunctionLeaderEntry(2, 5)
+            ]
+        ]
     ]
     const functionMap: FunctionMap = new Map()
+    const functionLeaders: FunctionLeaders = new Map()
     const fnList: FunctionEntry[] = []
 
     for (const [name, entries] of testData) {
@@ -215,26 +231,27 @@ describe('createUpdateFunctionSummary', (): void => {
     })
 
     function getLastLocation(
-        entries: Array<FunctionLocationEntry | FunctionExecutionEntry | FunctionAliasEntry>
+        entries: Array<FunctionAliasEntry | FunctionLeaderEntry | FunctionLocationEntry | FunctionExecutionEntry>
     ): number {
         for (let index = entries.length - 1; index >= 0; index--) {
             const entry = entries[index]
 
-            if (entry.variant === Variant.FunctionLocation) {
+            if (entry.variant === Variant.FunctionLocation || entry.variant === Variant.FunctionLeader) {
                 return entry.lineStart
-            }
-            if (entry.variant === Variant.FunctionAlias) {
-                return functionLeaders.get(entry.index)?.lineStart ?? 0
             }
         }
 
         return 0
     }
 
-    function getHits(entries: Array<FunctionLocationEntry | FunctionExecutionEntry | FunctionAliasEntry>): number {
+    function getHits(
+        entries: Array<FunctionAliasEntry | FunctionLeaderEntry | FunctionLocationEntry | FunctionExecutionEntry>
+    ): number {
         return entries.reduce(
             (previousValue, entry): number =>
-                entry.variant !== Variant.FunctionLocation ? previousValue + entry.hit : previousValue,
+                entry.variant === Variant.FunctionExecution || entry.variant === Variant.FunctionAlias
+                    ? previousValue + entry.hit
+                    : previousValue,
             0
         )
     }
