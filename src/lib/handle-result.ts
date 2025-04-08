@@ -24,7 +24,7 @@ export function handleResult(
 ): boolean {
     switch (entry.variant) {
         case Variant.TestName:
-            // creating a new test module, to prevent name conflicts simply clear the current FunctionMap
+            // creating a new test module: clear function contexts to prevent name conflicts from previous modules
             functionMap.clear()
             functionLeaders.clear()
             section.name = entry.name
@@ -33,7 +33,7 @@ export function handleResult(
             section.path = entry.path
             break
         case Variant.EndOfRecord:
-            // we've left the test module, to prevent name conflicts clear the current FunctionMap
+            // we've left the test module: clear function contexts to prevent name conflicts
             functionMap.clear()
             functionLeaders.clear()
             return true
@@ -118,7 +118,7 @@ export function createUpdateFunctionSummary(
         if (functionSummary === undefined) {
             const summary = {
                 hit: entry.hit,
-                line: functionLeaders.get(entry.index)?.lineStart || 0,
+                line: functionLeaders.get(entry.index)?.lineStart ?? 0,
                 name: entry.name
             }
 

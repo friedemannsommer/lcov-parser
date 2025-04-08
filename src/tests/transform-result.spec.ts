@@ -1174,21 +1174,6 @@ describe('transformFunctionAlias', (): void => {
         [
             {
                 done: false,
-                incomplete: false,
-                value: null,
-                variant: Variant.FunctionAlias
-            },
-            {
-                hit: 0,
-                done: false,
-                index: 0,
-                name: '',
-                variant: Variant.FunctionAlias
-            }
-        ],
-        [
-            {
-                done: false,
                 incomplete: true,
                 value: [],
                 variant: Variant.FunctionAlias
@@ -1283,21 +1268,6 @@ describe('transformFunctionAlias', (): void => {
 
 describe('transformFunctionLeader', (): void => {
     const testData: TestData<Variant.FunctionLeader, FunctionLeaderEntry> = [
-        [
-            {
-                done: false,
-                incomplete: false,
-                value: null,
-                variant: Variant.FunctionLeader
-            },
-            {
-                done: false,
-                index: 0,
-                lineEnd: 0,
-                lineStart: 0,
-                variant: Variant.FunctionLeader
-            }
-        ],
         [
             {
                 done: true,

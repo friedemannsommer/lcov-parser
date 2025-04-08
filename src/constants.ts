@@ -33,7 +33,7 @@ export enum Variant {
      */
     FilePath = 6,
     /**
-     * Call count for a given function alias.
+     * Call count for a given function alias, identified by index.
      */
     FunctionAlias = 7,
     /**
