@@ -51,9 +51,11 @@ export interface FieldNames {
     comment: string
     endOfRecord: string
     filePath: string
+    functionAlias: string
     functionExecution: string
     functionHit: string
     functionInstrumented: string
+    functionLeader: string
     functionLocation: string
     lineHit: string
     lineInstrumented: string

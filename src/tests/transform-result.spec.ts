@@ -7,7 +7,9 @@ import transformResult, {
     transformComment,
     transformEndOfRecord,
     transformFilePath,
+    transformFunctionAlias,
     transformFunctionExecution,
+    transformFunctionLeader,
     transformFunctionLocation,
     transformHit,
     transformInstrumented,
@@ -23,7 +25,9 @@ import type {
     Entry,
     EntryVariants,
     FilePathEntry,
+    FunctionAliasEntry,
     FunctionExecutionEntry,
+    FunctionLeaderEntry,
     FunctionLocationEntry,
     HitEntryVariants,
     InstrumentedEntryVariants,
@@ -992,6 +996,21 @@ describe('transformResult', (): void => {
             {
                 done: false,
                 incomplete: false,
+                value: ['1', '10', 'fnName'],
+                variant: Variant.FunctionAlias
+            },
+            {
+                done: false,
+                index: 1,
+                hit: 10,
+                name: 'fnName',
+                variant: Variant.FunctionAlias
+            }
+        ],
+        [
+            {
+                done: false,
+                incomplete: false,
                 value: ['1', 'fnName'],
                 variant: Variant.FunctionExecution
             },
@@ -1000,6 +1019,22 @@ describe('transformResult', (): void => {
                 done: false,
                 name: 'fnName',
                 variant: Variant.FunctionExecution
+            }
+        ],
+        [
+            {
+                done: false,
+                incomplete: false,
+                value: ['1', '10', '12'],
+                variant: Variant.FunctionLeader
+            },
+            {
+                done: false,
+                index: 1,
+                lineStart: 10,
+                lineEnd: 12,
+                aliases: [],
+                variant: Variant.FunctionLeader
             }
         ],
         [
@@ -1133,4 +1168,172 @@ describe('transformComment', (): void => {
     ]
 
     processTestData(testData, transformComment)
+})
+
+describe('transformFunctionAlias', (): void => {
+    const testData: TestData<Variant.FunctionAlias, FunctionAliasEntry> = [
+        [
+            {
+                done: false,
+                incomplete: true,
+                value: [],
+                variant: Variant.FunctionAlias
+            },
+            {
+                hit: 0,
+                done: false,
+                index: 0,
+                name: '',
+                variant: Variant.FunctionAlias
+            }
+        ],
+        [
+            {
+                done: true,
+                incomplete: false,
+                value: ['1'],
+                variant: Variant.FunctionAlias
+            },
+            {
+                hit: 0,
+                done: true,
+                index: 0,
+                name: '',
+                variant: Variant.FunctionAlias
+            }
+        ],
+        [
+            {
+                done: true,
+                incomplete: true,
+                value: ['1', '10'],
+                variant: Variant.FunctionAlias
+            },
+            {
+                hit: 0,
+                done: true,
+                index: 0,
+                name: '',
+                variant: Variant.FunctionAlias
+            }
+        ],
+        [
+            {
+                done: true,
+                incomplete: true,
+                value: ['1', '10', 'test'],
+                variant: Variant.FunctionAlias
+            },
+            {
+                hit: 10,
+                done: true,
+                index: 1,
+                name: 'test',
+                variant: Variant.FunctionAlias
+            }
+        ],
+        [
+            {
+                done: false,
+                incomplete: false,
+                value: ['NaN', 'NaN', 'n'],
+                variant: Variant.FunctionAlias
+            },
+            {
+                hit: 0,
+                done: false,
+                index: 0,
+                name: 'n',
+                variant: Variant.FunctionAlias
+            }
+        ],
+        [
+            {
+                done: true,
+                incomplete: true,
+                value: ['2', '11', 'shouldBeFine', 'this', 'should', 'not', 'be', 'used'],
+                variant: Variant.FunctionAlias
+            },
+            {
+                hit: 11,
+                done: true,
+                index: 2,
+                name: 'shouldBeFine',
+                variant: Variant.FunctionAlias
+            }
+        ]
+    ]
+
+    processTestData(testData, transformFunctionAlias)
+})
+
+describe('transformFunctionLeader', (): void => {
+    const testData: TestData<Variant.FunctionLeader, FunctionLeaderEntry> = [
+        [
+            {
+                done: true,
+                incomplete: false,
+                value: [],
+                variant: Variant.FunctionLeader
+            },
+            {
+                done: true,
+                index: 0,
+                lineEnd: 0,
+                lineStart: 0,
+                aliases: [],
+                variant: Variant.FunctionLeader
+            }
+        ],
+        [
+            {
+                done: false,
+                incomplete: true,
+                value: ['1'],
+                variant: Variant.FunctionLeader
+            },
+            {
+                done: false,
+                index: 0,
+                lineEnd: 0,
+                lineStart: 0,
+                aliases: [],
+                variant: Variant.FunctionLeader
+            }
+        ],
+        [
+            {
+                done: true,
+                incomplete: true,
+                value: ['1', '1'],
+                variant: Variant.FunctionLeader
+            },
+            {
+                done: true,
+                index: 1,
+                lineEnd: 0,
+                lineStart: 1,
+                aliases: [],
+                variant: Variant.FunctionLeader
+            }
+        ],
+        [
+            {
+                done: false,
+                incomplete: false,
+                value: ['1', '1', '2'],
+                variant: Variant.FunctionLeader
+            },
+            {
+                done: false,
+                index: 1,
+                lineEnd: 2,
+                lineStart: 1,
+                aliases: [],
+                variant: Variant.FunctionLeader
+            }
+        ]
+    ]
+
+    processTestData(testData, transformFunctionLeader)
 })

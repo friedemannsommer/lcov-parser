@@ -33,41 +33,49 @@ export enum Variant {
      */
     FilePath = 6,
     /**
+     * Call count for a given function alias, identified by index.
+     */
+    FunctionAlias = 7,
+    /**
      * Call count for a given function, identified by name.
      */
-    FunctionExecution = 7,
+    FunctionExecution = 8,
     /**
      * Number of functions hit.
      */
-    FunctionHit = 8,
+    FunctionHit = 9,
     /**
      * Number of functions found.
      */
-    FunctionInstrumented = 9,
+    FunctionInstrumented = 10,
+    /**
+     * Start and end line numbers for a given function leader, identified by index.
+     */
+    FunctionLeader = 11,
     /**
      * Start and end line numbers for a given function, identified by name.
      */
-    FunctionLocation = 10,
+    FunctionLocation = 12,
     /**
      * Number of lines with a non-zero execution count.
      */
-    LineHit = 11,
+    LineHit = 13,
     /**
      * Number of instrumented lines.
      */
-    LineInstrumented = 12,
+    LineInstrumented = 14,
     /**
      * The execution count for a line, identified by line number.
      */
-    LineLocation = 13,
+    LineLocation = 15,
     /**
      * The test name.
      */
-    TestName = 14,
+    TestName = 16,
     /**
      * The source code version ID.
      */
-    Version = 15
+    Version = 17
 }
 
 /**

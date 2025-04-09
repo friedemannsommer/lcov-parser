@@ -3,7 +3,9 @@ import type {
     BranchLocationEntry,
     EndOfRecordEntry,
     FilePathEntry,
+    FunctionAliasEntry,
     FunctionExecutionEntry,
+    FunctionLeaderEntry,
     FunctionLocationEntry,
     LineLocationEntry,
     SummaryFoundEntry,
@@ -50,6 +52,27 @@ export function getFunctionExecutionEntry(name: string, value: number): Function
         hit: value,
         variant: Variant.FunctionExecution,
         name
+    }
+}
+
+export function getFunctionLeaderEntry(index: number, value: number): FunctionLeaderEntry {
+    return {
+        done: false,
+        index,
+        lineStart: value,
+        lineEnd: 0,
+        aliases: [],
+        variant: Variant.FunctionLeader
+    }
+}
+
+export function getFunctionAliasEntry(index: number, value: number, name: string): FunctionAliasEntry {
+    return {
+        done: false,
+        hit: value,
+        index,
+        name,
+        variant: Variant.FunctionAlias
     }
 }
 

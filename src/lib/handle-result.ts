@@ -2,7 +2,9 @@ import { Variant } from '../constants.js'
 import type {
     BranchLocationEntry,
     EntryVariants,
+    FunctionAliasEntry,
     FunctionExecutionEntry,
+    FunctionLeaderEntry,
     FunctionLocationEntry,
     HitEntryVariants,
     InstrumentedEntryVariants,
@@ -11,23 +13,40 @@ import type {
 } from '../typings/entry.js'
 import type { BranchEntry, FunctionEntry, LineEntry, SectionSummary, Summary } from '../typings/file.js'
 
-export type FunctionMap = Map<string, FunctionEntry>
+export interface FunctionIndexEntry {
+    index: number
+    line: number
+    aliases: FunctionEntry[]
+}
 
-export function handleResult(entry: EntryVariants, functionMap: FunctionMap, section: SectionSummary): boolean {
+export type FunctionMap = Map<string, FunctionEntry>
+export type FunctionIndexMap = Map<number, FunctionIndexEntry>
+
+export function handleResult(
+    entry: EntryVariants,
+    functionIndices: FunctionIndexMap,
+    functionMap: FunctionMap,
+    section: SectionSummary
+): boolean {
     switch (entry.variant) {
         case Variant.TestName:
-            // creating a new test module, to prevent name conflicts simply clear the current FunctionMap
+            // creating a new test module: clear function contexts to prevent name conflicts from previous modules
             functionMap.clear()
+            functionIndices.clear()
             section.name = entry.name
             break
         case Variant.FilePath:
             section.path = entry.path
             break
         case Variant.EndOfRecord:
-            // we've left the test module, to prevent name conflicts clear the current FunctionMap
+            // we've left the test module: clear function contexts to prevent name conflicts
             functionMap.clear()
-
+            functionIndices.clear()
             return true
+        case Variant.FunctionAlias:
+        case Variant.FunctionLeader:
+            createUpdateFunctionIndexSummary(functionIndices, functionMap, section.functions.details, entry)
+            break
         case Variant.FunctionLocation:
         case Variant.FunctionExecution:
             createUpdateFunctionSummary(functionMap, section.functions.details, entry)
@@ -58,6 +77,7 @@ export function handleResult(entry: EntryVariants, functionMap: FunctionMap, sec
 export function updateResults(
     sectionIndex: number,
     entry: EntryVariants,
+    functionIndices: FunctionIndexMap,
     functionMap: FunctionMap,
     sections: SectionSummary[]
 ): number {
@@ -66,7 +86,7 @@ export function updateResults(
         sections[sectionIndex] = createSection()
     }
 
-    return handleResult(entry, functionMap, sections[sectionIndex]) ? sectionIndex + 1 : sectionIndex
+    return handleResult(entry, functionIndices, functionMap, sections[sectionIndex]) ? sectionIndex + 1 : sectionIndex
 }
 
 export function createSection(entry?: TestNameEntry): SectionSummary {
@@ -91,13 +111,39 @@ export function createSection(entry?: TestNameEntry): SectionSummary {
     }
 }
 
+export function createUpdateFunctionIndexSummary(
+    functionIndices: FunctionIndexMap,
+    functionMap: FunctionMap,
+    functions: FunctionEntry[],
+    entry: FunctionAliasEntry | FunctionLeaderEntry
+) {
+    const functionIndex = functionIndices.get(entry.index) ?? createFunctionIndexSummary(entry)
+    functionIndices.set(entry.index, functionIndex)
+    if (entry.variant === Variant.FunctionLeader) {
+        functionIndex.line = entry.lineStart
+        for (const functionSummary of functionIndex.aliases) {
+            functionSummary.line = entry.lineStart
+        }
+    } else {
+        const functionSummary = functionMap.get(entry.name)
+        if (functionSummary === undefined) {
+            const summary = createFunctionSummaryFromAlias(functionIndex, entry)
+            functionIndex.aliases.push(summary)
+            functionMap.set(entry.name, summary)
+            functions.push(summary)
+        } else {
+            functionSummary.hit += entry.hit
+            functionSummary.line = functionIndex.line
+        }
+    }
+}
+
 export function createUpdateFunctionSummary(
     functionMap: FunctionMap,
     functions: FunctionEntry[],
     entry: FunctionLocationEntry | FunctionExecutionEntry
 ): void {
     const functionSummary = functionMap.get(entry.name)
-
     if (functionSummary === undefined) {
         const summary = createFunctionSummary(entry)
 
@@ -138,6 +184,22 @@ export function createFunctionSummary(entry: FunctionLocationEntry | FunctionExe
         hit: entry.variant === Variant.FunctionExecution ? entry.hit : 0,
         line: entry.variant === Variant.FunctionLocation ? entry.lineStart : 0,
         name: entry.name
+    }
+}
+
+export function createFunctionSummaryFromAlias(index: FunctionIndexEntry, entry: FunctionAliasEntry): FunctionEntry {
+    return {
+        hit: entry.hit,
+        line: index.line,
+        name: entry.name
+    }
+}
+
+export function createFunctionIndexSummary(entry: FunctionLeaderEntry | FunctionAliasEntry): FunctionIndexEntry {
+    return {
+        index: entry.index,
+        line: entry.variant === Variant.FunctionLeader ? entry.lineStart : 0,
+        aliases: []
     }
 }
 

@@ -3,10 +3,11 @@ import type { Readable } from 'node:stream'
 import { Variant } from '../constants.js'
 import type { LcovParser, ParseResult } from '../parser.js'
 import type { SectionSummary } from '../typings/file.js'
-import { type FunctionMap, updateResults } from './handle-result.js'
+import { type FunctionIndexMap, type FunctionMap, updateResults } from './handle-result.js'
 import transformResult from './transform-result.js'
 
 export function transformSynchronous(results: ParseResult[]): SectionSummary[] {
+    const functionIndices: FunctionIndexMap = new Map()
     const functionMap: FunctionMap = new Map()
     const result: SectionSummary[] = []
     let sectionIndex = 0
@@ -15,7 +16,7 @@ export function transformSynchronous(results: ParseResult[]): SectionSummary[] {
         const entry = transformResult(parseResult)
 
         if (entry.variant !== Variant.None) {
-            sectionIndex = updateResults(sectionIndex, entry, functionMap, result)
+            sectionIndex = updateResults(sectionIndex, entry, functionIndices, functionMap, result)
         }
     }
 
@@ -23,6 +24,7 @@ export function transformSynchronous(results: ParseResult[]): SectionSummary[] {
 }
 
 export function transformAsynchronous(parser: LcovParser, stream: Readable): Promise<SectionSummary[]> {
+    const functionIndices: FunctionIndexMap = new Map()
     const functionMap: FunctionMap = new Map()
     const result: SectionSummary[] = []
     let sectionIndex = 0
@@ -43,7 +45,7 @@ export function transformAsynchronous(parser: LcovParser, stream: Readable): Pro
                 const entry = transformResult(parseResult)
 
                 if (entry.variant !== Variant.None) {
-                    sectionIndex = updateResults(sectionIndex, entry, functionMap, result)
+                    sectionIndex = updateResults(sectionIndex, entry, functionIndices, functionMap, result)
                 }
             }
         }

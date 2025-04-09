@@ -2,11 +2,15 @@ import { expect } from 'chai'
 
 import { Variant } from '../constants.js'
 import {
+    type FunctionIndexMap,
     type FunctionMap,
     createBranchSummary,
+    createFunctionIndexSummary,
     createFunctionSummary,
+    createFunctionSummaryFromAlias,
     createLineSummary,
     createSection,
+    createUpdateFunctionIndexSummary,
     createUpdateFunctionSummary,
     handleResult,
     updateResults,
@@ -30,7 +34,9 @@ import {
     getBranchLocationEntry,
     getEndOfRecord,
     getFilePathEntry,
+    getFunctionAliasEntry,
     getFunctionExecutionEntry,
+    getFunctionLeaderEntry,
     getFunctionLocationEntry,
     getHitEntry,
     getInstrumentedEntry,
@@ -159,6 +165,75 @@ describe('updateSectionSummary', (): void => {
     }
 })
 
+describe('createUpdateFunctionIndexSummary', (): void => {
+    const testData: Array<[Variant.FunctionLeader, number, number] | [Variant.FunctionAlias, number, number, string]> =
+        [
+            [Variant.FunctionLeader, 0, 2],
+            [Variant.FunctionAlias, 0, 5, 'test_a'],
+            [Variant.FunctionAlias, 1, 7, 'test_b'],
+            [Variant.FunctionLeader, 1, 5],
+            [Variant.FunctionAlias, 3, 0, 'test_c'],
+            [Variant.FunctionLeader, 2, 8],
+            [Variant.FunctionAlias, 2, 2, 'test_d'],
+            [Variant.FunctionAlias, 2, 3, 'test_d'],
+            [Variant.FunctionLeader, 4, 10],
+            [Variant.FunctionAlias, 4, 5, 'test_e'],
+            [Variant.FunctionAlias, 4, 8, 'test_f'],
+            [Variant.FunctionLeader, 3, 12]
+        ]
+    const functionIndexMap: FunctionIndexMap = new Map()
+    const functionMap: FunctionMap = new Map()
+    const fnList: FunctionEntry[] = []
+
+    for (const [variant, value1, value2, name] of testData) {
+        createUpdateFunctionIndexSummary(
+            functionIndexMap,
+            functionMap,
+            fnList,
+            variant === Variant.FunctionAlias
+                ? getFunctionAliasEntry(value1, value2, name)
+                : getFunctionLeaderEntry(value1, value2)
+        )
+    }
+
+    for (const [variant, index, , name] of testData) {
+        if (variant !== Variant.FunctionAlias) continue
+
+        it(`should create a function summary for "${name}"`, (): void => {
+            expect(functionMap.get(name)).to.eql({
+                hit: getHits(name),
+                line: getLine(index),
+                name
+            })
+        })
+    }
+
+    function getHits(needle: string) {
+        let totalHits = 0
+        for (const [variant, , hits, name] of testData) {
+            if (variant !== Variant.FunctionAlias) continue
+            if (name === needle) {
+                totalHits += hits
+            }
+        }
+
+        return totalHits
+    }
+
+    function getLine(needle: number): number {
+        for (let i = testData.length - 1; i >= 0; i--) {
+            const [variant, index, line] = testData[i]
+            if (variant !== Variant.FunctionLeader) continue
+
+            if (index === needle) {
+                return line
+            }
+        }
+
+        return 0
+    }
+})
+
 describe('createUpdateFunctionSummary', (): void => {
     const testData: Array<[string, Array<[Variant, number]>]> = [
         [
@@ -243,10 +318,11 @@ describe('createUpdateFunctionSummary', (): void => {
 
 describe('handleResult', (): void => {
     it('should update section name', (): void => {
+        const functionIndices: FunctionIndexMap = new Map()
         const functionMap: FunctionMap = new Map([['a', createFunctionSummary(getFunctionExecutionEntry('a', 1))]])
         const section = createSection()
 
-        expect(handleResult(getTestNameEntry('test'), functionMap, section)).to.be.false
+        expect(handleResult(getTestNameEntry('test'), functionIndices, functionMap, section)).to.be.false
         expect(functionMap.size).to.eq(0, 'should have cleared the functionMap')
         expect(section).to.eql({
             ...createSection(),
@@ -255,10 +331,11 @@ describe('handleResult', (): void => {
     })
 
     it('should update section file path', (): void => {
+        const functionIndices: FunctionIndexMap = new Map()
         const functionMap: FunctionMap = new Map()
         const section = createSection()
 
-        expect(handleResult(getFilePathEntry('path/to/file.ext'), functionMap, section)).to.be.false
+        expect(handleResult(getFilePathEntry('path/to/file.ext'), functionIndices, functionMap, section)).to.be.false
         expect(section).to.eql({
             ...createSection(),
             path: 'path/to/file.ext'
@@ -266,21 +343,23 @@ describe('handleResult', (): void => {
     })
 
     it('should clear function map and signal to create a new section', (): void => {
+        const functionIndices: FunctionIndexMap = new Map()
         const functionMap: FunctionMap = new Map([['b', createFunctionSummary(getFunctionLocationEntry('b', 0))]])
         const section = createSection()
 
-        expect(handleResult(getEndOfRecord(), functionMap, section)).to.be.true
+        expect(handleResult(getEndOfRecord(), functionIndices, functionMap, section)).to.be.true
         expect(section).to.eql(createSection())
     })
 
     it(`should create function summary from "${Variant[Variant.FunctionLocation]}"`, (): void => {
+        const functionIndices: FunctionIndexMap = new Map()
         const functionMap: FunctionMap = new Map()
         const entry = getFunctionLocationEntry('test', 1)
         const section = createSection()
         const expectedSection = createSection()
         const expectedSummary = createFunctionSummary({ ...entry })
 
-        expect(handleResult(entry, functionMap, section)).to.be.false
+        expect(handleResult(entry, functionIndices, functionMap, section)).to.be.false
         expect(functionMap.get('test')).to.eql(expectedSummary)
         expect(section).to.eql({
             ...expectedSection,
@@ -292,13 +371,14 @@ describe('handleResult', (): void => {
     })
 
     it(`should create function summary from "${Variant[Variant.FunctionExecution]}"`, (): void => {
+        const functionIndices: FunctionIndexMap = new Map()
         const functionMap: FunctionMap = new Map()
         const entry = getFunctionExecutionEntry('test', 2)
         const section = createSection()
         const expectedSection = createSection()
         const expectedSummary = createFunctionSummary({ ...entry })
 
-        expect(handleResult(entry, functionMap, section)).to.be.false
+        expect(handleResult(entry, functionIndices, functionMap, section)).to.be.false
         expect(functionMap.get('test')).to.eql(expectedSummary)
         expect(section).to.eql({
             ...expectedSection,
@@ -310,6 +390,7 @@ describe('handleResult', (): void => {
     })
 
     it('should create and update function summary', (): void => {
+        const functionIndices: FunctionIndexMap = new Map()
         const functionMap: FunctionMap = new Map()
         const locationEntry = getFunctionLocationEntry('test', 1)
         const executionEntry = getFunctionExecutionEntry('test', 2)
@@ -319,8 +400,8 @@ describe('handleResult', (): void => {
 
         expectedSummary.hit = 2
 
-        expect(handleResult(locationEntry, functionMap, section)).to.be.false
-        expect(handleResult(executionEntry, functionMap, section)).to.be.false
+        expect(handleResult(locationEntry, functionIndices, functionMap, section)).to.be.false
+        expect(handleResult(executionEntry, functionIndices, functionMap, section)).to.be.false
         expect(functionMap.get('test')).to.eql(expectedSummary)
         expect(section).to.eql({
             ...expectedSection,
@@ -331,14 +412,61 @@ describe('handleResult', (): void => {
         })
     })
 
+    it(`should create index entry from "${Variant[Variant.FunctionLeader]}"`, (): void => {
+        const functionIndices: FunctionIndexMap = new Map()
+        const functionMap: FunctionMap = new Map()
+        const entry = getFunctionLeaderEntry(0, 2)
+        const section = createSection()
+        const expectedSection = createSection()
+        const expectedIndex = createFunctionIndexSummary({ ...entry })
+
+        expect(handleResult(entry, functionIndices, functionMap, section)).to.be.false
+        expect(functionIndices.get(0)).to.deep.eq(expectedIndex)
+        expect(section).to.eql({
+            ...expectedSection,
+            functions: {
+                ...expectedSection.functions,
+                details: []
+            }
+        })
+    })
+
+    it(`should create index and function entry from "${Variant[Variant.FunctionAlias]}"`, (): void => {
+        const functionIndices: FunctionIndexMap = new Map()
+        const functionMap: FunctionMap = new Map()
+        const entry = getFunctionAliasEntry(0, 2, 'test')
+        const section = createSection()
+        const expectedSection = createSection()
+        const expectedIndex = createFunctionIndexSummary({ ...entry })
+        const expectedSummary = createFunctionSummaryFromAlias(expectedIndex, { ...entry })
+        expectedIndex.aliases = [expectedSummary]
+
+        expect(handleResult(entry, functionIndices, functionMap, section)).to.be.false
+        expect(functionIndices.get(0)).to.deep.eq(expectedIndex)
+        expect(functionMap.get('test')).to.deep.eq(expectedSummary)
+        expect(section).to.eql({
+            ...expectedSection,
+            functions: {
+                ...expectedSection.functions,
+                details: [
+                    {
+                        ...expectedSummary,
+                        hit: 2
+                    }
+                ]
+            }
+        })
+    })
+
     it(`should create branch entry from "${Variant[Variant.BranchLocation]}"`, (): void => {
+        const functionIndices: FunctionIndexMap = new Map()
         const functionMap: FunctionMap = new Map()
         const section = createSection()
         const entry: BranchLocationEntry = getBranchLocationEntry()
         const expectedSection = createSection()
         const expectedSummary = createBranchSummary({ ...entry })
 
-        expect(handleResult(entry, functionMap, section)).to.be.false
+        expect(handleResult(entry, functionIndices, functionMap, section)).to.be.false
         expect(functionMap.size).to.eq(0)
         expect(section).to.eql({
             ...expectedSection,
@@ -350,13 +478,14 @@ describe('handleResult', (): void => {
     })
 
     it(`should create line entry from "${Variant[Variant.LineLocation]}"`, (): void => {
+        const functionIndices: FunctionIndexMap = new Map()
         const functionMap: FunctionMap = new Map()
         const section = createSection()
         const entry: LineLocationEntry = getLineLocationEntry()
         const expectedSection = createSection()
         const expectedSummary = createLineSummary({ ...entry })
 
-        expect(handleResult(entry, functionMap, section)).to.be.false
+        expect(handleResult(entry, functionIndices, functionMap, section)).to.be.false
         expect(functionMap.size).to.eq(0)
         expect(section).to.eql({
             ...expectedSection,
@@ -368,13 +497,14 @@ describe('handleResult', (): void => {
     })
 
     it('should update branch summary', (): void => {
+        const functionIndices: FunctionIndexMap = new Map()
         const functionMap: FunctionMap = new Map()
         const section = createSection()
         const instrumentedEntry: BranchInstrumentedEntry = getInstrumentedEntry(Variant.BranchInstrumented, 2)
         const hitEntry: BranchHitEntry = getHitEntry(Variant.BranchHit, 4)
 
-        expect(handleResult(instrumentedEntry, functionMap, section)).to.be.false
-        expect(handleResult(hitEntry, functionMap, section)).to.be.false
+        expect(handleResult(instrumentedEntry, functionIndices, functionMap, section)).to.be.false
+        expect(handleResult(hitEntry, functionIndices, functionMap, section)).to.be.false
         expect(functionMap.size).to.eq(0)
         expect(section).to.eql({
             ...createSection(),
@@ -387,13 +517,14 @@ describe('handleResult', (): void => {
     })
 
     it('should update function summary', (): void => {
+        const functionIndices: FunctionIndexMap = new Map()
         const functionMap: FunctionMap = new Map()
         const section = createSection()
         const instrumentedEntry: FunctionInstrumentedEntry = getInstrumentedEntry(Variant.FunctionInstrumented, 2)
         const hitEntry: FunctionHitEntry = getHitEntry(Variant.FunctionHit, 4)
 
-        expect(handleResult(instrumentedEntry, functionMap, section)).to.be.false
-        expect(handleResult(hitEntry, functionMap, section)).to.be.false
+        expect(handleResult(instrumentedEntry, functionIndices, functionMap, section)).to.be.false
+        expect(handleResult(hitEntry, functionIndices, functionMap, section)).to.be.false
         expect(functionMap.size).to.eq(0)
         expect(section).to.eql({
             ...createSection(),
@@ -406,13 +537,14 @@ describe('handleResult', (): void => {
     })
 
     it('should update line summary', (): void => {
+        const functionIndices: FunctionIndexMap = new Map()
         const functionMap: FunctionMap = new Map()
         const section = createSection()
         const instrumentedEntry: LineInstrumentedEntry = getInstrumentedEntry(Variant.LineInstrumented, 2)
         const hitEntry: LineHitEntry = getHitEntry(Variant.LineHit, 4)
 
-        expect(handleResult(instrumentedEntry, functionMap, section)).to.be.false
-        expect(handleResult(hitEntry, functionMap, section)).to.be.false
+        expect(handleResult(instrumentedEntry, functionIndices, functionMap, section)).to.be.false
+        expect(handleResult(hitEntry, functionIndices, functionMap, section)).to.be.false
         expect(functionMap.size).to.eq(0)
         expect(section).to.eql({
             ...createSection(),
@@ -494,12 +626,13 @@ describe('updateResults', (): void => {
 
     for (const [entries, expectedSections] of testData) {
         it(`should update sections based on values from (${entries.length}) entries`, (): void => {
+            const functionIndices: FunctionIndexMap = new Map()
             const functionMap: FunctionMap = new Map()
             const sections: SectionSummary[] = []
             let sectionIndex = 0
 
             for (const entry of entries) {
-                sectionIndex = updateResults(sectionIndex, entry, functionMap, sections)
+                sectionIndex = updateResults(sectionIndex, entry, functionIndices, functionMap, sections)
             }
 
             expect(sections).to.eql(expectedSections)
