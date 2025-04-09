@@ -117,17 +117,25 @@ export function createUpdateFunctionIndexSummary(
     functions: FunctionEntry[],
     entry: FunctionAliasEntry | FunctionLeaderEntry
 ) {
-    const functionIndex = functionIndices.get(entry.index) ?? createFunctionIndexSummary(entry)
-    functionIndices.set(entry.index, functionIndex)
+    let functionIndex = functionIndices.get(entry.index)
+
+    if (!functionIndex) {
+        functionIndex = createFunctionIndexSummary(entry)
+        functionIndices.set(entry.index, functionIndex)
+    }
+
     if (entry.variant === Variant.FunctionLeader) {
         functionIndex.line = entry.lineStart
+
         for (const functionSummary of functionIndex.aliases) {
             functionSummary.line = entry.lineStart
         }
     } else {
         const functionSummary = functionMap.get(entry.name)
+
         if (functionSummary === undefined) {
             const summary = createFunctionSummaryFromAlias(functionIndex, entry)
+
             functionIndex.aliases.push(summary)
             functionMap.set(entry.name, summary)
             functions.push(summary)
@@ -144,6 +152,7 @@ export function createUpdateFunctionSummary(
     entry: FunctionLocationEntry | FunctionExecutionEntry
 ): void {
     const functionSummary = functionMap.get(entry.name)
+
     if (functionSummary === undefined) {
         const summary = createFunctionSummary(entry)
 
