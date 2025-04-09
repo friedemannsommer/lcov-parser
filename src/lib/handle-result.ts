@@ -120,6 +120,7 @@ export function createUpdateFunctionIndexSummary(
     const functionIndex = functionIndices.get(entry.index) ?? createFunctionIndexSummary(entry)
     functionIndices.set(entry.index, functionIndex)
     if (entry.variant === Variant.FunctionLeader) {
+        functionIndex.line = entry.lineStart
         for (const functionSummary of functionIndex.aliases) {
             functionSummary.line = entry.lineStart
         }
