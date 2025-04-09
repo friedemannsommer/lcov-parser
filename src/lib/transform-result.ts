@@ -26,22 +26,22 @@ export type ParseResultInstrumented = ParseResult<
 
 const handlers = {
     [Variant.BranchHit]: transformHit,
-    [Variant.FunctionHit]: transformHit,
-    [Variant.LineHit]: transformHit,
     [Variant.BranchInstrumented]: transformInstrumented,
-    [Variant.FunctionInstrumented]: transformInstrumented,
-    [Variant.LineInstrumented]: transformInstrumented,
     [Variant.BranchLocation]: transformBranchLocation,
+    [Variant.Comment]: transformComment,
     [Variant.EndOfRecord]: transformEndOfRecord,
     [Variant.FilePath]: transformFilePath,
     [Variant.FunctionAlias]: transformFunctionAlias,
     [Variant.FunctionExecution]: transformFunctionExecution,
+    [Variant.FunctionHit]: transformHit,
+    [Variant.FunctionInstrumented]: transformInstrumented,
     [Variant.FunctionLeader]: transformFunctionLeader,
     [Variant.FunctionLocation]: transformFunctionLocation,
+    [Variant.LineHit]: transformHit,
+    [Variant.LineInstrumented]: transformInstrumented,
     [Variant.LineLocation]: transformLineLocation,
     [Variant.TestName]: transformTestName,
-    [Variant.Version]: transformVersion,
-    [Variant.Comment]: transformComment
+    [Variant.Version]: transformVersion
 }
 
 export default function transformResult(result: ParseResult): EntryVariants {
