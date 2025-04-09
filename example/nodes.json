@@ -13,7 +13,7 @@
     "value": [
       "example"
     ],
-    "variant": 14
+    "variant": 16
   },
   {
     "done": false,
@@ -30,7 +30,7 @@
       "1",
       "1"
     ],
-    "variant": 13
+    "variant": 15
   },
   {
     "done": false,
@@ -47,7 +47,7 @@
       "2",
       "0"
     ],
-    "variant": 13
+    "variant": 15
   },
   {
     "done": false,
@@ -56,7 +56,7 @@
       "3",
       "0"
     ],
-    "variant": 13
+    "variant": 15
   },
   {
     "done": false,
@@ -65,7 +65,7 @@
       "4",
       "1"
     ],
-    "variant": 13
+    "variant": 15
   },
   {
     "done": false,
@@ -74,7 +74,7 @@
       "10",
       "0"
     ],
-    "variant": 13
+    "variant": 15
   },
   {
     "done": false,
@@ -83,7 +83,7 @@
       "11",
       "0"
     ],
-    "variant": 13
+    "variant": 15
   },
   {
     "done": false,
@@ -92,7 +92,7 @@
       "12",
       "0"
     ],
-    "variant": 13
+    "variant": 15
   },
   {
     "done": false,
@@ -100,7 +100,7 @@
     "value": [
       "7"
     ],
-    "variant": 12
+    "variant": 14
   },
   {
     "done": false,
@@ -108,7 +108,7 @@
     "value": [
       "2"
     ],
-    "variant": 11
+    "variant": 13
   },
   {
     "done": false,
@@ -118,7 +118,7 @@
       "2",
       "fcn"
     ],
-    "variant": 10
+    "variant": 12
   },
   {
     "done": false,
@@ -128,7 +128,7 @@
       "2",
       "alias"
     ],
-    "variant": 10
+    "variant": 12
   },
   {
     "done": false,
@@ -138,7 +138,7 @@
       "3",
       "noCommonAlias"
     ],
-    "variant": 10
+    "variant": 12
   },
   {
     "done": false,
@@ -148,7 +148,7 @@
       "11",
       "onlyA"
     ],
-    "variant": 10
+    "variant": 12
   },
   {
     "done": false,
@@ -156,7 +156,7 @@
     "value": [
       "4"
     ],
-    "variant": 9
+    "variant": 10
   },
   {
     "done": false,
@@ -164,7 +164,7 @@
     "value": [
       "3"
     ],
-    "variant": 8
+    "variant": 9
   },
   {
     "done": false,
@@ -181,7 +181,7 @@
       "0",
       "fcn"
     ],
-    "variant": 7
+    "variant": 8
   },
   {
     "done": false,
@@ -190,7 +190,7 @@
       "2",
       "alias"
     ],
-    "variant": 7
+    "variant": 8
   },
   {
     "done": false,
@@ -199,7 +199,7 @@
       "0",
       "onlyA"
     ],
-    "variant": 7
+    "variant": 8
   },
   {
     "done": false,
@@ -208,7 +208,7 @@
       "1",
       "noCommonAlias"
     ],
-    "variant": 7
+    "variant": 8
   },
   {
     "done": false,
@@ -319,6 +319,154 @@
       "4"
     ],
     "variant": 1
+  },
+  {
+    "done": false,
+    "incomplete": false,
+    "value": null,
+    "variant": 5
+  },
+  {
+    "done": false,
+    "incomplete": false,
+    "value": [
+      "version 2.2"
+    ],
+    "variant": 16
+  },
+  {
+    "done": false,
+    "incomplete": false,
+    "value": [
+      "b.cpp"
+    ],
+    "variant": 6
+  },
+  {
+    "done": false,
+    "incomplete": false,
+    "value": [
+      "1",
+      "10",
+      "18"
+    ],
+    "variant": 11
+  },
+  {
+    "done": false,
+    "incomplete": false,
+    "value": [
+      "1",
+      "17",
+      "myFunction"
+    ],
+    "variant": 7
+  },
+  {
+    "done": false,
+    "incomplete": false,
+    "value": [
+      "3",
+      "myFunction"
+    ],
+    "variant": 8
+  },
+  {
+    "done": false,
+    "incomplete": false,
+    "value": [
+      "1"
+    ],
+    "variant": 10
+  },
+  {
+    "done": false,
+    "incomplete": false,
+    "value": [
+      "1"
+    ],
+    "variant": 9
+  },
+  {
+    "done": false,
+    "incomplete": false,
+    "value": [
+      "15",
+      "0",
+      "0",
+      "2"
+    ],
+    "variant": 3
+  },
+  {
+    "done": false,
+    "incomplete": false,
+    "value": [
+      "15",
+      "0",
+      "1",
+      "1"
+    ],
+    "variant": 3
+  },
+  {
+    "done": false,
+    "incomplete": false,
+    "value": [
+      "2"
+    ],
+    "variant": 2
+  },
+  {
+    "done": false,
+    "incomplete": false,
+    "value": [
+      "2"
+    ],
+    "variant": 1
+  },
+  {
+    "done": false,
+    "incomplete": false,
+    "value": [
+      "10",
+      "3"
+    ],
+    "variant": 15
+  },
+  {
+    "done": false,
+    "incomplete": false,
+    "value": [
+      "11",
+      "3"
+    ],
+    "variant": 15
+  },
+  {
+    "done": false,
+    "incomplete": false,
+    "value": [
+      "15",
+      "3"
+    ],
+    "variant": 15
+  },
+  {
+    "done": false,
+    "incomplete": false,
+    "value": [
+      "3"
+    ],
+    "variant": 14
+  },
+  {
+    "done": false,
+    "incomplete": false,
+    "value": [
+      "3"
+    ],
+    "variant": 13
   },
   {
     "done": false,

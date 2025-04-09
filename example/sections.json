@@ -117,5 +117,58 @@
     },
     "name": "example",
     "path": "a.cpp"
+  },
+  {
+    "branches": {
+      "details": [
+        {
+          "block": 0,
+          "branch": "0",
+          "hit": 2,
+          "isException": false,
+          "line": 15
+        },
+        {
+          "block": 0,
+          "branch": "1",
+          "hit": 1,
+          "isException": false,
+          "line": 15
+        }
+      ],
+      "hit": 2,
+      "instrumented": 2
+    },
+    "functions": {
+      "details": [
+        {
+          "hit": 20,
+          "line": 10,
+          "name": "myFunction"
+        }
+      ],
+      "hit": 1,
+      "instrumented": 1
+    },
+    "lines": {
+      "details": [
+        {
+          "hit": 3,
+          "line": 10
+        },
+        {
+          "hit": 3,
+          "line": 11
+        },
+        {
+          "hit": 3,
+          "line": 15
+        }
+      ],
+      "hit": 3,
+      "instrumented": 3
+    },
+    "name": "version 2.2",
+    "path": "b.cpp"
   }
 ]
