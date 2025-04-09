@@ -13,12 +13,18 @@ import type {
 } from '../typings/entry.js'
 import type { BranchEntry, FunctionEntry, LineEntry, SectionSummary, Summary } from '../typings/file.js'
 
+export interface FunctionIndexEntry {
+    index: number
+    line: number
+    aliases: FunctionEntry[]
+}
+
 export type FunctionMap = Map<string, FunctionEntry>
-export type FunctionLeaders = Map<number, FunctionLeaderEntry>
+export type FunctionIndexMap = Map<number, FunctionIndexEntry>
 
 export function handleResult(
     entry: EntryVariants,
-    functionLeaders: FunctionLeaders,
+    functionIndices: FunctionIndexMap,
     functionMap: FunctionMap,
     section: SectionSummary
 ): boolean {
@@ -26,7 +32,7 @@ export function handleResult(
         case Variant.TestName:
             // creating a new test module: clear function contexts to prevent name conflicts from previous modules
             functionMap.clear()
-            functionLeaders.clear()
+            functionIndices.clear()
             section.name = entry.name
             break
         case Variant.FilePath:
@@ -35,13 +41,15 @@ export function handleResult(
         case Variant.EndOfRecord:
             // we've left the test module: clear function contexts to prevent name conflicts
             functionMap.clear()
-            functionLeaders.clear()
+            functionIndices.clear()
             return true
         case Variant.FunctionAlias:
         case Variant.FunctionLeader:
+            createUpdateFunctionIndexSummary(functionIndices, functionMap, section.functions.details, entry)
+            break
         case Variant.FunctionLocation:
         case Variant.FunctionExecution:
-            createUpdateFunctionSummary(functionLeaders, functionMap, section.functions.details, entry)
+            createUpdateFunctionSummary(functionMap, section.functions.details, entry)
             break
         case Variant.BranchLocation:
             section.branches.details.push(createBranchSummary(entry))
@@ -69,7 +77,7 @@ export function handleResult(
 export function updateResults(
     sectionIndex: number,
     entry: EntryVariants,
-    functionLeaders: FunctionLeaders,
+    functionIndices: FunctionIndexMap,
     functionMap: FunctionMap,
     sections: SectionSummary[]
 ): number {
@@ -78,7 +86,7 @@ export function updateResults(
         sections[sectionIndex] = createSection()
     }
 
-    return handleResult(entry, functionLeaders, functionMap, sections[sectionIndex]) ? sectionIndex + 1 : sectionIndex
+    return handleResult(entry, functionIndices, functionMap, sections[sectionIndex]) ? sectionIndex + 1 : sectionIndex
 }
 
 export function createSection(entry?: TestNameEntry): SectionSummary {
@@ -103,61 +111,38 @@ export function createSection(entry?: TestNameEntry): SectionSummary {
     }
 }
 
-export function createUpdateFunctionSummary(
-    functionLeaders: FunctionLeaders,
+export function createUpdateFunctionIndexSummary(
+    functionIndices: FunctionIndexMap,
     functionMap: FunctionMap,
     functions: FunctionEntry[],
-    entry: FunctionAliasEntry | FunctionLeaderEntry | FunctionLocationEntry | FunctionExecutionEntry
-): void {
+    entry: FunctionAliasEntry | FunctionLeaderEntry
+) {
+    const functionIndex = functionIndices.get(entry.index) ?? createFunctionIndexSummary(entry)
+    functionIndices.set(entry.index, functionIndex)
     if (entry.variant === Variant.FunctionLeader) {
-        const functionLeader = functionLeaders.get(entry.index)
-        if (functionLeader === undefined) {
-            functionLeaders.set(entry.index, entry)
-        } else {
-            functionLeader.lineEnd = entry.lineEnd
-            functionLeader.lineStart = entry.lineStart
-            for (const alias of functionLeader.aliases) {
-                const functionSummary = functionMap.get(alias.name)
-                if (functionSummary != null) {
-                    functionSummary.line = entry.lineStart
-                }
-            }
+        for (const functionSummary of functionIndex.aliases) {
+            functionSummary.line = entry.lineStart
         }
-        return
-    }
-
-    const functionSummary = functionMap.get(entry.name)
-    if (entry.variant === Variant.FunctionAlias) {
-        const functionLeader = functionLeaders.get(entry.index)
-        if (functionLeader === undefined) {
-            functionLeaders.set(entry.index, {
-                aliases: [entry],
-                lineEnd: 0,
-                lineStart: 0,
-                index: entry.index,
-                done: true,
-                variant: Variant.FunctionLeader
-            })
-        } else {
-            functionLeader.aliases.push(entry)
-        }
-
+    } else {
+        const functionSummary = functionMap.get(entry.name)
         if (functionSummary === undefined) {
-            const summary = {
-                hit: entry.hit,
-                line: functionLeaders.get(entry.index)?.lineStart ?? 0,
-                name: entry.name
-            }
-
+            const summary = createFunctionSummaryFromAlias(functionIndex, entry)
+            functionIndex.aliases.push(summary)
             functionMap.set(entry.name, summary)
             functions.push(summary)
         } else {
             functionSummary.hit += entry.hit
-            functionSummary.line = functionLeader?.lineStart ?? 0
+            functionSummary.line = functionIndex.line
         }
-        return
     }
+}
 
+export function createUpdateFunctionSummary(
+    functionMap: FunctionMap,
+    functions: FunctionEntry[],
+    entry: FunctionLocationEntry | FunctionExecutionEntry
+): void {
+    const functionSummary = functionMap.get(entry.name)
     if (functionSummary === undefined) {
         const summary = createFunctionSummary(entry)
 
@@ -198,6 +183,22 @@ export function createFunctionSummary(entry: FunctionLocationEntry | FunctionExe
         hit: entry.variant === Variant.FunctionExecution ? entry.hit : 0,
         line: entry.variant === Variant.FunctionLocation ? entry.lineStart : 0,
         name: entry.name
+    }
+}
+
+export function createFunctionSummaryFromAlias(index: FunctionIndexEntry, entry: FunctionAliasEntry): FunctionEntry {
+    return {
+        hit: entry.hit,
+        line: index.line,
+        name: entry.name
+    }
+}
+
+export function createFunctionIndexSummary(entry: FunctionLeaderEntry | FunctionAliasEntry): FunctionIndexEntry {
+    return {
+        index: entry.index,
+        line: entry.variant === Variant.FunctionLeader ? entry.lineStart : 0,
+        aliases: []
     }
 }
 
