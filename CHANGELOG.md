@@ -1,5 +1,11 @@
 # @friedemannsommer/lcov-parser
 
+## 5.0.0
+
+### Major Changes
+
+- [#280](https://github.com/friedemannsommer/lcov-parser/pull/280) [`4bb7148`](https://github.com/friedemannsommer/lcov-parser/commit/4bb71487260b9d9a0452ce0d050218007dbbc968) Thanks [@C2thehris](https://github.com/C2thehris)! - Support the new [Function Coverage format](https://github.com/linux-test-project/lcov/blob/5186f7394417292537d17b9a9a30f8c06bedc16c/man/geninfo.1#L1418) defined by LCOV 2.2.
+
 ## 4.0.4
 
 ### Patch Changes
