@@ -59,7 +59,7 @@ which can be found here: [friedemannsommer.github.io/lcov-parser][package-docs].
 
 [buffer-docs]: https://nodejs.org/api/buffer.html#class-buffer
 
-[lcov-format]: https://github.com/linux-test-project/lcov/blob/3decc12ab1e7b34d2860393e2f40f0e1057d5c16/man/geninfo.1#L989-L1171
+[lcov-format]: https://github.com/linux-test-project/lcov/blob/5186f7394417292537d17b9a9a30f8c06bedc16c/man/geninfo.1#L1370-L1675
 
 [npm]: https://www.npmjs.com/package/@friedemannsommer/lcov-parser
 
