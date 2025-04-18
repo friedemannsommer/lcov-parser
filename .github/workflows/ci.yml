@@ -24,7 +24,7 @@ jobs:
           - 22
     steps:
       - uses: actions/checkout@v4.2.2
-      - uses: actions/setup-node@v4.3.0
+      - uses: actions/setup-node@v4.4.0
         with:
           cache: 'npm'
           node-version: ${{ matrix.node_version }}
@@ -37,7 +37,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4.2.2
-      - uses: actions/setup-node@v4.3.0
+      - uses: actions/setup-node@v4.4.0
         with:
           cache: 'npm'
           node-version: 20
@@ -64,7 +64,7 @@ jobs:
     concurrency: '${{ github.workflow }}-${{ github.ref }}'
     steps:
       - uses: actions/checkout@v4.2.2
-      - uses: actions/setup-node@v4.3.0
+      - uses: actions/setup-node@v4.4.0
         with:
           cache: 'npm'
           node-version: 20
