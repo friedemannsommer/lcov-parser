@@ -133,7 +133,7 @@ export function transformFunctionExecution(result: ParseResult<Variant.FunctionE
 
     if (result.value !== null && result.value.length >= 2) {
         hit = parseInteger(result.value[0])
-        name = result.value[1]
+        name = result.value.slice(1).join(',')
     }
 
     return {
@@ -156,7 +156,7 @@ export function transformFunctionLocation(result: ParseResult<Variant.FunctionLo
         if (lineEnd < lineStart || result.value.length === 2) {
             name = result.value[1]
         } else if (result.value.length >= 3) {
-            name = result.value[2]
+            name = result.value.slice(2).join(',')
         }
     }
 
@@ -224,7 +224,7 @@ export function transformFunctionAlias(result: ParseResult<Variant.FunctionAlias
     if (result.value != null && result.value.length >= 3) {
         index = parseInteger(result.value[0])
         hit = parseInteger(result.value[1])
-        name = result.value[2]
+        name = result.value.slice(2).join(',')
     }
 
     return {
