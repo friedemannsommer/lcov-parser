@@ -15,7 +15,7 @@
     "chai": "5.2.0",
     "mocha": "11.4.0",
     "ts-node": "10.9.2",
-    "typedoc": "0.28.4",
+    "typedoc": "0.28.5",
     "typedoc-github-theme": "0.3.0",
     "typedoc-plugin-mdn-links": "5.0.2",
     "typescript": "5.8.3",
