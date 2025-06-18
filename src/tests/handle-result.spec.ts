@@ -2,8 +2,6 @@ import { expect } from 'chai'
 
 import { Variant } from '../constants.js'
 import {
-    type FunctionIndexMap,
-    type FunctionMap,
     createBranchSummary,
     createFunctionIndexSummary,
     createFunctionSummary,
@@ -12,6 +10,8 @@ import {
     createSection,
     createUpdateFunctionIndexSummary,
     createUpdateFunctionSummary,
+    type FunctionIndexMap,
+    type FunctionMap,
     handleResult,
     updateResults,
     updateSectionSummary

@@ -1,9 +1,8 @@
 import { createReadStream } from 'node:fs'
 import { writeFile } from 'node:fs/promises'
-
+import { defaultFieldNames } from '../dist/constants.mjs'
 import { LcovParser } from '../dist/parser.mjs'
 import lcovParserPromise from '../dist/promise/index.mjs'
-import { defaultFieldNames } from '../dist/constants.mjs'
 
 const lcovFile = createReadStream(new URL('./lcov.info', import.meta.url))
 

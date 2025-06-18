@@ -1,15 +1,7 @@
 {
-  "all": true,
-  "clean": true,
-  "exclude": [
-    "src/tests/**/*.ts",
-    "src/typings/**/*.ts"
-  ],
-  "include": [
-    "src/**/*.ts"
-  ],
-  "reporter": [
-    "lcovonly",
-    "text"
-  ]
+    "all": true,
+    "clean": true,
+    "exclude": ["src/tests/**/*.ts", "src/typings/**/*.ts"],
+    "include": ["src/**/*.ts"],
+    "reporter": ["lcovonly", "text"]
 }

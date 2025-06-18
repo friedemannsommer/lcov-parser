@@ -1,21 +1,18 @@
 {
-  "$schema": "https://typedoc.org/schema.json",
-  "cleanOutputDir": false,
-  "entryPoints": [
-    "src/constants.ts",
-    "src/index.ts",
-    "src/lib/field-variant.ts",
-    "src/parser.ts",
-    "src/promise/index.ts",
-    "src/stream/index.ts",
-    "src/sync/index.ts"
-  ],
-  "githubPages": false,
-  "lang": "en",
-  "name": "LCOV parser",
-  "out": "docs",
-  "plugin": [
-    "typedoc-github-theme",
-    "typedoc-plugin-mdn-links"
-  ]
+    "$schema": "https://typedoc.org/schema.json",
+    "cleanOutputDir": false,
+    "entryPoints": [
+        "src/constants.ts",
+        "src/index.ts",
+        "src/lib/field-variant.ts",
+        "src/parser.ts",
+        "src/promise/index.ts",
+        "src/stream/index.ts",
+        "src/sync/index.ts"
+    ],
+    "githubPages": false,
+    "lang": "en",
+    "name": "LCOV parser",
+    "out": "docs",
+    "plugin": ["typedoc-github-theme", "typedoc-plugin-mdn-links"]
 }

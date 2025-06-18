@@ -1,7 +1,7 @@
 import { Transform, type TransformCallback } from 'node:stream'
 
 import { defaultFieldNames } from '../constants.js'
-import { type FunctionIndexMap, type FunctionMap, createSection, handleResult } from '../lib/handle-result.js'
+import { createSection, type FunctionIndexMap, type FunctionMap, handleResult } from '../lib/handle-result.js'
 import { isBlankSpace } from '../lib/parse.js'
 import transformResult from '../lib/transform-result.js'
 import { type FlushedResults, LcovParser } from '../parser.js'

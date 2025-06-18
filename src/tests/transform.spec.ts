@@ -1,7 +1,7 @@
 import { Readable } from 'node:stream'
 import { expect } from 'chai'
 
-import { Variant, defaultFieldNames } from '../constants.js'
+import { defaultFieldNames, Variant } from '../constants.js'
 import { createSection } from '../lib/handle-result.js'
 import { transformAsynchronous, transformSynchronous } from '../lib/transform-flow.js'
 import { LcovParser } from '../parser.js'

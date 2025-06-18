@@ -1,6 +1,6 @@
 import { expect } from 'chai'
 
-import { Variant, defaultFieldNames } from '../constants.js'
+import { defaultFieldNames, Variant } from '../constants.js'
 import ByteMatch from '../lib/byte-match.js'
 import { FIELD_NAME_MAP, type FieldOptions, generateFieldLookup, sortFieldNames } from '../lib/lookup.js'
 import type { FieldNames } from '../typings/options.js'

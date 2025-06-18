@@ -1,6 +1,6 @@
 import { expect } from 'chai'
 
-import { Variant, defaultFieldNames } from '../constants.js'
+import { defaultFieldNames, Variant } from '../constants.js'
 import { isEmptyField } from '../lib/field-variant.js'
 import { FIELD_NAME_MAP } from '../lib/lookup.js'
 import { LcovParser } from '../parser.js'
