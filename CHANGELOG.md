@@ -1,5 +1,11 @@
 # @friedemannsommer/lcov-parser
 
+## 5.0.1
+
+### Patch Changes
+
+- [`3e2a902`](https://github.com/friedemannsommer/lcov-parser/commit/3e2a902c1a79594d81106615a1737ab0102463fa) Thanks [@friedemannsommer](https://github.com/friedemannsommer)! - Updated [`Sync.Options`](https://friedemannsommer.github.io/lcov-parser/v5.0.0/interfaces/sync.Options.html#from) to allow `ArrayBuffer` as well as `SharedArrayBuffer`.
+
 ## 5.0.0
 
 ### Major Changes
