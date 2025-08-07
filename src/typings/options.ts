@@ -24,9 +24,9 @@ export interface Options extends SharedOptions {
 export interface SyncOptions extends SharedOptions {
     /**
      * Input source to read from.
-     * This can be a `string`, `Buffer`, or `ArrayBuffer`.
+     * This can be a `string`, `Buffer`, `ArrayBuffer`, or `SharedArrayBuffer`.
      */
-    from: string | Buffer | ArrayBuffer
+    from: string | Buffer | ArrayBufferLike
 }
 
 export interface StreamOptions
