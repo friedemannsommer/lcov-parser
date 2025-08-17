@@ -42,6 +42,8 @@ interface ParseValueResult {
 }
 
 const newLineChar = 10 /* UTF-8 `\n` */
+const colonChar = 58 /* ':' (colon) */
+const commaChar = 44 /* ',' (comma) */
 
 /**
  * Parses the given chunks based on the provided {@link FieldNames}.
@@ -70,6 +72,53 @@ export class LcovParser {
     public constructor(fieldNames: FieldNames) {
         this._fields = generateFieldLookup(fieldNames)
         this._fieldsLength = this._fields.length
+    }
+
+    /**
+     * @internal
+     */
+    private static _parseValue(buf: Buffer, offset: number): ParseValueResult | null {
+        const endOfLineIndex = buf.indexOf(newLineChar, offset)
+
+        if (endOfLineIndex !== -1) {
+            return {
+                lastIndex: endOfLineIndex,
+                value: LcovParser._parseSlice(buf, offset, endOfLineIndex)
+            }
+        }
+
+        return null
+    }
+
+    /**
+     * @internal
+     */
+    private static _parseSlice(buf: Buffer, start: number, end: number): string[] {
+        const values: string[] = []
+        let offset = start
+
+        for (let index = start; index < end; index++) {
+            if (buf[index] === commaChar) {
+                values.push(buf.toString('utf-8', offset, index))
+                offset = index + 1
+            }
+        }
+
+        values.push(buf.toString('utf-8', offset, end))
+
+        return values
+    }
+
+    /**
+     * @internal
+     */
+    private static _defaultResult(done: boolean, incomplete: boolean): ParseResult {
+        return {
+            done,
+            incomplete,
+            value: null,
+            variant: Variant.None
+        }
     }
 
     /**
@@ -163,6 +212,7 @@ export class LcovParser {
      */
     private _matchFields(buf: Buffer, byteIndex: number): ParseResult | null {
         const byte = buf[byteIndex]
+        const bufLength = buf.byteLength
 
         for (let nameIndex = 0; nameIndex < this._fieldsLength; nameIndex++) {
             const field = this._fields[nameIndex]
@@ -175,8 +225,8 @@ export class LcovParser {
                 if (
                     nonEmptyField &&
                     !isComment /* comments aren't required to contain a ':' (colon) */ &&
-                    byteIndex + 1 < buf.byteLength &&
-                    buf[byteIndex + 1] !== 58 /* ':' (colon) */
+                    byteIndex + 1 < bufLength &&
+                    buf[byteIndex + 1] !== colonChar
                 ) {
                     continue
                 }
@@ -221,53 +271,6 @@ export class LcovParser {
     private _resetMatcher(): void {
         for (let index = 0; index < this._fieldsLength; index++) {
             this._fields[index].matcher.reset()
-        }
-    }
-
-    /**
-     * @internal
-     */
-    private static _parseValue(buf: Buffer, offset: number): ParseValueResult | null {
-        const endOfLineIndex = buf.indexOf(newLineChar, offset)
-
-        if (endOfLineIndex !== -1) {
-            return {
-                lastIndex: endOfLineIndex,
-                value: LcovParser._parseSlice(buf, offset, endOfLineIndex)
-            }
-        }
-
-        return null
-    }
-
-    /**
-     * @internal
-     */
-    private static _parseSlice(buf: Buffer, start: number, end: number): string[] {
-        const values: string[] = []
-        let offset = start
-
-        for (let index = start; index < end; index++) {
-            if (buf[index] === 44 /* ',' (comma) */) {
-                values.push(buf.toString('utf-8', offset, index))
-                offset = index + 1
-            }
-        }
-
-        values.push(buf.toString('utf-8', offset, end))
-
-        return values
-    }
-
-    /**
-     * @internal
-     */
-    private static _defaultResult(done: boolean, incomplete: boolean): ParseResult {
-        return {
-            done,
-            incomplete,
-            value: null,
-            variant: Variant.None
         }
     }
 }
