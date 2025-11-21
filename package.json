@@ -26,39 +26,74 @@
     },
     "exports": {
         ".": {
-            "types": "./dist/index.d.ts",
-            "import": "./dist/index.mjs",
-            "require": "./dist/index.cjs"
+            "import": {
+                "types": "./dist/index.d.mts",
+                "default": "./dist/index.mjs"
+            },
+            "require": {
+                "types": "./dist/index.d.cts",
+                "default": "./dist/index.cjs"
+            }
         },
         "./constants": {
-            "types": "./dist/constants.d.ts",
-            "import": "./dist/constants.mjs",
-            "require": "./dist/constants.cjs"
+            "import": {
+                "types": "./dist/constants.d.mts",
+                "default": "./dist/constants.mjs"
+            },
+            "require": {
+                "types": "./dist/constants.d.cts",
+                "default": "./dist/constants.cjs"
+            }
         },
         "./lib/field-variant": {
-            "types": "./dist/lib/field-variant.d.ts",
-            "import": "./dist/lib/field-variant.mjs",
-            "require": "./dist/lib/field-variant.cjs"
+            "import": {
+                "types": "./dist/lib/field-variant.d.mts",
+                "default": "./dist/lib/field-variant.mjs"
+            },
+            "require": {
+                "types": "./dist/lib/field-variant.d.cts",
+                "default": "./dist/lib/field-variant.cjs"
+            }
         },
         "./parser": {
-            "types": "./dist/parser.d.ts",
-            "import": "./dist/parser.mjs",
-            "require": "./dist/parser.cjs"
+            "import": {
+                "types": "./dist/parser.d.mts",
+                "default": "./dist/parser.mjs"
+            },
+            "require": {
+                "types": "./dist/parser.d.cts",
+                "default": "./dist/parser.cjs"
+            }
         },
         "./promise": {
-            "types": "./dist/promise/index.d.ts",
-            "import": "./dist/promise/index.mjs",
-            "require": "./dist/promise/index.cjs"
+            "import": {
+                "types": "./dist/promise/index.d.mts",
+                "default": "./dist/promise/index.mjs"
+            },
+            "require": {
+                "types": "./dist/promise/index.d.cts",
+                "default": "./dist/promise/index.cjs"
+            }
         },
         "./stream": {
-            "types": "./dist/stream/index.d.ts",
-            "import": "./dist/stream/index.mjs",
-            "require": "./dist/stream/index.cjs"
+            "import": {
+                "types": "./dist/stream/index.d.mts",
+                "default": "./dist/stream/index.mjs"
+            },
+            "require": {
+                "types": "./dist/stream/index.d.cts",
+                "default": "./dist/stream/index.cjs"
+            }
         },
         "./sync": {
-            "types": "./dist/sync/index.d.ts",
-            "import": "./dist/sync/index.mjs",
-            "require": "./dist/sync/index.cjs"
+            "import": {
+                "types": "./dist/sync/index.d.mts",
+                "default": "./dist/sync/index.mjs"
+            },
+            "require": {
+                "types": "./dist/sync/index.d.cts",
+                "default": "./dist/sync/index.cjs"
+            }
         }
     },
     "files": [
@@ -72,6 +107,7 @@
     ],
     "license": "MIT",
     "main": "./dist/index.cjs",
+    "module": "./dist/index.mjs",
     "name": "@friedemannsommer/lcov-parser",
     "publishConfig": {
         "provenance": true
@@ -93,5 +129,6 @@
     },
     "sideEffects": false,
     "type": "module",
+    "types": "./dist/index.d.ts",
     "version": "5.0.1"
 }
