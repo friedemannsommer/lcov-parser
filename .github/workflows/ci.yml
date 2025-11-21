@@ -70,6 +70,8 @@ jobs:
           cache: 'npm'
           node-version-file: '.node-version'
           registry-url: 'https://registry.npmjs.org'
+      - name: Update npm
+        run: npm install -g npm@latest
       - run: npm ci --no-fund --no-audit
       - name: Create release PR or publish
         uses: changesets/action@v1.5.3
@@ -79,4 +81,4 @@ jobs:
           publish: npm run release
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+          NPM_TOKEN: '' # https://github.com/changesets/changesets/issues/1152#issuecomment-3190884868
