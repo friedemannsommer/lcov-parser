@@ -1,5 +1,12 @@
 # @friedemannsommer/lcov-parser
 
+## 5.0.2
+
+### Patch Changes
+
+- [`7d8fc3f`](https://github.com/friedemannsommer/lcov-parser/commit/7d8fc3fc77f81669bdc968d98c55d03bde79dc20) Thanks [@friedemannsommer](https://github.com/friedemannsommer)! - Separated ESM and CJS typings in package config.
+  This _should_ resolve the CJS declaration mix up issues when trying to default import from this package in an ESM environment (see [`allowSyntheticDefaultImports`](https://www.typescriptlang.org/tsconfig/#allowSyntheticDefaultImports)).
+
 ## 5.0.1
 
 ### Patch Changes
