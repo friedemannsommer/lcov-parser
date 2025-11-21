@@ -1,5 +1,13 @@
 # @friedemannsommer/lcov-parser
 
+## 6.0.0
+
+### Major Changes
+
+- [`1ad6dec`](https://github.com/friedemannsommer/lcov-parser/commit/1ad6dec115bc6e6d3572683e9cfb15df7c517c36) Thanks [@friedemannsommer](https://github.com/friedemannsommer)! - **(_Possibly_) breaking change**
+
+  Changed default package typing (more about the [`types`](https://www.typescriptlang.org/docs/handbook/declaration-files/publishing.html) field) to use ESM declarations.
+
 ## 5.0.2
 
 ### Patch Changes
