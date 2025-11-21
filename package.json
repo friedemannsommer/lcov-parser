@@ -130,6 +130,6 @@
     },
     "sideEffects": false,
     "type": "module",
-    "types": "./dist/index.d.ts",
+    "types": "./dist/index.d.mts",
     "version": "5.0.2"
 }
