@@ -110,11 +110,12 @@
     "module": "./dist/index.mjs",
     "name": "@friedemannsommer/lcov-parser",
     "publishConfig": {
+        "access": "public",
         "provenance": true
     },
     "repository": {
         "type": "git",
-        "url": "https://github.com/friedemannsommer/lcov-parser.git"
+        "url": "git+https://github.com/friedemannsommer/lcov-parser.git"
     },
     "scripts": {
         "build": "unbuild",
