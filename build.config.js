@@ -14,7 +14,7 @@ export default defineBuildConfig({
             // this will save roughly 20%.
             minify: true,
             platform: 'neutral',
-            target: 'node16',
+            target: 'node18',
             treeShaking: true
         },
         output: {
