@@ -1,4 +1,5 @@
-import { expect } from 'chai'
+import assert from 'node:assert/strict'
+import { describe, it } from 'node:test'
 
 import { Variant } from '../constants.js'
 import transformResult, {
@@ -50,7 +51,7 @@ function processTestData<V extends Variant, E extends Entry<V>>(
         it(`should parse (${Variant[result.variant]}) result with "done: ${result.done}" and value ${
             result.value ? `length: ${result.value.length}` : '"null"'
         } #${index + 1}`, (): void => {
-            expect(transformFn(result)).to.eql(expected)
+            assert.deepStrictEqual(transformFn(result), expected)
         })
     }
 }

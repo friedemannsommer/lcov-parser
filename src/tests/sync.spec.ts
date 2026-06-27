@@ -1,4 +1,6 @@
-import { expect } from 'chai'
+import assert from 'node:assert/strict'
+import { describe, it } from 'node:test'
+
 import { defaultFieldNames } from '../constants.js'
 import { createSection } from '../lib/handle-result.js'
 import lcovParser from '../sync/index.js'
@@ -15,7 +17,7 @@ describe('sync/lcovParser', () => {
             from: input
         })
 
-        expect(result).to.eql([createSection(getTestNameEntry('example'))])
+        assert.deepStrictEqual(result, [createSection(getTestNameEntry('example'))])
     })
 
     it('should parse ArrayBuffer input correctly', () => {
@@ -23,7 +25,7 @@ describe('sync/lcovParser', () => {
             from: new TextEncoder().encode(input).buffer
         })
 
-        expect(result).to.eql([createSection(getTestNameEntry('example'))])
+        assert.deepStrictEqual(result, [createSection(getTestNameEntry('example'))])
     })
 
     it('should parse Buffer input correctly', () => {
@@ -31,15 +33,15 @@ describe('sync/lcovParser', () => {
             from: Buffer.from(input, 'utf-8')
         })
 
-        expect(result).to.eql([createSection(getTestNameEntry('example'))])
+        assert.deepStrictEqual(result, [createSection(getTestNameEntry('example'))])
     })
 
     it('should throw error for unsupported input type', () => {
-        expect(() =>
+        assert.throws(() =>
             lcovParser({
                 // biome-ignore lint/suspicious/noExplicitAny: Using null to simulate unsupported type
                 from: null as any
             })
-        ).to.throw(Error)
+        )
     })
 })

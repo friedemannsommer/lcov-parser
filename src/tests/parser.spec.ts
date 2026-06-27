@@ -1,4 +1,5 @@
-import { expect } from 'chai'
+import assert from 'node:assert/strict'
+import { describe, it } from 'node:test'
 
 import { defaultFieldNames, Variant } from '../constants.js'
 import { isEmptyField } from '../lib/field-variant.js'
@@ -25,7 +26,7 @@ describe('LcovParser - Field names', (): void => {
 
             parser.write(Buffer.from(chunk))
 
-            expect(parser.flush()).to.eql([
+            assert.deepStrictEqual(parser.flush(), [
                 getParseResult(
                     variant,
                     isEmptyFieldVariant ? null : variant === Variant.Comment ? [':test', 'data'] : ['test', 'data']
@@ -51,7 +52,7 @@ describe('LcovParser - Invalid fields', (): void => {
 
             parser.write(Buffer.from(`${fieldName}test,data\n`))
 
-            expect(parser.read()).to.eql(getParseResult(Variant.None, null, false, true))
+            assert.deepStrictEqual(parser.read(), getParseResult(Variant.None, null, false, true))
         })
     }
 })
@@ -61,7 +62,7 @@ describe('LcovParser - Chunks', (): void => {
         const parser = new LcovParser(defaultFieldNames)
         const result = parser.read()
 
-        expect(result).to.eql(getParseResult(Variant.None, null, true))
+        assert.deepStrictEqual(result, getParseResult(Variant.None, null, true))
     })
 
     it('should not parse chunk without trailing new line', (): void => {
@@ -71,7 +72,7 @@ describe('LcovParser - Chunks', (): void => {
 
         const result = parser.read()
 
-        expect(result).to.eql(getParseResult(Variant.TestName, null, false, true))
+        assert.deepStrictEqual(result, getParseResult(Variant.TestName, null, false, true))
     })
 
     it('should parse chunk with trailing new line', (): void => {
@@ -81,7 +82,7 @@ describe('LcovParser - Chunks', (): void => {
 
         const result = parser.read()
 
-        expect(result).to.eql(getParseResult(Variant.TestName, ['example']))
+        assert.deepStrictEqual(result, getParseResult(Variant.TestName, ['example']))
     })
 
     it('should parse multiple chunks into one result', (): void => {
@@ -94,7 +95,10 @@ describe('LcovParser - Chunks', (): void => {
 
         const result = parser.flush()
 
-        expect(result).to.eql([getParseResult(Variant.TestName, ['example']), getParseResult(Variant.None, null, true)])
+        assert.deepStrictEqual(result, [
+            getParseResult(Variant.TestName, ['example']),
+            getParseResult(Variant.None, null, true)
+        ])
     })
 
     it('should parse multiple chunks into multiple results', (): void => {
@@ -120,7 +124,7 @@ describe('LcovParser - Chunks', (): void => {
 
         const result = parser.flush()
 
-        expect(result).to.eql([
+        assert.deepStrictEqual(result, [
             getParseResult(Variant.TestName, ['example']),
             getParseResult(Variant.Version, ['2']),
             getParseResult(Variant.FilePath, ['directory/file.ext']),
@@ -147,7 +151,7 @@ describe('LcovParser - Chunks', (): void => {
 
         const result = parser.flush()
 
-        expect(result).to.eql([
+        assert.deepStrictEqual(result, [
             getParseResult(Variant.TestName, ['example 1']),
             getParseResult(Variant.FilePath, ['file.ext']),
             getParseResult(Variant.EndOfRecord, null),
@@ -163,7 +167,7 @@ describe('LcovParser - Current buffer', (): void => {
     it('should return `null` if no buffer is available', (): void => {
         const parser = new LcovParser(defaultFieldNames)
 
-        expect(parser.getCurrentBuffer()).to.be.null
+        assert.strictEqual(parser.getCurrentBuffer(), null)
     })
 
     it('should return `Buffer` if no buffer is available', (): void => {
@@ -172,7 +176,7 @@ describe('LcovParser - Current buffer', (): void => {
         parser.write(Buffer.from('not relevant'))
         parser.read()
 
-        expect(Buffer.isBuffer(parser.getCurrentBuffer()), 'isBuffer').to.be.true
+        assert.ok(Buffer.isBuffer(parser.getCurrentBuffer()), 'isBuffer')
     })
 })
 
@@ -187,9 +191,12 @@ describe('LcovParser - Comments', (): void => {
             )
         )
 
-        expect(parser.read()).to.eql(getParseResult(Variant.TestName, ['test']))
-        expect(parser.read()).to.eql(getParseResult(Variant.Comment, [`${defaultFieldNames.filePath}:example.file`]))
-        expect(parser.read()).to.eql(getParseResult(Variant.None, null, true))
+        assert.deepStrictEqual(parser.read(), getParseResult(Variant.TestName, ['test']))
+        assert.deepStrictEqual(
+            parser.read(),
+            getParseResult(Variant.Comment, [`${defaultFieldNames.filePath}:example.file`])
+        )
+        assert.deepStrictEqual(parser.read(), getParseResult(Variant.None, null, true))
     })
 
     it('should return incomplete for comment without new line', (): void => {
@@ -202,8 +209,8 @@ describe('LcovParser - Comments', (): void => {
             )
         )
 
-        expect(parser.read()).to.eql(getParseResult(Variant.TestName, ['test']))
-        expect(parser.read()).to.eql(getParseResult(Variant.Comment, null, false, true))
+        assert.deepStrictEqual(parser.read(), getParseResult(Variant.TestName, ['test']))
+        assert.deepStrictEqual(parser.read(), getParseResult(Variant.Comment, null, false, true))
     })
 })
 
@@ -213,8 +220,8 @@ describe('LcovParser - empty fields', (): void => {
 
         parser.write(Buffer.from(getRawLcov(defaultFieldNames.endOfRecord)))
 
-        expect(parser.read()).to.eql(getParseResult(Variant.EndOfRecord))
-        expect(parser.read()).to.eql(getParseResult(Variant.None, null, true))
+        assert.deepStrictEqual(parser.read(), getParseResult(Variant.EndOfRecord))
+        assert.deepStrictEqual(parser.read(), getParseResult(Variant.None, null, true))
     })
 
     it('should return incomplete for "end_of_record" without new line', (): void => {
@@ -222,7 +229,7 @@ describe('LcovParser - empty fields', (): void => {
 
         parser.write(Buffer.from(getRawLcov(defaultFieldNames.endOfRecord).slice(0, -1)))
 
-        expect(parser.read()).to.eql(getParseResult(Variant.None, null, false, true))
+        assert.deepStrictEqual(parser.read(), getParseResult(Variant.None, null, false, true))
     })
 })
 
@@ -239,10 +246,11 @@ describe('LcovParser - Paths containing colons', (): void => {
             )
         )
 
-        expect(parser.read()).to.eql(
+        assert.deepStrictEqual(
+            parser.read(),
             getParseResult(Variant.FilePath, ['C:\\Users\\Example\\Documents\\Projects\\example\\src\\example.file'])
         )
-        expect(parser.read()).to.eql(getParseResult(Variant.None, null, true))
+        assert.deepStrictEqual(parser.read(), getParseResult(Variant.None, null, true))
     })
 
     it('should process a path containing multiple colons', (): void => {
@@ -250,7 +258,7 @@ describe('LcovParser - Paths containing colons', (): void => {
 
         parser.write(Buffer.from(getRawLcov(defaultFieldNames.filePath, '/this/is/a/path:with:colons')))
 
-        expect(parser.read()).to.eql(getParseResult(Variant.FilePath, ['/this/is/a/path:with:colons']))
-        expect(parser.read()).to.eql(getParseResult(Variant.None, null, true))
+        assert.deepStrictEqual(parser.read(), getParseResult(Variant.FilePath, ['/this/is/a/path:with:colons']))
+        assert.deepStrictEqual(parser.read(), getParseResult(Variant.None, null, true))
     })
 })

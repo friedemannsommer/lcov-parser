@@ -1,4 +1,5 @@
-import { expect } from 'chai'
+import assert from 'node:assert/strict'
+import { describe, it } from 'node:test'
 
 import { Variant } from '../constants.js'
 import {
@@ -46,7 +47,7 @@ import {
 
 describe('createSection', (): void => {
     it('default section structure with empty string as name', (): void => {
-        expect(createSection()).to.eql({
+        assert.deepStrictEqual(createSection(), {
             branches: {
                 details: [],
                 hit: 0,
@@ -68,7 +69,7 @@ describe('createSection', (): void => {
     })
 
     it('default section structure with given entry name', (): void => {
-        expect(createSection(getTestNameEntry('test'))).to.eql({
+        assert.deepStrictEqual(createSection(getTestNameEntry('test')), {
             branches: {
                 details: [],
                 hit: 0,
@@ -92,7 +93,7 @@ describe('createSection', (): void => {
 
 describe('createBranchSummary', (): void => {
     it('should create summary with given entry values', (): void => {
-        expect(createBranchSummary(getBranchLocationEntry(2, undefined, 4, true, 6))).to.eql({
+        assert.deepStrictEqual(createBranchSummary(getBranchLocationEntry(2, undefined, 4, true, 6)), {
             block: 2,
             branch: '_test_',
             hit: 4,
@@ -104,7 +105,7 @@ describe('createBranchSummary', (): void => {
 
 describe('createFunctionSummary', (): void => {
     it('create with location entry', (): void => {
-        expect(createFunctionSummary(getFunctionLocationEntry('_test_', 4))).to.eql({
+        assert.deepStrictEqual(createFunctionSummary(getFunctionLocationEntry('_test_', 4)), {
             hit: 0,
             line: 4,
             name: '_test_'
@@ -112,7 +113,7 @@ describe('createFunctionSummary', (): void => {
     })
 
     it('create with execution entry', (): void => {
-        expect(createFunctionSummary(getFunctionExecutionEntry('_test_', 3))).to.eql({
+        assert.deepStrictEqual(createFunctionSummary(getFunctionExecutionEntry('_test_', 3)), {
             hit: 3,
             line: 0,
             name: '_test_'
@@ -122,7 +123,7 @@ describe('createFunctionSummary', (): void => {
 
 describe('createLineSummary', (): void => {
     it('should create summary with given values', (): void => {
-        expect(createLineSummary(getLineLocationEntry())).to.eql({
+        assert.deepStrictEqual(createLineSummary(getLineLocationEntry()), {
             hit: 2,
             line: 4
         })
@@ -156,7 +157,7 @@ describe('updateSectionSummary', (): void => {
                 variant: variant
             } as unknown as HitEntryVariants | InstrumentedEntryVariants)
 
-            expect(summary).to.eql({
+            assert.deepStrictEqual(summary, {
                 details: [],
                 hit: isHitVariant ? value : 0,
                 instrumented: isHitVariant ? 0 : value
@@ -200,7 +201,7 @@ describe('createUpdateFunctionIndexSummary', (): void => {
         if (variant !== Variant.FunctionAlias) continue
 
         it(`should create a function summary for "${name}"`, (): void => {
-            expect(functionMap.get(name)).to.eql({
+            assert.deepStrictEqual(functionMap.get(name), {
                 hit: getHits(name),
                 line: getLine(index),
                 name
@@ -277,7 +278,7 @@ describe('createUpdateFunctionSummary', (): void => {
         }
 
         it(`should create function summary for "${name}" based on (${entries.length}) entries`, (): void => {
-            expect(functionMap.get(name)).to.eql({
+            assert.deepStrictEqual(functionMap.get(name), {
                 hit: getSumByVariant(entries, Variant.FunctionExecution),
                 line: getLastEntryValue(entries, Variant.FunctionLocation),
                 name
@@ -286,7 +287,8 @@ describe('createUpdateFunctionSummary', (): void => {
     }
 
     it(`should have created (${testData.length}) entries with provided values`, (): void => {
-        expect(fnList).to.eql(
+        assert.deepStrictEqual(
+            fnList,
             testData.map(([name, entries]) => ({
                 hit: getSumByVariant(entries, Variant.FunctionExecution),
                 line: getLastEntryValue(entries, Variant.FunctionLocation),
@@ -322,9 +324,9 @@ describe('handleResult', (): void => {
         const functionMap: FunctionMap = new Map([['a', createFunctionSummary(getFunctionExecutionEntry('a', 1))]])
         const section = createSection()
 
-        expect(handleResult(getTestNameEntry('test'), functionIndices, functionMap, section)).to.be.false
-        expect(functionMap.size).to.eq(0, 'should have cleared the functionMap')
-        expect(section).to.eql({
+        assert.strictEqual(handleResult(getTestNameEntry('test'), functionIndices, functionMap, section), false)
+        assert.strictEqual(functionMap.size, 0, 'should have cleared the functionMap')
+        assert.deepStrictEqual(section, {
             ...createSection(),
             name: 'test'
         })
@@ -335,8 +337,11 @@ describe('handleResult', (): void => {
         const functionMap: FunctionMap = new Map()
         const section = createSection()
 
-        expect(handleResult(getFilePathEntry('path/to/file.ext'), functionIndices, functionMap, section)).to.be.false
-        expect(section).to.eql({
+        assert.strictEqual(
+            handleResult(getFilePathEntry('path/to/file.ext'), functionIndices, functionMap, section),
+            false
+        )
+        assert.deepStrictEqual(section, {
             ...createSection(),
             path: 'path/to/file.ext'
         })
@@ -347,8 +352,8 @@ describe('handleResult', (): void => {
         const functionMap: FunctionMap = new Map([['b', createFunctionSummary(getFunctionLocationEntry('b', 0))]])
         const section = createSection()
 
-        expect(handleResult(getEndOfRecord(), functionIndices, functionMap, section)).to.be.true
-        expect(section).to.eql(createSection())
+        assert.strictEqual(handleResult(getEndOfRecord(), functionIndices, functionMap, section), true)
+        assert.deepStrictEqual(section, createSection())
     })
 
     it(`should create function summary from "${Variant[Variant.FunctionLocation]}"`, (): void => {
@@ -359,9 +364,9 @@ describe('handleResult', (): void => {
         const expectedSection = createSection()
         const expectedSummary = createFunctionSummary({ ...entry })
 
-        expect(handleResult(entry, functionIndices, functionMap, section)).to.be.false
-        expect(functionMap.get('test')).to.eql(expectedSummary)
-        expect(section).to.eql({
+        assert.strictEqual(handleResult(entry, functionIndices, functionMap, section), false)
+        assert.deepStrictEqual(functionMap.get('test'), expectedSummary)
+        assert.deepStrictEqual(section, {
             ...expectedSection,
             functions: {
                 ...expectedSection.functions,
@@ -378,9 +383,9 @@ describe('handleResult', (): void => {
         const expectedSection = createSection()
         const expectedSummary = createFunctionSummary({ ...entry })
 
-        expect(handleResult(entry, functionIndices, functionMap, section)).to.be.false
-        expect(functionMap.get('test')).to.eql(expectedSummary)
-        expect(section).to.eql({
+        assert.strictEqual(handleResult(entry, functionIndices, functionMap, section), false)
+        assert.deepStrictEqual(functionMap.get('test'), expectedSummary)
+        assert.deepStrictEqual(section, {
             ...expectedSection,
             functions: {
                 ...expectedSection.functions,
@@ -400,10 +405,10 @@ describe('handleResult', (): void => {
 
         expectedSummary.hit = 2
 
-        expect(handleResult(locationEntry, functionIndices, functionMap, section)).to.be.false
-        expect(handleResult(executionEntry, functionIndices, functionMap, section)).to.be.false
-        expect(functionMap.get('test')).to.eql(expectedSummary)
-        expect(section).to.eql({
+        assert.strictEqual(handleResult(locationEntry, functionIndices, functionMap, section), false)
+        assert.strictEqual(handleResult(executionEntry, functionIndices, functionMap, section), false)
+        assert.deepStrictEqual(functionMap.get('test'), expectedSummary)
+        assert.deepStrictEqual(section, {
             ...expectedSection,
             functions: {
                 ...expectedSection.functions,
@@ -420,9 +425,9 @@ describe('handleResult', (): void => {
         const expectedSection = createSection()
         const expectedIndex = createFunctionIndexSummary({ ...entry })
 
-        expect(handleResult(entry, functionIndices, functionMap, section)).to.be.false
-        expect(functionIndices.get(0)).to.deep.eq(expectedIndex)
-        expect(section).to.eql({
+        assert.strictEqual(handleResult(entry, functionIndices, functionMap, section), false)
+        assert.deepStrictEqual(functionIndices.get(0), expectedIndex)
+        assert.deepStrictEqual(section, {
             ...expectedSection,
             functions: {
                 ...expectedSection.functions,
@@ -441,10 +446,10 @@ describe('handleResult', (): void => {
         const expectedSummary = createFunctionSummaryFromAlias(expectedIndex, { ...entry })
         expectedIndex.aliases = [expectedSummary]
 
-        expect(handleResult(entry, functionIndices, functionMap, section)).to.be.false
-        expect(functionIndices.get(0)).to.deep.eq(expectedIndex)
-        expect(functionMap.get('test')).to.deep.eq(expectedSummary)
-        expect(section).to.eql({
+        assert.strictEqual(handleResult(entry, functionIndices, functionMap, section), false)
+        assert.deepStrictEqual(functionIndices.get(0), expectedIndex)
+        assert.deepStrictEqual(functionMap.get('test'), expectedSummary)
+        assert.deepStrictEqual(section, {
             ...expectedSection,
             functions: {
                 ...expectedSection.functions,
@@ -466,9 +471,9 @@ describe('handleResult', (): void => {
         const expectedSection = createSection()
         const expectedSummary = createBranchSummary({ ...entry })
 
-        expect(handleResult(entry, functionIndices, functionMap, section)).to.be.false
-        expect(functionMap.size).to.eq(0)
-        expect(section).to.eql({
+        assert.strictEqual(handleResult(entry, functionIndices, functionMap, section), false)
+        assert.strictEqual(functionMap.size, 0)
+        assert.deepStrictEqual(section, {
             ...expectedSection,
             branches: {
                 ...expectedSection.branches,
@@ -485,9 +490,9 @@ describe('handleResult', (): void => {
         const expectedSection = createSection()
         const expectedSummary = createLineSummary({ ...entry })
 
-        expect(handleResult(entry, functionIndices, functionMap, section)).to.be.false
-        expect(functionMap.size).to.eq(0)
-        expect(section).to.eql({
+        assert.strictEqual(handleResult(entry, functionIndices, functionMap, section), false)
+        assert.strictEqual(functionMap.size, 0)
+        assert.deepStrictEqual(section, {
             ...expectedSection,
             lines: {
                 ...expectedSection.lines,
@@ -503,10 +508,10 @@ describe('handleResult', (): void => {
         const instrumentedEntry: BranchInstrumentedEntry = getInstrumentedEntry(Variant.BranchInstrumented, 2)
         const hitEntry: BranchHitEntry = getHitEntry(Variant.BranchHit, 4)
 
-        expect(handleResult(instrumentedEntry, functionIndices, functionMap, section)).to.be.false
-        expect(handleResult(hitEntry, functionIndices, functionMap, section)).to.be.false
-        expect(functionMap.size).to.eq(0)
-        expect(section).to.eql({
+        assert.strictEqual(handleResult(instrumentedEntry, functionIndices, functionMap, section), false)
+        assert.strictEqual(handleResult(hitEntry, functionIndices, functionMap, section), false)
+        assert.strictEqual(functionMap.size, 0)
+        assert.deepStrictEqual(section, {
             ...createSection(),
             branches: {
                 details: [],
@@ -523,10 +528,10 @@ describe('handleResult', (): void => {
         const instrumentedEntry: FunctionInstrumentedEntry = getInstrumentedEntry(Variant.FunctionInstrumented, 2)
         const hitEntry: FunctionHitEntry = getHitEntry(Variant.FunctionHit, 4)
 
-        expect(handleResult(instrumentedEntry, functionIndices, functionMap, section)).to.be.false
-        expect(handleResult(hitEntry, functionIndices, functionMap, section)).to.be.false
-        expect(functionMap.size).to.eq(0)
-        expect(section).to.eql({
+        assert.strictEqual(handleResult(instrumentedEntry, functionIndices, functionMap, section), false)
+        assert.strictEqual(handleResult(hitEntry, functionIndices, functionMap, section), false)
+        assert.strictEqual(functionMap.size, 0)
+        assert.deepStrictEqual(section, {
             ...createSection(),
             functions: {
                 details: [],
@@ -543,10 +548,10 @@ describe('handleResult', (): void => {
         const instrumentedEntry: LineInstrumentedEntry = getInstrumentedEntry(Variant.LineInstrumented, 2)
         const hitEntry: LineHitEntry = getHitEntry(Variant.LineHit, 4)
 
-        expect(handleResult(instrumentedEntry, functionIndices, functionMap, section)).to.be.false
-        expect(handleResult(hitEntry, functionIndices, functionMap, section)).to.be.false
-        expect(functionMap.size).to.eq(0)
-        expect(section).to.eql({
+        assert.strictEqual(handleResult(instrumentedEntry, functionIndices, functionMap, section), false)
+        assert.strictEqual(handleResult(hitEntry, functionIndices, functionMap, section), false)
+        assert.strictEqual(functionMap.size, 0)
+        assert.deepStrictEqual(section, {
             ...createSection(),
             lines: {
                 details: [],
@@ -635,7 +640,7 @@ describe('updateResults', (): void => {
                 sectionIndex = updateResults(sectionIndex, entry, functionIndices, functionMap, sections)
             }
 
-            expect(sections).to.eql(expectedSections)
+            assert.deepStrictEqual(sections, expectedSections)
         })
     }
 })

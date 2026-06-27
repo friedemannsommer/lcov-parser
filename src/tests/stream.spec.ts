@@ -1,4 +1,5 @@
-import { expect } from 'chai'
+import assert from 'node:assert/strict'
+import { describe, it } from 'node:test'
 
 import { defaultFieldNames } from '../constants.js'
 import { createSection } from '../lib/handle-result.js'
@@ -23,7 +24,7 @@ describe('LcovStreamParser', (): void => {
             parser.end()
         })
 
-        expect(section).to.eql(createSection(getTestNameEntry('test_name')))
+        assert.deepStrictEqual(section, createSection(getTestNameEntry('test_name')))
     })
 
     it('should parse buffers into multiple sections', async (): Promise<void> => {
@@ -34,10 +35,7 @@ describe('LcovStreamParser', (): void => {
             parser.on('data', (result: SectionSummary): void => {
                 sections.push(result)
             })
-            parser.once('error', (err: Error): void => {
-                expect(err).to.be.undefined("parser shouldn't have thrown a exception")
-                reject(err)
-            })
+            parser.once('error', reject)
             parser.once('finish', resolve)
             parser.write(Buffer.from(getRawLcov(defaultFieldNames.testName, 'example_1')))
             parser.write(Buffer.from(getRawLcov(defaultFieldNames.endOfRecord)))
@@ -48,7 +46,7 @@ describe('LcovStreamParser', (): void => {
             parser.end()
         })
 
-        expect(sections).to.eql([
+        assert.deepStrictEqual(sections, [
             createSection(getTestNameEntry('example_1')),
             createSection(getTestNameEntry('example_2')),
             createSection(getTestNameEntry('example_3'))
@@ -71,7 +69,7 @@ describe('LcovStreamParser', (): void => {
         })
 
         // input doesn't end with 'end_of_record', parser shouldn't yield a section
-        expect(section).to.be.undefined
+        assert.strictEqual(section, undefined)
     })
 
     it('should reject buffers, because of eof', async (): Promise<void> => {
@@ -88,7 +86,7 @@ describe('LcovStreamParser', (): void => {
             parser.end()
         })
 
-        expect(error).to.be.instanceof(Error)
-        expect(error.message).to.eq('unexpected end of input.')
+        assert.ok(error instanceof Error)
+        assert.strictEqual(error.message, 'unexpected end of input.')
     })
 })

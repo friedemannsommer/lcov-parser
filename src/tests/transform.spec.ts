@@ -1,5 +1,6 @@
+import assert from 'node:assert/strict'
 import { Readable } from 'node:stream'
-import { expect } from 'chai'
+import { describe, it } from 'node:test'
 
 import { defaultFieldNames, Variant } from '../constants.js'
 import { createSection } from '../lib/handle-result.js'
@@ -10,7 +11,7 @@ import { getParseResult, getRawLcov } from './lib/parse.js'
 
 describe('transformSynchronous', (): void => {
     it('should transform parsed values into sections', (): void => {
-        expect(
+        assert.deepStrictEqual(
             transformSynchronous([
                 getParseResult(Variant.TestName, ['example']),
                 getParseResult(Variant.FilePath, ['a/example.file']),
@@ -18,17 +19,18 @@ describe('transformSynchronous', (): void => {
                 getParseResult(Variant.TestName, ['test']),
                 getParseResult(Variant.FilePath, ['b/example.file']),
                 getParseResult(Variant.EndOfRecord, null, true)
-            ])
-        ).to.eql([
-            {
-                ...createSection(getTestNameEntry('example')),
-                path: 'a/example.file'
-            },
-            {
-                ...createSection(getTestNameEntry('test')),
-                path: 'b/example.file'
-            }
-        ])
+            ]),
+            [
+                {
+                    ...createSection(getTestNameEntry('example')),
+                    path: 'a/example.file'
+                },
+                {
+                    ...createSection(getTestNameEntry('test')),
+                    path: 'b/example.file'
+                }
+            ]
+        )
     })
 })
 
@@ -45,7 +47,7 @@ describe('transformAsynchronous', (): void => {
         stream.push(getRawLcov(defaultFieldNames.endOfRecord))
         stream.push(null)
 
-        expect(await transformAsynchronous(parser, stream)).to.eql([
+        assert.deepStrictEqual(await transformAsynchronous(parser, stream), [
             {
                 ...createSection(getTestNameEntry('example_1')),
                 path: 'path/to/file.ext'
@@ -66,7 +68,7 @@ describe('transformAsynchronous', (): void => {
         stream.push(getRawLcov(defaultFieldNames.endOfRecord))
         stream.push(null)
 
-        expect(await transformAsynchronous(parser, stream)).to.eql([
+        assert.deepStrictEqual(await transformAsynchronous(parser, stream), [
             {
                 ...createSection(getTestNameEntry('example_1')),
                 path: 'path/to/file.ext'
@@ -83,7 +85,7 @@ describe('transformAsynchronous', (): void => {
         stream.push(getRawLcov(defaultFieldNames.endOfRecord))
         stream.push(null)
 
-        expect(await transformAsynchronous(parser, stream)).to.eql([
+        assert.deepStrictEqual(await transformAsynchronous(parser, stream), [
             {
                 ...createSection(getTestNameEntry('example_1')),
                 path: 'path/to/file.ext'
@@ -103,10 +105,10 @@ describe('transformAsynchronous', (): void => {
 
         try {
             await transformAsynchronous(parser, stream)
-            expect(true).to.be.false("the promise should've been rejected")
+            assert.fail("the promise should've been rejected")
         } catch (err) {
-            expect(err).to.be.instanceof(Error)
-            expect((err as Error).message).be.eq('received unsupported chunk type.')
+            assert.ok(err instanceof Error)
+            assert.strictEqual((err as Error).message, 'received unsupported chunk type.')
         }
     })
 
@@ -119,10 +121,10 @@ describe('transformAsynchronous', (): void => {
 
         try {
             await transformAsynchronous(parser, stream)
-            expect(true).to.be.false("the promise should've been rejected")
+            assert.fail("the promise should've been rejected")
         } catch (err) {
-            expect(err).to.be.instanceof(Error)
-            expect((err as Error).message).be.eq('test')
+            assert.ok(err instanceof Error)
+            assert.strictEqual((err as Error).message, 'test')
         }
     })
 })

@@ -1,4 +1,5 @@
-import { expect } from 'chai'
+import assert from 'node:assert/strict'
+import { describe, it } from 'node:test'
 
 import { defaultFieldNames, Variant } from '../constants.js'
 import ByteMatch from '../lib/byte-match.js'
@@ -26,33 +27,34 @@ const fieldVariants: Array<[Variant, keyof FieldNames]> = [
 describe('Lookup - mapFieldName', (): void => {
     for (const [variant, fieldName] of fieldVariants) {
         it(`should map field "${fieldName}" to "${Variant[variant]}"`, (): void => {
-            expect(FIELD_NAME_MAP[fieldName]).to.eq(variant)
+            assert.strictEqual(FIELD_NAME_MAP[fieldName], variant)
         })
     }
 })
 
 describe('Lookup - sortFieldNames', (): void => {
     it('should sort by value size (DESC)', (): void => {
-        expect(
+        assert.strictEqual(
             sortFieldNames(
                 { variant: Variant.Comment, matcher: new ByteMatch(new Uint8Array([0])) },
                 { variant: Variant.Comment, matcher: new ByteMatch(new Uint8Array([1])) }
-            )
-        ).to.eq(0)
+            ),
+            0
+        )
 
-        expect(
+        assert.ok(
             sortFieldNames(
                 { variant: Variant.Comment, matcher: new ByteMatch(new Uint8Array([0])) },
                 { variant: Variant.Comment, matcher: new ByteMatch(new Uint8Array([0, 1])) }
-            )
-        ).to.greaterThan(0)
+            ) > 0
+        )
 
-        expect(
+        assert.ok(
             sortFieldNames(
                 { variant: Variant.Comment, matcher: new ByteMatch(new Uint8Array([0, 1])) },
                 { variant: Variant.Comment, matcher: new ByteMatch(new Uint8Array([0])) }
-            )
-        ).to.lessThan(0)
+            ) < 0
+        )
     })
 })
 
@@ -83,7 +85,8 @@ describe('Lookup - generateFieldLookup', (): void => {
 
         expected.sort(([, matcherA], [, matcherB]) => (matcherA.size > matcherB.size ? -1 : 1))
 
-        expect(generateFieldLookup(defaultFieldNames)).to.eql(
+        assert.deepStrictEqual(
+            generateFieldLookup(defaultFieldNames),
             expected.map(
                 ([variant, matcher]): FieldOptions => ({
                     variant,
