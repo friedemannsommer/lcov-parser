@@ -1,5 +1,15 @@
 # @friedemannsommer/lcov-parser
 
+## 7.0.0
+
+### Major Changes
+
+- [`99ea376`](https://github.com/friedemannsommer/lcov-parser/commit/99ea376ae5dc8488f21d2ea0335a9522478421b5) Thanks [@friedemannsommer](https://github.com/friedemannsommer)! - Bump minimal supported version to Node.js v22
+
+### Patch Changes
+
+- [`4dde29c`](https://github.com/friedemannsommer/lcov-parser/commit/4dde29c5ea5715b87e021ba97d8c500d66fa39b7) Thanks [@friedemannsommer](https://github.com/friedemannsommer)! - Fixed `FN` parsing: `lineEnd` incorrectly set for 2-value format
+
 ## 6.0.0
 
 ### Major Changes
