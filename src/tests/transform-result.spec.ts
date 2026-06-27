@@ -639,6 +639,36 @@ describe('transformFunctionLocation', (): void => {
                 name: 'name',
                 variant: Variant.FunctionLocation
             }
+        ],
+        [
+            {
+                done: false,
+                incomplete: false,
+                value: ['10', '100'],
+                variant: Variant.FunctionLocation
+            },
+            {
+                done: false,
+                lineEnd: 0,
+                lineStart: 10,
+                name: '100',
+                variant: Variant.FunctionLocation
+            }
+        ],
+        [
+            {
+                done: false,
+                incomplete: false,
+                value: ['10', '5', 'main'],
+                variant: Variant.FunctionLocation
+            },
+            {
+                done: false,
+                lineEnd: 5,
+                lineStart: 10,
+                name: 'main',
+                variant: Variant.FunctionLocation
+            }
         ]
     ]
 

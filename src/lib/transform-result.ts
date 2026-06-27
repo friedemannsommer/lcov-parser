@@ -96,7 +96,7 @@ export function transformBranchLocation(result: ParseResult<Variant.BranchLocati
         line = parseInteger(result.value[0])
         isException = result.value[1].startsWith('e')
         block = parseInteger(isException ? result.value[1].slice(1) : result.value[1])
-        // if the branch contained "," (semicolon), add them back by joining the possibly related values
+        // if the branch contained "," (comma), add them back by joining the possibly related values
         branch = result.value.slice(2, -1).join(',')
         taken = branchTaken === '-' ? 0 : parseInteger(branchTaken)
     }
@@ -151,11 +151,11 @@ export function transformFunctionLocation(result: ParseResult<Variant.FunctionLo
 
     if (result.value !== null && result.value.length >= 2) {
         lineStart = parseInteger(result.value[0])
-        lineEnd = parseInteger(result.value[1])
 
-        if (lineEnd < lineStart || result.value.length === 2) {
+        if (result.value.length === 2) {
             name = result.value[1]
-        } else if (result.value.length >= 3) {
+        } else {
+            lineEnd = parseInteger(result.value[1])
             name = result.value[2]
         }
     }
