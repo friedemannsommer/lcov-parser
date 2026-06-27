@@ -3,14 +3,13 @@
     "compilerOptions": {
         "allowJs": false,
         "allowSyntheticDefaultImports": true,
+        "verbatimModuleSyntax": true,
         "allowUnreachableCode": false,
         "allowUnusedLabels": false,
         "alwaysStrict": true,
-        "baseUrl": "./",
         "declaration": true,
         "forceConsistentCasingInFileNames": true,
         "importHelpers": false,
-        "importsNotUsedAsValues": "remove",
         "lib": ["ES2020"],
         "module": "NodeNext",
         "moduleResolution": "NodeNext",
@@ -36,7 +35,7 @@
         "strictPropertyInitialization": true,
         "suppressImplicitAnyIndexErrors": false,
         "target": "ES2020",
-        "typeRoots": ["./node_modules/@types"]
+        "types": ["node"]
     },
     "exclude": ["node_modules"],
     "include": ["./src/**/*.ts"]
