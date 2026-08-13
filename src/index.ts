@@ -1,6 +1,6 @@
 import lcovParser from './promise/index.js'
 
-export type { BranchEntry, FunctionEntry, LineEntry, SectionSummary, Summary } from './typings/file.js'
+export type { BranchEntry, FunctionEntry, LineEntry, MCDCEntry, SectionSummary, Summary } from './typings/file.js'
 export type { FieldNames } from './typings/options.js'
 
 /**

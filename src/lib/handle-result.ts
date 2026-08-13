@@ -9,9 +9,10 @@ import type {
     HitEntryVariants,
     InstrumentedEntryVariants,
     LineLocationEntry,
+    MCDCLocationEntry,
     TestNameEntry
 } from '../typings/entry.js'
-import type { BranchEntry, FunctionEntry, LineEntry, SectionSummary, Summary } from '../typings/file.js'
+import type { BranchEntry, FunctionEntry, LineEntry, MCDCEntry, SectionSummary, Summary } from '../typings/file.js'
 
 export interface FunctionIndexEntry {
     index: number
@@ -57,6 +58,9 @@ export function handleResult(
         case Variant.LineLocation:
             section.lines.details.push(createLineSummary(entry))
             break
+        case Variant.MCDCLocation:
+            section.mcdc.details.push(createMCDCSummary(entry))
+            break
         case Variant.BranchInstrumented:
         case Variant.BranchHit:
             updateSectionSummary(section.branches, entry)
@@ -68,6 +72,10 @@ export function handleResult(
         case Variant.LineInstrumented:
         case Variant.LineHit:
             updateSectionSummary(section.lines, entry)
+            break
+        case Variant.MCDCInstrumented:
+        case Variant.MCDCHit:
+            updateSectionSummary(section.mcdc, entry)
             break
     }
 
@@ -102,6 +110,11 @@ export function createSection(entry?: TestNameEntry): SectionSummary {
             instrumented: 0
         },
         lines: {
+            details: [],
+            hit: 0,
+            instrumented: 0
+        },
+        mcdc: {
             details: [],
             hit: 0,
             instrumented: 0
@@ -171,7 +184,12 @@ export function updateSectionSummary<Detail extends LineEntry>(
 ): void {
     const variant = entry.variant
 
-    if (variant === Variant.BranchHit || variant === Variant.FunctionHit || variant === Variant.LineHit) {
+    if (
+        variant === Variant.BranchHit ||
+        variant === Variant.FunctionHit ||
+        variant === Variant.LineHit ||
+        variant === Variant.MCDCHit
+    ) {
         summary.hit += entry.hit
     } else {
         summary.instrumented += entry.found
@@ -184,7 +202,21 @@ export function createBranchSummary(entry: BranchLocationEntry): BranchEntry {
         branch: entry.branch,
         hit: entry.hit,
         isException: entry.isException,
+        isFallthrough: entry.isFallthrough,
+        isUnreachable: entry.isUnreachable,
         line: entry.line
+    }
+}
+
+export function createMCDCSummary(entry: MCDCLocationEntry): MCDCEntry {
+    return {
+        expression: entry.expression,
+        groupSize: entry.groupSize,
+        hit: entry.hit,
+        index: entry.index,
+        isUnreachable: entry.isUnreachable,
+        line: entry.line,
+        sense: entry.sense
     }
 }
 

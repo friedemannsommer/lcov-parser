@@ -20,6 +20,9 @@ const fieldVariants: Array<[Variant, keyof FieldNames]> = [
     [Variant.LineHit, 'lineHit'],
     [Variant.LineInstrumented, 'lineInstrumented'],
     [Variant.LineLocation, 'lineLocation'],
+    [Variant.MCDCHit, 'mcdcHit'],
+    [Variant.MCDCInstrumented, 'mcdcInstrumented'],
+    [Variant.MCDCLocation, 'mcdcLocation'],
     [Variant.TestName, 'testName'],
     [Variant.Version, 'version']
 ]
@@ -79,6 +82,9 @@ describe('Lookup - generateFieldLookup', (): void => {
             [Variant.LineHit, new ByteMatch(new Uint8Array([76, 72]))],
             [Variant.LineInstrumented, new ByteMatch(new Uint8Array([76, 70]))],
             [Variant.LineLocation, new ByteMatch(new Uint8Array([68, 65]))],
+            [Variant.MCDCHit, new ByteMatch(new Uint8Array([77, 67, 72]))],
+            [Variant.MCDCInstrumented, new ByteMatch(new Uint8Array([77, 67, 70]))],
+            [Variant.MCDCLocation, new ByteMatch(new Uint8Array([77, 67, 68, 67]))],
             [Variant.TestName, new ByteMatch(new Uint8Array([84, 78]))],
             [Variant.Version, new ByteMatch(new Uint8Array([86, 69, 82]))]
         ]

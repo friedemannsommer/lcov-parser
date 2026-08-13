@@ -9,7 +9,7 @@ support and a streaming API.
 ![node-current](https://img.shields.io/node/v/%40friedemannsommer%2Flcov-parser?style=flat&logo=nodedotjs)
 
 > This parser is built for the LCOV trace file format, which can be found
-> here: [github.com/linux-test-project/lcov/man/geninfo.1][lcov-format].
+> here: [github.com/linux-test-project/lcov/docs/man/geninfo.rst][lcov-format].
 >
 > You're able to use different field names, if necessary.
 
@@ -18,7 +18,7 @@ support and a streaming API.
 |               | [`lcov-parse`][lcov-parse-npmx]                        | [`parse-lcov`][parse-lcov-npmx] | **`@friedemannsommer/lcov-parser`**                  |
 | ------------- | ------------------------------------------------------ | ------------------------------- | ---------------------------------------------------- |
 | Last updated  | 2017                                                   | 2020                            | 2026                                                 |
-| LCOV version  | 1.x (legacy)                                           | 1.x (legacy)                    | up to 2.2                                            |
+| LCOV version  | 1.x                                                    | 1.x                             | up to 2.5                                            |
 | TypeScript    | No (community [`@types/lcov-parse`][types-lcov-parse]) | Yes (native)                    | Yes (native)                                         |
 | Module format | CommonJS only                                          | CommonJS only                   | ESM + CommonJS (dual package)                        |
 | Dependencies  | 0                                                      | 0                               | 0                                                    |
@@ -70,7 +70,7 @@ which can be found here: [friedemannsommer.github.io/lcov-parser][package-docs].
 
 [array-buffer-docs]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/ArrayBuffer
 [buffer-docs]: https://nodejs.org/api/buffer.html#class-buffer
-[lcov-format]: https://github.com/linux-test-project/lcov/blob/751a06367107e0134c8bce2ea1b89e1f8d10ea35/man/geninfo.1#L1479-L1784
+[lcov-format]: https://github.com/linux-test-project/lcov/blob/c3f5c3f1fd6677ce8a7d387939500c7ad0af3dab/docs/man/geninfo.rst#tracefile-format
 [lcov-parse-npmx]: https://npmx.dev/package/lcov-parse
 [lcov-parser-npmx]: https://npmx.dev/package/@friedemannsommer/lcov-parser
 [npm]: https://www.npmjs.com/package/@friedemannsommer/lcov-parser

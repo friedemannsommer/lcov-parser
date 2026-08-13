@@ -20,6 +20,9 @@ const variants: Variant[] = [
     Variant.LineHit,
     Variant.LineInstrumented,
     Variant.LineLocation,
+    Variant.MCDCHit,
+    Variant.MCDCInstrumented,
+    Variant.MCDCLocation,
     Variant.TestName,
     Variant.Version
 ]

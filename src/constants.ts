@@ -75,7 +75,19 @@ export enum Variant {
     /**
      * The source code version ID.
      */
-    Version = 17
+    Version = 17,
+    /**
+     * Number of MC/DC conditions hit.
+     */
+    MCDCHit = 18,
+    /**
+     * Number of MC/DC conditions found.
+     */
+    MCDCInstrumented = 19,
+    /**
+     * Provides MC/DC coverage information, such as line number, group size, sense, and how often it was sensitized.
+     */
+    MCDCLocation = 20
 }
 
 /**

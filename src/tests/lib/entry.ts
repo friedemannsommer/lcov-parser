@@ -8,6 +8,8 @@ import type {
     FunctionLeaderEntry,
     FunctionLocationEntry,
     LineLocationEntry,
+    MCDCLocationEntry,
+    MCDCSense,
     SummaryFoundEntry,
     SummaryHitEntry,
     TestNameEntry
@@ -81,7 +83,9 @@ export function getBranchLocationEntry(
     branch = '_test_',
     hit = 2,
     isException = false,
-    line = 4
+    line = 4,
+    isFallthrough = false,
+    isUnreachable = false
 ): BranchLocationEntry {
     return {
         block,
@@ -89,8 +93,32 @@ export function getBranchLocationEntry(
         done: false,
         hit,
         isException,
+        isFallthrough,
+        isUnreachable,
         line,
         variant: Variant.BranchLocation
+    }
+}
+
+export function getMCDCLocationEntry(
+    line = 4,
+    groupSize = 2,
+    sense: MCDCSense = 'f',
+    hit = 1,
+    index = 0,
+    expression = '_test_',
+    isUnreachable = false
+): MCDCLocationEntry {
+    return {
+        done: false,
+        expression,
+        groupSize,
+        hit,
+        index,
+        isUnreachable,
+        line,
+        sense,
+        variant: Variant.MCDCLocation
     }
 }
 

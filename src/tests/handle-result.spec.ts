@@ -8,6 +8,7 @@ import {
     createFunctionSummary,
     createFunctionSummaryFromAlias,
     createLineSummary,
+    createMCDCSummary,
     createSection,
     createUpdateFunctionIndexSummary,
     createUpdateFunctionSummary,
@@ -28,7 +29,10 @@ import type {
     InstrumentedEntryVariants,
     LineHitEntry,
     LineInstrumentedEntry,
-    LineLocationEntry
+    LineLocationEntry,
+    MCDCHitEntry,
+    MCDCInstrumentedEntry,
+    MCDCLocationEntry
 } from '../typings/entry.js'
 import type { FunctionEntry, LineEntry, SectionSummary, Summary } from '../typings/file.js'
 import {
@@ -42,6 +46,7 @@ import {
     getHitEntry,
     getInstrumentedEntry,
     getLineLocationEntry,
+    getMCDCLocationEntry,
     getTestNameEntry
 } from './lib/entry.js'
 
@@ -59,6 +64,11 @@ describe('createSection', (): void => {
                 instrumented: 0
             },
             lines: {
+                details: [],
+                hit: 0,
+                instrumented: 0
+            },
+            mcdc: {
                 details: [],
                 hit: 0,
                 instrumented: 0
@@ -85,6 +95,11 @@ describe('createSection', (): void => {
                 hit: 0,
                 instrumented: 0
             },
+            mcdc: {
+                details: [],
+                hit: 0,
+                instrumented: 0
+            },
             name: 'test',
             path: ''
         })
@@ -98,7 +113,35 @@ describe('createBranchSummary', (): void => {
             branch: '_test_',
             hit: 4,
             isException: true,
+            isFallthrough: false,
+            isUnreachable: false,
             line: 6
+        })
+    })
+
+    it('should create summary with fallthrough and unreachable flags', (): void => {
+        assert.deepStrictEqual(createBranchSummary(getBranchLocationEntry(2, undefined, 4, false, 6, true, true)), {
+            block: 2,
+            branch: '_test_',
+            hit: 4,
+            isException: false,
+            isFallthrough: true,
+            isUnreachable: true,
+            line: 6
+        })
+    })
+})
+
+describe('createMCDCSummary', (): void => {
+    it('should create summary with given entry values', (): void => {
+        assert.deepStrictEqual(createMCDCSummary(getMCDCLocationEntry(6, 2, 't', 1, 0, 'enable', true)), {
+            expression: 'enable',
+            groupSize: 2,
+            hit: 1,
+            index: 0,
+            isUnreachable: true,
+            line: 6,
+            sense: 't'
         })
     })
 })
@@ -135,9 +178,11 @@ describe('updateSectionSummary', (): void => {
         [Variant.BranchHit, 4],
         [Variant.FunctionHit, 6],
         [Variant.LineHit, 8],
+        [Variant.MCDCHit, 9],
         [Variant.BranchInstrumented, 10],
         [Variant.FunctionInstrumented, 12],
-        [Variant.LineInstrumented, 14]
+        [Variant.LineInstrumented, 14],
+        [Variant.MCDCInstrumented, 16]
     ]
 
     for (const [variant, value] of testData) {
@@ -147,7 +192,10 @@ describe('updateSectionSummary', (): void => {
             instrumented: 0
         }
         const isHitVariant =
-            variant === Variant.BranchHit || variant === Variant.FunctionHit || variant === Variant.LineHit
+            variant === Variant.BranchHit ||
+            variant === Variant.FunctionHit ||
+            variant === Variant.LineHit ||
+            variant === Variant.MCDCHit
         const fieldName = isHitVariant ? 'hit' : 'found'
 
         it(`should update the "${fieldName}" field with the given value (${value}) for variant "${Variant[variant]}"`, (): void => {
@@ -560,6 +608,45 @@ describe('handleResult', (): void => {
             }
         })
     })
+
+    it(`should create MC/DC entry from "${Variant[Variant.MCDCLocation]}"`, (): void => {
+        const functionIndices: FunctionIndexMap = new Map()
+        const functionMap: FunctionMap = new Map()
+        const section = createSection()
+        const entry: MCDCLocationEntry = getMCDCLocationEntry()
+        const expectedSection = createSection()
+        const expectedSummary = createMCDCSummary({ ...entry })
+
+        assert.strictEqual(handleResult(entry, functionIndices, functionMap, section), false)
+        assert.strictEqual(functionMap.size, 0)
+        assert.deepStrictEqual(section, {
+            ...expectedSection,
+            mcdc: {
+                ...expectedSection.mcdc,
+                details: [expectedSummary]
+            }
+        })
+    })
+
+    it('should update MC/DC summary', (): void => {
+        const functionIndices: FunctionIndexMap = new Map()
+        const functionMap: FunctionMap = new Map()
+        const section = createSection()
+        const instrumentedEntry: MCDCInstrumentedEntry = getInstrumentedEntry(Variant.MCDCInstrumented, 2)
+        const hitEntry: MCDCHitEntry = getHitEntry(Variant.MCDCHit, 4)
+
+        assert.strictEqual(handleResult(instrumentedEntry, functionIndices, functionMap, section), false)
+        assert.strictEqual(handleResult(hitEntry, functionIndices, functionMap, section), false)
+        assert.strictEqual(functionMap.size, 0)
+        assert.deepStrictEqual(section, {
+            ...createSection(),
+            mcdc: {
+                details: [],
+                hit: 4,
+                instrumented: 2
+            }
+        })
+    })
 })
 
 describe('updateResults', (): void => {
@@ -620,6 +707,58 @@ describe('updateResults', (): void => {
                     lines: {
                         details: [createLineSummary(getLineLocationEntry(2, 2))],
                         hit: 2,
+                        instrumented: 2
+                    },
+                    mcdc: {
+                        details: [],
+                        hit: 0,
+                        instrumented: 0
+                    },
+                    name: 'test',
+                    path: 'path/to/file.ext'
+                }
+            ]
+        ],
+        [
+            [
+                getTestNameEntry('test'),
+                getFilePathEntry('path/to/file.ext'),
+                getBranchLocationEntry(1, 'fallthrough', 1, false, 3, true, false),
+                getBranchLocationEntry(2, 'unreachable', 0, false, 3, false, true),
+                getInstrumentedEntry(Variant.BranchInstrumented, 2),
+                getHitEntry(Variant.BranchHit, 1),
+                getMCDCLocationEntry(3, 2, 'f', 0, 0, 'enable'),
+                getMCDCLocationEntry(3, 2, 't', 1, 0, 'enable'),
+                getInstrumentedEntry(Variant.MCDCInstrumented, 2),
+                getHitEntry(Variant.MCDCHit, 1),
+                getEndOfRecord()
+            ],
+            [
+                {
+                    branches: {
+                        details: [
+                            createBranchSummary(getBranchLocationEntry(1, 'fallthrough', 1, false, 3, true, false)),
+                            createBranchSummary(getBranchLocationEntry(2, 'unreachable', 0, false, 3, false, true))
+                        ],
+                        hit: 1,
+                        instrumented: 2
+                    },
+                    functions: {
+                        details: [],
+                        hit: 0,
+                        instrumented: 0
+                    },
+                    lines: {
+                        details: [],
+                        hit: 0,
+                        instrumented: 0
+                    },
+                    mcdc: {
+                        details: [
+                            createMCDCSummary(getMCDCLocationEntry(3, 2, 'f', 0, 0, 'enable')),
+                            createMCDCSummary(getMCDCLocationEntry(3, 2, 't', 1, 0, 'enable'))
+                        ],
+                        hit: 1,
                         instrumented: 2
                     },
                     name: 'test',

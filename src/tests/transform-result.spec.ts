@@ -15,6 +15,7 @@ import transformResult, {
     transformHit,
     transformInstrumented,
     transformLineLocation,
+    transformMCDCLocation,
     transformTestName,
     transformVersion
 } from '../lib/transform-result.js'
@@ -33,6 +34,7 @@ import type {
     HitEntryVariants,
     InstrumentedEntryVariants,
     LineLocationEntry,
+    MCDCLocationEntry,
     NoneEntry,
     TestNameEntry,
     VersionEntry
@@ -103,7 +105,10 @@ describe('intoNone', (): void => {
 })
 
 describe('transformHit', (): void => {
-    const testData: TestData<Variant.BranchHit | Variant.FunctionHit | Variant.LineHit, HitEntryVariants> = [
+    const testData: TestData<
+        Variant.BranchHit | Variant.FunctionHit | Variant.LineHit | Variant.MCDCHit,
+        HitEntryVariants
+    > = [
         [
             {
                 done: false,
@@ -155,6 +160,19 @@ describe('transformHit', (): void => {
                 hit: 123,
                 variant: Variant.LineHit
             }
+        ],
+        [
+            {
+                done: true,
+                incomplete: false,
+                value: ['5'],
+                variant: Variant.MCDCHit
+            },
+            {
+                done: true,
+                hit: 5,
+                variant: Variant.MCDCHit
+            }
         ]
     ]
 
@@ -163,7 +181,7 @@ describe('transformHit', (): void => {
 
 describe('transformInstrumented', (): void => {
     const testData: TestData<
-        Variant.BranchInstrumented | Variant.FunctionInstrumented | Variant.LineInstrumented,
+        Variant.BranchInstrumented | Variant.FunctionInstrumented | Variant.LineInstrumented | Variant.MCDCInstrumented,
         InstrumentedEntryVariants
     > = [
         [
@@ -204,6 +222,19 @@ describe('transformInstrumented', (): void => {
                 found: 123,
                 variant: Variant.LineInstrumented
             }
+        ],
+        [
+            {
+                done: true,
+                incomplete: false,
+                value: ['7'],
+                variant: Variant.MCDCInstrumented
+            },
+            {
+                done: true,
+                found: 7,
+                variant: Variant.MCDCInstrumented
+            }
         ]
     ]
 
@@ -224,6 +255,8 @@ describe('transformBranchLocation', (): void => {
                 done: false,
                 branch: '',
                 isException: false,
+                isFallthrough: false,
+                isUnreachable: false,
                 line: 0,
                 hit: 0,
                 variant: Variant.BranchLocation
@@ -241,6 +274,8 @@ describe('transformBranchLocation', (): void => {
                 done: true,
                 branch: '',
                 isException: false,
+                isFallthrough: false,
+                isUnreachable: false,
                 line: 0,
                 hit: 0,
                 variant: Variant.BranchLocation
@@ -258,6 +293,8 @@ describe('transformBranchLocation', (): void => {
                 done: false,
                 branch: '',
                 isException: false,
+                isFallthrough: false,
+                isUnreachable: false,
                 line: 0,
                 hit: 0,
                 variant: Variant.BranchLocation
@@ -275,6 +312,8 @@ describe('transformBranchLocation', (): void => {
                 done: false,
                 branch: '',
                 isException: false,
+                isFallthrough: false,
+                isUnreachable: false,
                 line: 0,
                 hit: 0,
                 variant: Variant.BranchLocation
@@ -292,6 +331,8 @@ describe('transformBranchLocation', (): void => {
                 done: false,
                 branch: 'expr',
                 isException: false,
+                isFallthrough: false,
+                isUnreachable: false,
                 line: 1,
                 hit: 3,
                 variant: Variant.BranchLocation
@@ -309,6 +350,84 @@ describe('transformBranchLocation', (): void => {
                 done: false,
                 branch: 'expr',
                 isException: true,
+                isFallthrough: false,
+                isUnreachable: false,
+                line: 1,
+                hit: 3,
+                variant: Variant.BranchLocation
+            }
+        ],
+        [
+            {
+                done: false,
+                incomplete: true,
+                value: ['1', 'f2', 'expr', '3'],
+                variant: Variant.BranchLocation
+            },
+            {
+                block: 2,
+                done: false,
+                branch: 'expr',
+                isException: false,
+                isFallthrough: true,
+                isUnreachable: false,
+                line: 1,
+                hit: 3,
+                variant: Variant.BranchLocation
+            }
+        ],
+        [
+            {
+                done: false,
+                incomplete: true,
+                value: ['1', 'U2', 'expr', '3'],
+                variant: Variant.BranchLocation
+            },
+            {
+                block: 2,
+                done: false,
+                branch: 'expr',
+                isException: false,
+                isFallthrough: false,
+                isUnreachable: true,
+                line: 1,
+                hit: 3,
+                variant: Variant.BranchLocation
+            }
+        ],
+        [
+            {
+                done: false,
+                incomplete: true,
+                value: ['1', 'eU2', 'expr', '3'],
+                variant: Variant.BranchLocation
+            },
+            {
+                block: 2,
+                done: false,
+                branch: 'expr',
+                isException: true,
+                isFallthrough: false,
+                isUnreachable: true,
+                line: 1,
+                hit: 3,
+                variant: Variant.BranchLocation
+            }
+        ],
+        [
+            {
+                done: false,
+                incomplete: true,
+                value: ['1', 'fU2', 'expr', '3'],
+                variant: Variant.BranchLocation
+            },
+            {
+                block: 2,
+                done: false,
+                branch: 'expr',
+                isException: false,
+                isFallthrough: true,
+                isUnreachable: true,
                 line: 1,
                 hit: 3,
                 variant: Variant.BranchLocation
@@ -326,6 +445,8 @@ describe('transformBranchLocation', (): void => {
                 done: false,
                 branch: 'expr,with,comma',
                 isException: false,
+                isFallthrough: false,
+                isUnreachable: false,
                 line: 1,
                 hit: 3,
                 variant: Variant.BranchLocation
@@ -343,6 +464,8 @@ describe('transformBranchLocation', (): void => {
                 done: false,
                 branch: 'expr,with,comma',
                 isException: true,
+                isFallthrough: false,
+                isUnreachable: false,
                 line: 1,
                 hit: 3,
                 variant: Variant.BranchLocation
@@ -360,6 +483,8 @@ describe('transformBranchLocation', (): void => {
                 done: false,
                 branch: 'expr',
                 isException: false,
+                isFallthrough: false,
+                isUnreachable: false,
                 line: 1,
                 hit: 0,
                 variant: Variant.BranchLocation
@@ -368,6 +493,127 @@ describe('transformBranchLocation', (): void => {
     ]
 
     processTestData(testData, transformBranchLocation)
+})
+
+describe('transformMCDCLocation', (): void => {
+    const testData: TestData<Variant.MCDCLocation, MCDCLocationEntry> = [
+        [
+            {
+                done: false,
+                incomplete: false,
+                value: null,
+                variant: Variant.MCDCLocation
+            },
+            {
+                done: false,
+                expression: '',
+                groupSize: 0,
+                hit: 0,
+                index: 0,
+                isUnreachable: false,
+                line: 0,
+                sense: 'f',
+                variant: Variant.MCDCLocation
+            }
+        ],
+        [
+            {
+                done: false,
+                incomplete: true,
+                value: ['1', '2', '3', '4'],
+                variant: Variant.MCDCLocation
+            },
+            {
+                done: false,
+                expression: '',
+                groupSize: 0,
+                hit: 0,
+                index: 0,
+                isUnreachable: false,
+                line: 0,
+                sense: 'f',
+                variant: Variant.MCDCLocation
+            }
+        ],
+        [
+            {
+                done: false,
+                incomplete: true,
+                value: ['10', '2', 'f', '0', '0', 'enable'],
+                variant: Variant.MCDCLocation
+            },
+            {
+                done: false,
+                expression: 'enable',
+                groupSize: 2,
+                hit: 0,
+                index: 0,
+                isUnreachable: false,
+                line: 10,
+                sense: 'f',
+                variant: Variant.MCDCLocation
+            }
+        ],
+        [
+            {
+                done: false,
+                incomplete: true,
+                value: ['10', '2', 't', '1', '0', 'enable'],
+                variant: Variant.MCDCLocation
+            },
+            {
+                done: false,
+                expression: 'enable',
+                groupSize: 2,
+                hit: 1,
+                index: 0,
+                isUnreachable: false,
+                line: 10,
+                sense: 't',
+                variant: Variant.MCDCLocation
+            }
+        ],
+        [
+            {
+                done: false,
+                incomplete: true,
+                value: ['10', 'U2', 't', '1', '0', 'enable'],
+                variant: Variant.MCDCLocation
+            },
+            {
+                done: false,
+                expression: 'enable',
+                groupSize: 2,
+                hit: 1,
+                index: 0,
+                isUnreachable: true,
+                line: 10,
+                sense: 't',
+                variant: Variant.MCDCLocation
+            }
+        ],
+        [
+            {
+                done: false,
+                incomplete: true,
+                value: ['10', '2', 't', '1', '0', 'call', 'with', 'comma'],
+                variant: Variant.MCDCLocation
+            },
+            {
+                done: false,
+                expression: 'call,with,comma',
+                groupSize: 2,
+                hit: 1,
+                index: 0,
+                isUnreachable: false,
+                line: 10,
+                sense: 't',
+                variant: Variant.MCDCLocation
+            }
+        ]
+    ]
+
+    processTestData(testData, transformMCDCLocation)
 })
 
 describe('transformEndOfRecord', (): void => {
@@ -993,9 +1239,56 @@ describe('transformResult', (): void => {
                 done: false,
                 branch: 'separated,expr',
                 isException: true,
+                isFallthrough: false,
+                isUnreachable: false,
                 line: 1,
                 hit: 3,
                 variant: Variant.BranchLocation
+            }
+        ],
+        [
+            {
+                done: false,
+                incomplete: false,
+                value: ['10', 'U2', 't', '1', '0', 'enable'],
+                variant: Variant.MCDCLocation
+            },
+            {
+                done: false,
+                expression: 'enable',
+                groupSize: 2,
+                hit: 1,
+                index: 0,
+                isUnreachable: true,
+                line: 10,
+                sense: 't',
+                variant: Variant.MCDCLocation
+            }
+        ],
+        [
+            {
+                done: false,
+                incomplete: false,
+                value: ['4'],
+                variant: Variant.MCDCHit
+            },
+            {
+                done: false,
+                hit: 4,
+                variant: Variant.MCDCHit
+            }
+        ],
+        [
+            {
+                done: false,
+                incomplete: false,
+                value: ['5'],
+                variant: Variant.MCDCInstrumented
+            },
+            {
+                done: false,
+                found: 5,
+                variant: Variant.MCDCInstrumented
             }
         ],
         [

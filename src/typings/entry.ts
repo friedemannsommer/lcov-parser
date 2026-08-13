@@ -16,12 +16,25 @@ export type EntryVariants =
     | LineHitEntry
     | LineInstrumentedEntry
     | LineLocationEntry
+    | MCDCHitEntry
+    | MCDCInstrumentedEntry
+    | MCDCLocationEntry
     | NoneEntry
     | TestNameEntry
     | VersionEntry
 
-export type HitEntryVariants = BranchHitEntry | FunctionHitEntry | LineHitEntry
-export type InstrumentedEntryVariants = BranchInstrumentedEntry | FunctionInstrumentedEntry | LineInstrumentedEntry
+export type HitEntryVariants = BranchHitEntry | FunctionHitEntry | LineHitEntry | MCDCHitEntry
+export type InstrumentedEntryVariants =
+    | BranchInstrumentedEntry
+    | FunctionInstrumentedEntry
+    | LineInstrumentedEntry
+    | MCDCInstrumentedEntry
+
+/**
+ * The sense of a MC/DC condition, *i.e.* whether the condition outcome changes if the corresponding condition
+ * changes from `false` to `true` (`"t"`) or from `true` to `false` (`"f"`).
+ */
+export type MCDCSense = 'f' | 't'
 
 export type EndOfRecordEntry = Entry<Variant.EndOfRecord>
 export type BranchHitEntry = SummaryHitEntry<Variant.BranchHit>
@@ -30,6 +43,8 @@ export type FunctionHitEntry = SummaryHitEntry<Variant.FunctionHit>
 export type FunctionInstrumentedEntry = SummaryFoundEntry<Variant.FunctionInstrumented>
 export type LineHitEntry = SummaryHitEntry<Variant.LineHit>
 export type LineInstrumentedEntry = SummaryFoundEntry<Variant.LineInstrumented>
+export type MCDCHitEntry = SummaryHitEntry<Variant.MCDCHit>
+export type MCDCInstrumentedEntry = SummaryFoundEntry<Variant.MCDCInstrumented>
 
 export interface Entry<V extends Variant = Variant.None> {
     done: boolean
@@ -53,6 +68,8 @@ export interface BranchLocationEntry extends Entry<Variant.BranchLocation> {
     branch: string
     hit: number
     isException: boolean
+    isFallthrough: boolean
+    isUnreachable: boolean
     line: number
 }
 
@@ -100,4 +117,14 @@ export interface FunctionLeaderEntry extends Entry<Variant.FunctionLeader> {
     lineEnd: number
     lineStart: number
     aliases: FunctionAliasEntry[]
+}
+
+export interface MCDCLocationEntry extends Entry<Variant.MCDCLocation> {
+    expression: string
+    groupSize: number
+    hit: number
+    index: number
+    isUnreachable: boolean
+    line: number
+    sense: MCDCSense
 }

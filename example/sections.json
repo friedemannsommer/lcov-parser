@@ -7,6 +7,8 @@
           "branch": "0",
           "hit": 1,
           "isException": false,
+          "isFallthrough": false,
+          "isUnreachable": false,
           "line": 1
         },
         {
@@ -14,6 +16,8 @@
           "branch": "1",
           "hit": 1,
           "isException": false,
+          "isFallthrough": false,
+          "isUnreachable": false,
           "line": 1
         },
         {
@@ -21,6 +25,8 @@
           "branch": "2",
           "hit": 0,
           "isException": false,
+          "isFallthrough": false,
+          "isUnreachable": false,
           "line": 1
         },
         {
@@ -28,6 +34,8 @@
           "branch": "0",
           "hit": 1,
           "isException": false,
+          "isFallthrough": false,
+          "isUnreachable": false,
           "line": 1
         },
         {
@@ -35,6 +43,8 @@
           "branch": "1",
           "hit": 0,
           "isException": false,
+          "isFallthrough": false,
+          "isUnreachable": false,
           "line": 1
         },
         {
@@ -42,6 +52,8 @@
           "branch": "0",
           "hit": 0,
           "isException": false,
+          "isFallthrough": false,
+          "isUnreachable": false,
           "line": 11
         },
         {
@@ -49,6 +61,8 @@
           "branch": "1",
           "hit": 0,
           "isException": false,
+          "isFallthrough": false,
+          "isUnreachable": false,
           "line": 11
         }
       ],
@@ -115,6 +129,11 @@
       "hit": 2,
       "instrumented": 7
     },
+    "mcdc": {
+      "details": [],
+      "hit": 0,
+      "instrumented": 0
+    },
     "name": "example",
     "path": "a.cpp"
   },
@@ -126,6 +145,8 @@
           "branch": "0",
           "hit": 2,
           "isException": false,
+          "isFallthrough": false,
+          "isUnreachable": false,
           "line": 15
         },
         {
@@ -133,6 +154,8 @@
           "branch": "1",
           "hit": 1,
           "isException": false,
+          "isFallthrough": false,
+          "isUnreachable": false,
           "line": 15
         }
       ],
@@ -167,6 +190,11 @@
       ],
       "hit": 3,
       "instrumented": 3
+    },
+    "mcdc": {
+      "details": [],
+      "hit": 0,
+      "instrumented": 0
     },
     "name": "version 2.2",
     "path": "b.cpp"

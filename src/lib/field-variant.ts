@@ -7,13 +7,18 @@ export type NonEmptyVariants =
     | Variant.BranchLocation
     | Variant.Comment
     | Variant.FilePath
+    | Variant.FunctionAlias
     | Variant.FunctionExecution
     | Variant.FunctionHit
     | Variant.FunctionInstrumented
+    | Variant.FunctionLeader
     | Variant.FunctionLocation
     | Variant.LineHit
     | Variant.LineInstrumented
     | Variant.LineLocation
+    | Variant.MCDCHit
+    | Variant.MCDCInstrumented
+    | Variant.MCDCLocation
     | Variant.TestName
     | Variant.Version
 

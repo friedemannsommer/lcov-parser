@@ -13,15 +13,16 @@ import type {
     HitEntryVariants,
     InstrumentedEntryVariants,
     LineLocationEntry,
+    MCDCLocationEntry,
     NoneEntry,
     TestNameEntry,
     VersionEntry
 } from '../typings/entry.js'
 import { parseInteger } from './parse.js'
 
-export type ParseResultHit = ParseResult<Variant.BranchHit | Variant.FunctionHit | Variant.LineHit>
+export type ParseResultHit = ParseResult<Variant.BranchHit | Variant.FunctionHit | Variant.LineHit | Variant.MCDCHit>
 export type ParseResultInstrumented = ParseResult<
-    Variant.BranchInstrumented | Variant.FunctionInstrumented | Variant.LineInstrumented
+    Variant.BranchInstrumented | Variant.FunctionInstrumented | Variant.LineInstrumented | Variant.MCDCInstrumented
 >
 
 const handlers = {
@@ -40,6 +41,9 @@ const handlers = {
     [Variant.LineHit]: transformHit,
     [Variant.LineInstrumented]: transformInstrumented,
     [Variant.LineLocation]: transformLineLocation,
+    [Variant.MCDCHit]: transformHit,
+    [Variant.MCDCInstrumented]: transformInstrumented,
+    [Variant.MCDCLocation]: transformMCDCLocation,
     [Variant.TestName]: transformTestName,
     [Variant.Version]: transformVersion
 }
@@ -83,19 +87,43 @@ export function transformInstrumented(result: ParseResultInstrumented): Instrume
     }
 }
 
+/**
+ * A `<block>` field of a {@link Variant.BranchLocation} entry may be prefixed with any combination of
+ * `e` (exception), `f` (fallthrough), and `U` (unreachable) flags, in any order.
+ */
+function isBranchFlagChar(char: string): boolean {
+    return char === 'e' || char === 'f' || char === 'U'
+}
+
 export function transformBranchLocation(result: ParseResult<Variant.BranchLocation>): BranchLocationEntry {
     let block = 0
     let branch = ''
     let isException = false
+    let isFallthrough = false
+    let isUnreachable = false
     let line = 0
     let taken = 0
 
     if (result.value !== null && result.value.length >= 4) {
         const branchTaken = result.value[result.value.length - 1]
+        const blockField = result.value[1]
+        let flagLength = 0
 
         line = parseInteger(result.value[0])
-        isException = result.value[1].startsWith('e')
-        block = parseInteger(isException ? result.value[1].slice(1) : result.value[1])
+
+        while (flagLength < blockField.length && isBranchFlagChar(blockField[flagLength])) {
+            flagLength++
+        }
+
+        if (flagLength > 0) {
+            const flags = blockField.slice(0, flagLength)
+
+            isException = flags.includes('e')
+            isFallthrough = flags.includes('f')
+            isUnreachable = flags.includes('U')
+        }
+
+        block = parseInteger(blockField.slice(flagLength))
         // if the branch contained "," (comma), add them back by joining the possibly related values
         branch = result.value.slice(2, -1).join(',')
         taken = branchTaken === '-' ? 0 : parseInteger(branchTaken)
@@ -107,6 +135,8 @@ export function transformBranchLocation(result: ParseResult<Variant.BranchLocati
         done: result.done,
         hit: taken,
         isException,
+        isFallthrough,
+        isUnreachable,
         line,
         variant: result.variant
     }
@@ -256,6 +286,41 @@ export function transformFunctionLeader(result: ParseResult<Variant.FunctionLead
         lineStart,
         index,
         aliases: [],
+        variant: result.variant
+    }
+}
+
+export function transformMCDCLocation(result: ParseResult<Variant.MCDCLocation>): MCDCLocationEntry {
+    let expression = ''
+    let groupSize = 0
+    let hit = 0
+    let index = 0
+    let isUnreachable = false
+    let line = 0
+    let sense: MCDCLocationEntry['sense'] = 'f'
+
+    if (result.value !== null && result.value.length >= 6) {
+        const groupSizeField = result.value[1]
+
+        line = parseInteger(result.value[0])
+        isUnreachable = groupSizeField.startsWith('U')
+        groupSize = parseInteger(isUnreachable ? groupSizeField.slice(1) : groupSizeField)
+        sense = result.value[2] === 't' ? 't' : 'f'
+        hit = parseInteger(result.value[3])
+        index = parseInteger(result.value[4])
+        // if the expression contained "," (comma), add them back by joining the possibly related values
+        expression = result.value.slice(5).join(',')
+    }
+
+    return {
+        done: result.done,
+        expression,
+        groupSize,
+        hit,
+        index,
+        isUnreachable,
+        line,
+        sense,
         variant: result.variant
     }
 }

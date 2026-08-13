@@ -23,6 +23,9 @@ export const FIELD_NAME_MAP: Readonly<Record<keyof FieldNames, Variant>> = {
     lineHit: Variant.LineHit,
     lineInstrumented: Variant.LineInstrumented,
     lineLocation: Variant.LineLocation,
+    mcdcHit: Variant.MCDCHit,
+    mcdcInstrumented: Variant.MCDCInstrumented,
+    mcdcLocation: Variant.MCDCLocation,
     testName: Variant.TestName,
     version: Variant.Version
 }

@@ -60,6 +60,9 @@ export interface FieldNames {
     lineHit: string
     lineInstrumented: string
     lineLocation: string
+    mcdcHit: string
+    mcdcInstrumented: string
+    mcdcLocation: string
     testName: string
     version: string
 }
