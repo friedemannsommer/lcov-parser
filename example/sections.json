@@ -198,5 +198,90 @@
     },
     "name": "version 2.2",
     "path": "b.cpp"
+  },
+  {
+    "branches": {
+      "details": [
+        {
+          "block": 0,
+          "branch": "0",
+          "hit": 1,
+          "isException": false,
+          "isFallthrough": false,
+          "isUnreachable": false,
+          "line": 6
+        },
+        {
+          "block": 0,
+          "branch": "1",
+          "hit": 0,
+          "isException": false,
+          "isFallthrough": false,
+          "isUnreachable": false,
+          "line": 6
+        }
+      ],
+      "hit": 1,
+      "instrumented": 2
+    },
+    "functions": {
+      "details": [
+        {
+          "hit": 1,
+          "line": 5,
+          "name": "conditional"
+        }
+      ],
+      "hit": 1,
+      "instrumented": 1
+    },
+    "lines": {
+      "details": [
+        {
+          "hit": 1,
+          "line": 5
+        },
+        {
+          "hit": 1,
+          "line": 6
+        },
+        {
+          "hit": 1,
+          "line": 7
+        },
+        {
+          "hit": 0,
+          "line": 8
+        }
+      ],
+      "hit": 3,
+      "instrumented": 4
+    },
+    "mcdc": {
+      "details": [
+        {
+          "expression": "enable",
+          "groupSize": 2,
+          "hit": 0,
+          "index": 0,
+          "isUnreachable": false,
+          "line": 6,
+          "sense": "f"
+        },
+        {
+          "expression": "enable",
+          "groupSize": 2,
+          "hit": 1,
+          "index": 0,
+          "isUnreachable": false,
+          "line": 6,
+          "sense": "t"
+        }
+      ],
+      "hit": 0,
+      "instrumented": 1
+    },
+    "name": "version 2.5",
+    "path": "c.cpp"
   }
 ]
