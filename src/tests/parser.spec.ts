@@ -163,6 +163,24 @@ describe('LcovParser - Chunks', (): void => {
     })
 })
 
+describe('LcovParser - Field prefix collision regression (BRxH)', (): void => {
+    it('should not mistake "BRxH" for "BRH" (BranchHit)', (): void => {
+        const parser = new LcovParser(defaultFieldNames)
+
+        parser.write(Buffer.from('BRxH:1,2\n'))
+
+        assert.deepStrictEqual(parser.read(), getParseResult(Variant.None, null, false, true))
+    })
+
+    it('should still match "BRH" (BranchHit) once the stray byte is removed', (): void => {
+        const parser = new LcovParser(defaultFieldNames)
+
+        parser.write(Buffer.from(`${defaultFieldNames.branchHit}:1,2\n`))
+
+        assert.deepStrictEqual(parser.read(), getParseResult(Variant.BranchHit, ['1', '2']))
+    })
+})
+
 describe('LcovParser - Current buffer', (): void => {
     it('should return `null` if no buffer is available', (): void => {
         const parser = new LcovParser(defaultFieldNames)

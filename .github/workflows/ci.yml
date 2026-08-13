@@ -41,6 +41,8 @@ jobs:
       - run: npm ci --no-fund --no-audit
       - name: Run checks
         run: npm run check:ci
+      - name: Replay fuzz regression corpus
+        run: npm run fuzz:regression
       - name: Collect coverage
         run: npm run coverage
       - name: Upload coverage reports to Codecov

@@ -55,3 +55,65 @@ where these tools cause errors.
 ```shell
 npm run check:biome
 ```
+
+## Property-based tests
+
+Alongside the example-based tests in `src/tests/**/*.spec.ts`, some entrypoints also have `*.property.spec.ts`
+counterparts that use [fast-check](https://fast-check.dev/) to assert invariants (e.g. "chunking the same input
+ differently across `write()` calls never changes the parsed result", "arbitrary bytes never throw") across many
+randomly generated inputs instead of a handful of fixed examples. These run as part of the normal `npm run test` /
+`npm run coverage` commands, no separate command is needed.
+
+If a property test fails, fast-check prints a shrunk counterexample and a seed. Reproduce it directly with:
+
+```shell
+node --import tsx --test src/tests/<file>.property.spec.ts
+```
+
+## Benchmarking
+
+This project uses [tinybench](https://github.com/tinylibs/tinybench) for performance benchmarks. Benchmarks live in
+`bench/` and are not part of the test suite or CI, they're a tool for evaluating the performance impact of a change
+locally.
+
+```shell
+npm run bench
+```
+
+When comparing before/after numbers for a change, run the benchmark on the same machine, ideally with nothing else
+running, and compare relative differences between tasks rather than absolute ops/sec (see tinybench's
+[FAQ](https://github.com/tinylibs/tinybench/blob/master/FAQ.md) for why).
+
+## Fuzz testing
+
+This project uses [Jazzer.js](https://github.com/CodeIntelligenceTesting/jazzer.js), a coverage-guided fuzzer, to
+search for inputs that crash or hang one of the four main entrypoints: the low-level `LcovParser` (`fuzz/parser.fuzz.mjs`),
+and the `sync`, `promise`, and `stream` entrypoints (`fuzz/sync.fuzz.mjs`, `fuzz/promise.fuzz.mjs`,
+`fuzz/stream.fuzz.mjs`). A small seed corpus for each lives in `fuzz/corpus/<name>`.
+
+Jazzer.js instruments code for coverage feedback by loading it through its own module loader, so it can only
+instrument plain JavaScript, not TypeScript directly. This means fuzz targets import from the built `dist` output
+rather than `src`, and need a build first:
+
+```shell
+npm run build
+```
+
+After building, run the fuzz targets with:
+
+```shell
+npm run fuzz:parser
+npm run fuzz:promise
+npm run fuzz:stream
+npm run fuzz:sync
+```
+
+Any input that triggers a genuine bug gets saved into that target's `fuzz/corpus/<name>` directory and should be
+committed, so it acts as a regression test. To replay the current corpus without fuzzing:
+
+```shell
+npm run fuzz:regression
+```
+
+Note that Jazzer.js only flags inputs that throw, reject, or hang - it has no notion of "the parsed result is
+wrong". Catching silently-incorrect output is what the example-based and property-based tests are for.

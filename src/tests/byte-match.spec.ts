@@ -36,6 +36,20 @@ describe('ByteMatch - reset', (): void => {
     })
 })
 
+describe('ByteMatch - prefix collision regression (BRxH)', (): void => {
+    it('should not complete a match using non-contiguous bytes after a partial match breaks', () => {
+        const instance = new ByteMatch(new Uint8Array([66, 82, 72])) // "BRH"
+
+        assert.ok(instance.compare(66))
+        assert.ok(instance.compare(82))
+        assert.strictEqual(instance.compare(120), false)
+        assert.strictEqual(instance.matched(), false)
+
+        assert.strictEqual(instance.compare(72), false)
+        assert.strictEqual(instance.matched(), false)
+    })
+})
+
 describe('ByteMatch - out of order', (): void => {
     it('should not match values out of order', () => {
         const instance = new ByteMatch(new Uint8Array([0, 1, 2]))

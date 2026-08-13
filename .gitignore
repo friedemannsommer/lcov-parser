@@ -10,6 +10,12 @@ lerna-debug.log*
 # Diagnostic reports (https://nodejs.org/api/report.html)
 report.[0-9]*.[0-9]*.[0-9]*.[0-9]*.json
 
+# Jazzer.js / libFuzzer crash artifacts (written to CWD when a fuzz run finds a failing input)
+/crash-*
+/leak-*
+/timeout-*
+/oom-*
+
 # Runtime data
 pids
 *.pid

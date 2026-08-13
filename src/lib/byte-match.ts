@@ -17,6 +17,8 @@ export default class ByteMatch {
             return true
         }
 
+        this._offset = 0
+
         return false
     }
 
