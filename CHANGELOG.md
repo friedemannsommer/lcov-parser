@@ -1,5 +1,26 @@
 # @friedemannsommer/lcov-parser
 
+## 8.0.0
+
+### Major Changes
+
+- [`6a71c2b`](https://github.com/friedemannsommer/lcov-parser/commit/6a71c2b3dd94486c79d412bcd2dfa75ac3dbbf57) Thanks [@friedemannsommer](https://github.com/friedemannsommer)! - Added support for [MC/DC coverage](https://github.com/linux-test-project/lcov/blob/master/docs/man/geninfo.rst) (`MCDC`, `MCF`, `MCH` records), which was previously silently dropped while parsing.
+  
+  **Breaking changes:**
+  
+  - `FieldNames` now requires `mcdcHit`, `mcdcInstrumented`, and `mcdcLocation` field names. `defaultFieldNames` already provides sensible defaults (`MCH`, `MCF`, `MCDC` respectively), but custom `FieldNames` objects may need to be updated.
+  - `SectionSummary` now includes an `mcdc` field.
+
+### Minor Changes
+
+- [`6a71c2b`](https://github.com/friedemannsommer/lcov-parser/commit/6a71c2b3dd94486c79d412bcd2dfa75ac3dbbf57) Thanks [@friedemannsommer](https://github.com/friedemannsommer)! - Updated `BRDA` parsing: the `<block>` field may be prefixed with a `f` (fallthrough) and/or `U` (unreachable) flag, in addition to the already supported `e` (exception) flag. Previously, only the `e` flag was recognized; any other prefix caused the `block` number to be parsed as `0`.
+  
+  `BranchEntry` (and the underlying `BranchLocationEntry`) now expose `isFallthrough` and `isUnreachable` booleans, alongside the existing `isException`.
+
+### Patch Changes
+
+- [`f0aef39`](https://github.com/friedemannsommer/lcov-parser/commit/f0aef39b0bcc061e53da45ead40ad94fd08f53ba) Thanks [@friedemannsommer](https://github.com/friedemannsommer)! - Fixed a parsing bug where a malformed field name could be misidentified as a valid one if it shared a prefix with another field and happened to end with the same byte(s) as the real field name (e.g. `BRxH:1,2` being misparsed as a `BRH` (`BranchHit`) entry with value `["1", "2"]`, instead of being treated as unrecognized). Well-formed LCOV input is unaffected.
+
 ## 7.0.0
 
 ### Major Changes
