@@ -65,7 +65,7 @@ describe('LcovParser - property', (): void => {
 
                     singleParser.write(buffer)
 
-                    assert.deepStrictEqual(chunkedParser.flush(), chunkedParser.flush())
+                    assert.deepStrictEqual(chunkedParser.flush(), singleParser.flush())
                 }
             )
         )
