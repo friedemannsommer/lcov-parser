@@ -1,0 +1,24 @@
+# soproto1,1
+BRDA:6,U,=Rs 0,0,1
+BRDA:3,U,1,
+BRDA:3,U,1,0ˆ
+
+BRDA:6,U,1,0
+-dest1
+BRDA:6,U,1,0ˆ
+BRDA:6,U,1,0
+-dt
+BRDA:DA:6,U,1,RDA0ˆ
+BS nofz1
+BRDA:6,U,1,-de
+BRDA:6,U,1,0,1
+BRDA:6,U,1,__proto__zeRo
+BRDA:6,U,1,0
+-deçà1
+BRDA:6,U,1,0ˆ
+BRDA:6,U,1,0
+-desta
+BRDA:DA:6,U,1,0
+BRDA:6,U,1,0
+-__BRDA:6,U,,U,1,-desta
+6

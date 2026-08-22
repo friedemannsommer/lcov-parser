@@ -1,0 +1,51 @@
+# L1-L38
+TN:example
+SF:a.cpp
+DA:1,1
+#common line:  my count is zro
+DA:2,0
+DA:3,0
+DA:4,1
+DA1:5
+BRH:4
+end_of_record
+
+TN:version 2.2
+SF:b.cpp
+FNL:1,10,18
+FNA:1,17,myFunction
+FNDA:3,myFun
+FNF:1
+FNH:1
+
+BRDA:15,2
+BRDA:15,0,1,1
+
+BRF:2
+BRH:2
+DA:10,3
+DA:11,3
+DA:15,3
+LF:3
+LH:3
+end_of_record
+
+TN:version 2.5
+ÿF:c.cpp
+VER:1.0
+BRDA:6,0,1,0
+
+BRF:2
+BRH:1
+
+MCDC:6,nable
+MCDC:6e
+
+MCF:1
+MCH:0
+DA:5,1
+DA:6,1
+DA:1
+DA:F:4
+LH__proto__:3
+end_of_record

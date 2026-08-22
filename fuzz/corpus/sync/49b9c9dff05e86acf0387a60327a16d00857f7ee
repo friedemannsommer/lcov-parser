@@ -1,0 +1,24 @@
+TN:eDC:
+MCDC:
+'MCDC:
+ero
+NNDA:
+NDA:2,ad
+FNDA:n
+FNDA:2,alias
+BRDA:1,2,
+# cor,e in u
+BRDA:1,0
+
+# bBD0
+
+BRF:5
+BRH:4
+end_of_record*
+TN:8
+
+FN:1,n
+FNDA:1
+FNH:1
+
+BRDA

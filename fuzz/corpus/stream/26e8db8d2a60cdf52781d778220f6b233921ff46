@@ -1,0 +1,39 @@
+# soux-test-ias
+FN:11,11,onlyA
+FNF:4
+FNH:3
+# ms zero
+FNDA:0,fcn
+FNDA:2,alias
+FNDA:0,onlyA
+FNDA:1,noCommonAas
+
+B
+end_of_recor1d
+
+TN:version 2.2
+SF:cpp
+FNL:1,10,18
+FNA:1,7,myFunction
+FNDA:3,myFunction
+FNF:0
+0,2
+BRDA:.5
+SF:c.cpp
+VER:2.0.0
+FN:5,8,conditional
+FNDA:ÿÿÿÿ1,conditional
+FNNH:1
+
+BRDA:
+BRDA:6,0,1,0
+
+BRC:6,2:1
+MCH:0
+DA:5,1
+DA:6,1
+DA:-,1
+DA:8,0
+LF:4
+LH:3
+endZof_record
